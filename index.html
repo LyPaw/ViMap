@@ -16,7 +16,6 @@
       --menu-bg: #f1f3f5;
       --menu-hover: #e9ecef;
       --menu-width: 240px;
-      --menu-collapsed-width: 60px;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -43,7 +42,6 @@
       color: var(--text-primary);
       display: flex;
       min-height: 100vh;
-      transition: all 0.3s ease;
     }
 
     /* Botón hamburguesa */
@@ -63,7 +61,6 @@
       display: none; /* Oculto en desktop */
       align-items: center;
       justify-content: center;
-      transition: all 0.3s ease;
     }
 
     .toggle-btn:hover {
@@ -77,7 +74,7 @@
       padding: 24px 16px;
       border-right: 1px solid var(--border-color);
       overflow-y: auto;
-      transition: all 0.3s ease;
+      transition: left 0.3s ease;
       z-index: 999;
       position: fixed;
       top: 0;
@@ -85,48 +82,6 @@
       bottom: 0;
       display: flex;
       flex-direction: column;
-    }
-
-    nav.collapsed {
-      width: var(--menu-collapsed-width);
-      padding: 16px 0;
-    }
-
-    nav.collapsed ul {
-      padding: 0;
-    }
-
-    nav.collapsed li {
-      margin: 8px 0;
-    }
-
-    nav.collapsed a {
-      padding: 10px;
-      justify-content: center;
-      text-align: center;
-      font-size: 0.9rem;
-    }
-
-    nav.collapsed a span {
-      display: none;
-    }
-
-    nav h1 {
-      font-size: 1.4rem;
-      margin-bottom: 24px;
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    nav.collapsed h1 {
-      justify-content: center;
-      font-size: 1.1rem;
-    }
-
-    nav.collapsed h1 span {
-      display: none;
     }
 
     nav ul {
@@ -158,11 +113,6 @@
       color: white;
     }
 
-    nav a.active::before {
-      content: "▶";
-      margin-right: 8px;
-    }
-
     /* Área de contenido principal */
     main {
       flex: 1;
@@ -170,10 +120,6 @@
       flex-direction: column;
       margin-left: var(--menu-width);
       transition: margin-left 0.3s ease;
-    }
-
-    main.menu-collapsed {
-      margin-left: var(--menu-collapsed-width);
     }
 
     header {
@@ -188,9 +134,6 @@
 
     .map-container {
       flex: 1;
-      padding: 0;
-      border: none;
-      width: 100%;
       background: var(--bg-secondary);
     }
 
@@ -207,42 +150,26 @@
       }
 
       nav {
-        width: var(--menu-collapsed-width);
-        padding: 16px 0;
-        left: -var(--menu-collapsed-width);
+        left: -100%; /* Totalmente oculto */
       }
 
       nav.expanded {
         left: 0;
-        width: var(--menu-width);
-        padding: 24px 16px;
       }
 
       main {
-        margin-left: var(--menu-collapsed-width);
-      }
-
-      main.menu-expanded {
-        margin-left: var(--menu-width);
-      }
-
-      nav.expanded h1 span {
-        display: inline;
-      }
-
-      nav.expanded a span {
-        display: inline;
+        margin-left: 0;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Botón para mostrar/ocultar menú -->
+  <!-- Botón hamburguesa -->
   <button class="toggle-btn" id="toggle-menu">☰</button>
 
   <nav id="sidebar">
-    <h1><span>🗺️</span> <span>Mapas</span></h1>
+    <h1>🗺️ Mapas</h1>
     <ul>
       <li><a href="#" class="map-link active" data-src="Videojuegos/Zelda/CronologiaZelda.html"><span>Cronología de Zelda</span></a></li>
       <li><a href="#" class="map-link" data-src="Videojuegos/MonsterHunter/FranquiciaMonsterHunter.html"><span>Franquicia Monster Hunter</span></a></li>
@@ -263,62 +190,41 @@
     const toggleBtn = document.getElementById('toggle-menu');
     const mapLinks = document.querySelectorAll('.map-link');
 
-    // Función para alternar el menú
     function toggleMenu() {
-      if (window.innerWidth <= 768) {
-        sidebar.classList.toggle('expanded');
-        mainContent.classList.toggle('menu-expanded');
-      } else {
-        sidebar.classList.toggle('collapsed');
-        mainContent.classList.toggle('menu-collapsed');
-      }
+      sidebar.classList.toggle('expanded');
     }
 
-    // Evento del botón
     toggleBtn.addEventListener('click', toggleMenu);
 
-    // Cerrar menú al hacer clic en un enlace (en móvil)
     mapLinks.forEach(link => {
       link.addEventListener('click', function(e) {
         e.preventDefault();
 
-        // Quitar clase 'active'
         mapLinks.forEach(el => el.classList.remove('active'));
-        // Añadir clase 'active' al clicado
         this.classList.add('active');
 
-        // Cambiar el iframe y el título
         const src = this.getAttribute('data-src');
         const title = this.textContent.trim();
         const freshSrc = src + '?_=' + Date.now();
         document.getElementById('map-frame').src = freshSrc;
         document.getElementById('map-title').textContent = title;
 
-        // En móvil, cerrar el menú después de seleccionar
-        if (window.innerWidth <= 768 && sidebar.classList.contains('expanded')) {
-          toggleMenu();
+        // Cerrar menú en móvil tras selección
+        if (window.innerWidth <= 768) {
+          sidebar.classList.remove('expanded');
         }
       });
     });
 
-    // Ajustar el menú al cambiar tamaño de ventana
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 768) {
-        // En desktop, asegurarse de que el menú no esté colapsado si no debería
-        sidebar.classList.remove('collapsed', 'expanded');
-        mainContent.classList.remove('menu-collapsed', 'menu-expanded');
-      } else {
-        // En móvil, mantenerlo colapsado
-        sidebar.classList.remove('expanded');
-        mainContent.classList.remove('menu-expanded');
-        sidebar.classList.add('collapsed');
-        mainContent.classList.add('menu-collapsed');
-      }
-    });
+    // Asegurar estado inicial en móviles
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove('expanded');
+    }
   </script>
 
 </body>
 </html>
+
 
 
 
