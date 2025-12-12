@@ -1,2 +1,5 @@
+> ## 📜 Licencia  
+> **© 2025 Lypaw.  
+> Todos los derechos reservados.**
+>
 https://lypaw.github.io/Mapa_Visual/
-<!-- © 2025 LyPaw. Todos los derechos reservados. -->
