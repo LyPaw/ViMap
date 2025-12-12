@@ -291,7 +291,7 @@
         const src = this.getAttribute('data-src');
         const title = this.textContent.trim();
         const freshSrc = src + '?_=' + Date.now();
-        document.getElementById('map-frame').src = src;
+        document.getElementById('map-frame').src = freshSrc;
         document.getElementById('map-title').textContent = title;
 
         // En móvil, cerrar el menú después de seleccionar
@@ -319,6 +319,7 @@
 
 </body>
 </html>
+
 
 
 
