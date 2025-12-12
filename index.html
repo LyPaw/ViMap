@@ -44,7 +44,6 @@
       min-height: 100vh;
     }
 
-    /* Botón hamburguesa */
     .toggle-btn {
       position: fixed;
       top: 16px;
@@ -58,7 +57,7 @@
       border-radius: 6px;
       font-size: 20px;
       cursor: pointer;
-      display: none; /* Oculto en desktop */
+      display: none; 
       align-items: center;
       justify-content: center;
     }
@@ -143,14 +142,14 @@
       border: none;
     }
 
-    /* Media Query para móviles */
+  
     @media (max-width: 768px) {
       .toggle-btn {
         display: flex;
       }
 
       nav {
-        left: -100%; /* Totalmente oculto */
+        left: -100%;
       }
 
       nav.expanded {
@@ -160,12 +159,15 @@
       main {
         margin-left: 0;
       }
+
+       header {
+        padding-left: 60px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Botón hamburguesa -->
   <button class="toggle-btn" id="toggle-menu">☰</button>
 
   <nav id="sidebar">
@@ -209,14 +211,14 @@
         document.getElementById('map-frame').src = freshSrc;
         document.getElementById('map-title').textContent = title;
 
-        // Cerrar menú en móvil tras selección
+      
         if (window.innerWidth <= 768) {
           sidebar.classList.remove('expanded');
         }
       });
     });
 
-    // Asegurar estado inicial en móviles
+
     if (window.innerWidth <= 768) {
       sidebar.classList.remove('expanded');
     }
@@ -224,6 +226,7 @@
 
 </body>
 </html>
+
 
 
 
