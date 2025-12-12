@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mapas Interactivos - Zelda</title>
+  <title>Mapas Interactivos</title>
   <style>
     :root {
       --bg-primary: #ffffff;
@@ -13,6 +13,8 @@
       --accent: #0d6efd;
       --menu-bg: #f1f3f5;
       --menu-hover: #e9ecef;
+      --menu-width: 240px;
+      --menu-collapsed-width: 60px;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -39,25 +41,95 @@
       color: var(--text-primary);
       display: flex;
       min-height: 100vh;
+      transition: all 0.3s ease;
+    }
+
+    /* Botón hamburguesa */
+    .toggle-btn {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 1000;
+      width: 40px;
+      height: 40px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 20px;
+      cursor: pointer;
+      display: none; /* Oculto en desktop */
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-btn:hover {
+      background: #0b5ed7;
     }
 
     /* Menú lateral */
     nav {
-      width: 240px;
+      width: var(--menu-width);
       background: var(--menu-bg);
       padding: 24px 16px;
       border-right: 1px solid var(--border-color);
       overflow-y: auto;
+      transition: all 0.3s ease;
+      z-index: 999;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav.collapsed {
+      width: var(--menu-collapsed-width);
+      padding: 16px 0;
+    }
+
+    nav.collapsed ul {
+      padding: 0;
+    }
+
+    nav.collapsed li {
+      margin: 8px 0;
+    }
+
+    nav.collapsed a {
+      padding: 10px;
+      justify-content: center;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    nav.collapsed a span {
+      display: none;
     }
 
     nav h1 {
       font-size: 1.4rem;
       margin-bottom: 24px;
       color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    nav.collapsed h1 {
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    nav.collapsed h1 span {
+      display: none;
     }
 
     nav ul {
       list-style: none;
+      flex: 1;
     }
 
     nav li {
@@ -65,7 +137,9 @@
     }
 
     nav a {
-      display: block;
+      display: flex;
+      align-items: center;
+      gap: 12px;
       padding: 10px 16px;
       text-decoration: none;
       color: var(--text-primary);
@@ -82,11 +156,22 @@
       color: white;
     }
 
+    nav a.active::before {
+      content: "▶";
+      margin-right: 8px;
+    }
+
     /* Área de contenido principal */
     main {
       flex: 1;
       display: flex;
       flex-direction: column;
+      margin-left: var(--menu-width);
+      transition: margin-left 0.3s ease;
+    }
+
+    main.menu-collapsed {
+      margin-left: var(--menu-collapsed-width);
     }
 
     header {
@@ -94,6 +179,9 @@
       border-bottom: 1px solid var(--border-color);
       font-size: 1.2rem;
       font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .map-container {
@@ -109,19 +197,57 @@
       height: 100%;
       border: none;
     }
+
+    /* Media Query para móviles */
+    @media (max-width: 768px) {
+      .toggle-btn {
+        display: flex;
+      }
+
+      nav {
+        width: var(--menu-collapsed-width);
+        padding: 16px 0;
+        left: -var(--menu-collapsed-width);
+      }
+
+      nav.expanded {
+        left: 0;
+        width: var(--menu-width);
+        padding: 24px 16px;
+      }
+
+      main {
+        margin-left: var(--menu-collapsed-width);
+      }
+
+      main.menu-expanded {
+        margin-left: var(--menu-width);
+      }
+
+      nav.expanded h1 span {
+        display: inline;
+      }
+
+      nav.expanded a span {
+        display: inline;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <nav>
-    <h1>🗺️ Mapas</h1>
+  <!-- Botón para mostrar/ocultar menú -->
+  <button class="toggle-btn" id="toggle-menu">☰</button>
+
+  <nav id="sidebar">
+    <h1><span>🗺️</span> <span>Mapas</span></h1>
     <ul>
-      <li><a href="#" class="map-link active" data-src="Zelda.html">Cronología de Zelda</a></li>
-      <li><a href="#" class="map-link" data-src="MonsterHunter.html">Franquicia Monster Hunter</a></li>
+      <li><a href="#" class="map-link active" data-src="Zelda.html"><span>Cronología de Zelda</span></a></li>
+      <li><a href="#" class="map-link" data-src="MonsterHunter.html"><span>Franquicia Monster Hunter</span></a></li>
     </ul>
   </nav>
 
-  <main>
+  <main id="main-content">
     <header id="map-title">Cronología de Zelda</header>
     <div class="map-container">
       <iframe id="map-frame" src="Zelda.html" title="Mapa de Zelda"></iframe>
@@ -129,12 +255,32 @@
   </main>
 
   <script>
-    document.querySelectorAll('.map-link').forEach(link => {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
+    const toggleBtn = document.getElementById('toggle-menu');
+    const mapLinks = document.querySelectorAll('.map-link');
+
+    // Función para alternar el menú
+    function toggleMenu() {
+      if (window.innerWidth <= 768) {
+        sidebar.classList.toggle('expanded');
+        mainContent.classList.toggle('menu-expanded');
+      } else {
+        sidebar.classList.toggle('collapsed');
+        mainContent.classList.toggle('menu-collapsed');
+      }
+    }
+
+    // Evento del botón
+    toggleBtn.addEventListener('click', toggleMenu);
+
+    // Cerrar menú al hacer clic en un enlace (en móvil)
+    mapLinks.forEach(link => {
       link.addEventListener('click', function(e) {
         e.preventDefault();
 
         // Quitar clase 'active'
-        document.querySelectorAll('.map-link').forEach(el => el.classList.remove('active'));
+        mapLinks.forEach(el => el.classList.remove('active'));
         // Añadir clase 'active' al clicado
         this.classList.add('active');
 
@@ -143,12 +289,29 @@
         const title = this.textContent.trim();
         document.getElementById('map-frame').src = src;
         document.getElementById('map-title').textContent = title;
+
+        // En móvil, cerrar el menú después de seleccionar
+        if (window.innerWidth <= 768 && sidebar.classList.contains('expanded')) {
+          toggleMenu();
+        }
       });
+    });
+
+    // Ajustar el menú al cambiar tamaño de ventana
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        // En desktop, asegurarse de que el menú no esté colapsado si no debería
+        sidebar.classList.remove('collapsed', 'expanded');
+        mainContent.classList.remove('menu-collapsed', 'menu-expanded');
+      } else {
+        // En móvil, mantenerlo colapsado
+        sidebar.classList.remove('expanded');
+        mainContent.classList.remove('menu-expanded');
+        sidebar.classList.add('collapsed');
+        mainContent.classList.add('menu-collapsed');
+      }
     });
   </script>
 
 </body>
-
 </html>
-
-
