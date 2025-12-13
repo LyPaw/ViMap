@@ -45,10 +45,6 @@
     }
 
     .toggle-btn {
-      position: fixed;
-      top: 16px;
-      left: 16px;
-      z-index: 1000;
       width: 40px;
       height: 40px;
       background: var(--accent);
@@ -60,17 +56,14 @@
       display: none; 
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
 
-    #sidebar > ul > li:nth-child(1) > div{
-      margin-top: 14px;
-    }
-    
     .toggle-btn:hover {
       background: #0b5ed7;
     }
 
-
+   
     nav {
       width: var(--menu-width);
       background: var(--menu-bg);
@@ -87,6 +80,27 @@
       flex-direction: column;
     }
 
+  
+    .menu-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 0 24px 0;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+    
+    #sidebar > ul > li:nth-child(1) > div{
+      margin-top: 14px;
+    }
+
+    .menu-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
     nav ul {
       list-style: none;
       flex: 1;
@@ -96,7 +110,7 @@
       margin-bottom: 12px;
     }
 
-    
+   
     .category {
       padding: 10px 16px;
       border-radius: 6px;
@@ -127,7 +141,7 @@
       transform: rotate(90deg);
     }
 
-   
+  
     .submenu {
       display: none;
       margin-left: 20px;
@@ -162,6 +176,7 @@
       background: var(--accent);
       color: white;
     }
+
 
     main {
       flex: 1;
@@ -218,12 +233,15 @@
 </head>
 <body>
 
-  <button class="toggle-btn" id="toggle-menu">☰</button>
 
   <nav id="sidebar">
-    <h1>🗺️ Mapas</h1>
+    <div class="menu-header">
+      <button class="toggle-btn" id="toggle-menu">☰</button>
+      <h1 class="menu-title">🗺️ Mapas</h1>
+    </div>
+
     <ul>
-  
+
       <li>
         <div class="category active" data-category="zelda">
           <span>Cronología de Zelda</span>
@@ -233,7 +251,7 @@
         </ul>
       </li>
 
-  
+
       <li>
         <div class="category" data-category="monsterhunter">
           <span>Monster Hunter</span>
@@ -253,90 +271,85 @@
     </div>
   </main>
 
-<script>
-  const sidebar = document.getElementById('sidebar');
-  const mainContent = document.getElementById('main-content');
-  const toggleBtn = document.getElementById('toggle-menu');
-  const mapLinks = document.querySelectorAll('.map-link');
-  const categories = document.querySelectorAll('.category');
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
+    const toggleBtn = document.getElementById('toggle-menu');
+    const mapLinks = document.querySelectorAll('.map-link');
+    const categories = document.querySelectorAll('.category');
 
-  // Función para alternar el menú
-  function toggleMenu() {
-    sidebar.classList.toggle('expanded');
-    if (sidebar.classList.contains('expanded')) {
-      toggleBtn.style.display = 'none';
-    } else {
-      toggleBtn.style.display = 'flex';
-    }
-  }
-
-  toggleBtn.addEventListener('click', toggleMenu);
-
-  // Cerrar menú al hacer clic en el área principal (solo en móvil)
-  mainContent.addEventListener('click', function() {
-    if (window.innerWidth <= 768 && sidebar.classList.contains('expanded')) {
-      sidebar.classList.remove('expanded');
-      toggleBtn.style.display = 'flex';
-    }
-  });
-
-  // Categorías (acordeón)
-  categories.forEach(category => {
-    category.addEventListener('click', function() {
-      const submenu = this.nextElementSibling;
-      const isExpanded = this.classList.contains('expanded');
-
-      categories.forEach(cat => {
-        cat.classList.remove('expanded');
-        cat.nextElementSibling.classList.remove('show');
-      });
-
-      if (!isExpanded) {
-        this.classList.add('expanded');
-        submenu.classList.add('show');
+    function toggleMenu() {
+      sidebar.classList.toggle('expanded');
+      if (sidebar.classList.contains('expanded')) {
+        toggleBtn.style.display = 'none';
+      } else {
+        toggleBtn.style.display = 'flex';
       }
-    });
-  });
+    }
 
-  // Mapas
-  mapLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
+    toggleBtn.addEventListener('click', toggleMenu);
 
-      mapLinks.forEach(el => el.classList.remove('active'));
-      this.classList.add('active');
 
-      categories.forEach(cat => cat.classList.remove('active'));
-      const parentCategory = this.closest('li').querySelector('.category');
-      if (parentCategory) {
-        parentCategory.classList.add('active');
-      }
-
-      const src = this.getAttribute('data-src');
-      const title = this.textContent.trim();
-      const freshSrc = src + '?_=' + Date.now();
-      document.getElementById('map-frame').src = freshSrc;
-      document.getElementById('map-title').textContent = title;
-
-      // Cerrar menú en móvil tras seleccionar
-      if (window.innerWidth <= 768) {
+    mainContent.addEventListener('click', function() {
+      if (window.innerWidth <= 768 && sidebar.classList.contains('expanded')) {
         sidebar.classList.remove('expanded');
         toggleBtn.style.display = 'flex';
       }
     });
-  });
 
-  // Inicialización en móvil
-  if (window.innerWidth <= 768) {
-    sidebar.classList.remove('expanded');
-  }
-</script>
+    categories.forEach(category => {
+      category.addEventListener('click', function() {
+        const submenu = this.nextElementSibling;
+        const isExpanded = this.classList.contains('expanded');
+
+        categories.forEach(cat => {
+          cat.classList.remove('expanded');
+          cat.nextElementSibling.classList.remove('show');
+        });
+
+        if (!isExpanded) {
+          this.classList.add('expanded');
+          submenu.classList.add('show');
+        }
+      });
+    });
+
+
+    mapLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        mapLinks.forEach(el => el.classList.remove('active'));
+        this.classList.add('active');
+
+        categories.forEach(cat => cat.classList.remove('active'));
+        const parentCategory = this.closest('li').querySelector('.category');
+        if (parentCategory) {
+          parentCategory.classList.add('active');
+        }
+
+        const src = this.getAttribute('data-src');
+        const title = this.textContent.trim();
+        const freshSrc = src + '?_=' + Date.now();
+        document.getElementById('map-frame').src = freshSrc;
+        document.getElementById('map-title').textContent = title;
+
+    
+        if (window.innerWidth <= 768) {
+          sidebar.classList.remove('expanded');
+          toggleBtn.style.display = 'flex';
+        }
+      });
+    });
+
+
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove('expanded');
+    }
+  </script>
 
 </body>
 </html>
-
-
-
 
 
 
