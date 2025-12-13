@@ -44,10 +44,10 @@
       min-height: 100vh;
     }
 
-    /* Botón de toggle centrado verticalmente en móvil */
+
     .toggle-btn {
       position: fixed;
-      top: 16px; /* valor por defecto (desktop, aunque no se muestra) */
+      top: 16px;
       left: 16px;
       z-index: 1000;
       width: 40px;
@@ -227,10 +227,10 @@
 </head>
 <body>
 
-  <!-- Botón de toggle fijo fuera del menú -->
+ 
   <button class="toggle-btn" id="toggle-menu">☰</button>
 
-  <!-- Menú lateral -->
+ 
   <nav id="sidebar">
     <h1>🗺️ Mapas</h1>
     <ul>
@@ -252,6 +252,7 @@
         <ul class="submenu">
           <li><a href="#" class="map-link" data-src="Videojuegos/MonsterHunter/FranquiciaMonsterHunter.html"><span>Franquicia Monster Hunter</span></a></li>
           <li><a href="#" class="map-link" data-src="Videojuegos/MonsterHunter/MonstruosMonsterHunter.html"><span>Monstruos Monster Hunter</span></a></li>
+          <li><a href="#" class="map-link" data-src="Videojuegos/MonsterHunter/ColaboracionesMonsterHunter.html"><span>Colaboraciones Monster Hunter</span></a></li>
         </ul>
       </li>
     </ul>
@@ -292,7 +293,7 @@
       }
     });
 
-    // Manejo de categorías (acordeón)
+   
     categories.forEach(category => {
       category.addEventListener('click', function() {
         const submenu = this.nextElementSibling;
@@ -346,6 +347,7 @@
 
 </body>
 </html>
+
 
 
 
