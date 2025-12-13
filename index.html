@@ -44,7 +44,12 @@
       min-height: 100vh;
     }
 
+    /* Botón de toggle centrado verticalmente en móvil */
     .toggle-btn {
+      position: fixed;
+      top: 16px; /* valor por defecto (desktop, aunque no se muestra) */
+      left: 16px;
+      z-index: 1000;
       width: 40px;
       height: 40px;
       background: var(--accent);
@@ -53,17 +58,16 @@
       border-radius: 6px;
       font-size: 20px;
       cursor: pointer;
-      display: none; 
+      display: none;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
     }
 
     .toggle-btn:hover {
       background: #0b5ed7;
     }
 
-   
+    /* Menú lateral */
     nav {
       width: var(--menu-width);
       background: var(--menu-bg);
@@ -80,25 +84,13 @@
       flex-direction: column;
     }
 
-  
-    .menu-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 0 0 24px 0;
-      border-bottom: 1px solid var(--border-color);
-      margin-bottom: 24px;
-    }
-    
-    #sidebar > ul > li:nth-child(1) > div{
-      margin-top: 14px;
-    }
-
-    .menu-title {
+    nav h1 {
       font-size: 1.5rem;
       font-weight: bold;
       color: var(--text-primary);
-      margin: 0;
+      margin: 0 0 24px 0;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
     }
 
     nav ul {
@@ -110,7 +102,7 @@
       margin-bottom: 12px;
     }
 
-   
+    /* Elemento padre (categoría) */
     .category {
       padding: 10px 16px;
       border-radius: 6px;
@@ -141,7 +133,7 @@
       transform: rotate(90deg);
     }
 
-  
+    /* Submenú (mapas hijos) */
     .submenu {
       display: none;
       margin-left: 20px;
@@ -177,7 +169,7 @@
       color: white;
     }
 
-
+    /* Área de contenido principal */
     main {
       flex: 1;
       display: flex;
@@ -207,10 +199,12 @@
       border: none;
     }
 
-  
+    /* Estilos para dispositivos móviles */
     @media (max-width: 768px) {
       .toggle-btn {
         display: flex;
+        top: 50%;
+        transform: translateY(-50%);
       }
 
       nav {
@@ -225,7 +219,7 @@
         margin-left: 0;
       }
 
-       header {
+      header {
         padding-left: 60px;
       }
     }
@@ -233,15 +227,14 @@
 </head>
 <body>
 
+  <!-- Botón de toggle fijo fuera del menú -->
+  <button class="toggle-btn" id="toggle-menu">☰</button>
 
+  <!-- Menú lateral -->
   <nav id="sidebar">
-    <div class="menu-header">
-      <button class="toggle-btn" id="toggle-menu">☰</button>
-      <h1 class="menu-title">🗺️ Mapas</h1>
-    </div>
-
+    <h1>🗺️ Mapas</h1>
     <ul>
-
+      <!-- Categoría Zelda -->
       <li>
         <div class="category active" data-category="zelda">
           <span>Cronología de Zelda</span>
@@ -251,7 +244,7 @@
         </ul>
       </li>
 
-
+      <!-- Categoría Monster Hunter -->
       <li>
         <div class="category" data-category="monsterhunter">
           <span>Monster Hunter</span>
@@ -264,6 +257,7 @@
     </ul>
   </nav>
 
+  <!-- Contenido principal -->
   <main id="main-content">
     <header id="map-title">Cronología de Zelda</header>
     <div class="map-container">
@@ -278,6 +272,7 @@
     const mapLinks = document.querySelectorAll('.map-link');
     const categories = document.querySelectorAll('.category');
 
+    // Alternar menú
     function toggleMenu() {
       sidebar.classList.toggle('expanded');
       if (sidebar.classList.contains('expanded')) {
@@ -289,7 +284,7 @@
 
     toggleBtn.addEventListener('click', toggleMenu);
 
-
+    // Cerrar menú al hacer clic en el mapa (solo en móvil)
     mainContent.addEventListener('click', function() {
       if (window.innerWidth <= 768 && sidebar.classList.contains('expanded')) {
         sidebar.classList.remove('expanded');
@@ -297,6 +292,7 @@
       }
     });
 
+    // Manejo de categorías (acordeón)
     categories.forEach(category => {
       category.addEventListener('click', function() {
         const submenu = this.nextElementSibling;
@@ -314,7 +310,7 @@
       });
     });
 
-
+    // Manejo de enlaces a mapas
     mapLinks.forEach(link => {
       link.addEventListener('click', function(e) {
         e.preventDefault();
@@ -334,7 +330,7 @@
         document.getElementById('map-frame').src = freshSrc;
         document.getElementById('map-title').textContent = title;
 
-    
+        // Cerrar menú en móvil tras seleccionar
         if (window.innerWidth <= 768) {
           sidebar.classList.remove('expanded');
           toggleBtn.style.display = 'flex';
@@ -342,7 +338,7 @@
       });
     });
 
-
+    // Inicialización en móviles
     if (window.innerWidth <= 768) {
       sidebar.classList.remove('expanded');
     }
@@ -350,6 +346,7 @@
 
 </body>
 </html>
+
 
 
 
