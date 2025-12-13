@@ -61,16 +61,15 @@
       align-items: center;
       justify-content: center;
     }
+
     #sidebar > ul > li:nth-child(1) > div{
       margin-top: 6px;
     }
+    
     .toggle-btn:hover {
       background: #0b5ed7;
     }
 
-    #toggle-menu{
-      margin-bottom:4px;
-    }
 
     nav {
       width: var(--menu-width);
@@ -97,7 +96,7 @@
       margin-bottom: 12px;
     }
 
-   
+    
     .category {
       padding: 10px 16px;
       border-radius: 6px;
@@ -128,7 +127,7 @@
       transform: rotate(90deg);
     }
 
-
+   
     .submenu {
       display: none;
       margin-left: 20px;
@@ -164,7 +163,6 @@
       color: white;
     }
 
-  
     main {
       flex: 1;
       display: flex;
@@ -225,7 +223,7 @@
   <nav id="sidebar">
     <h1>🗺️ Mapas</h1>
     <ul>
-     
+  
       <li>
         <div class="category active" data-category="zelda">
           <span>Cronología de Zelda</span>
@@ -235,7 +233,7 @@
         </ul>
       </li>
 
-     
+  
       <li>
         <div class="category" data-category="monsterhunter">
           <span>Monster Hunter</span>
@@ -262,20 +260,25 @@
     const mapLinks = document.querySelectorAll('.map-link');
     const categories = document.querySelectorAll('.category');
 
-  
     function toggleMenu() {
       sidebar.classList.toggle('expanded');
+      
+     
+      if (sidebar.classList.contains('expanded')) {
+        toggleBtn.style.display = 'none';
+      } else {
+        toggleBtn.style.display = 'flex';
+      }
     }
 
     toggleBtn.addEventListener('click', toggleMenu);
 
-   
+    
     categories.forEach(category => {
       category.addEventListener('click', function() {
         const submenu = this.nextElementSibling;
         const isExpanded = this.classList.contains('expanded');
 
-      
         categories.forEach(cat => {
           cat.classList.remove('expanded');
           cat.nextElementSibling.classList.remove('show');
@@ -294,14 +297,12 @@
       link.addEventListener('click', function(e) {
         e.preventDefault();
 
-      
+   
         mapLinks.forEach(el => el.classList.remove('active'));
         this.classList.add('active');
 
-       
         categories.forEach(cat => cat.classList.remove('active'));
 
-       
         const parentCategory = this.closest('li').querySelector('.category');
         if (parentCategory) {
           parentCategory.classList.add('active');
@@ -313,14 +314,15 @@
         document.getElementById('map-frame').src = freshSrc;
         document.getElementById('map-title').textContent = title;
 
-        
+       
         if (window.innerWidth <= 768) {
           sidebar.classList.remove('expanded');
+          toggleBtn.style.display = 'flex'; 
         }
       });
     });
 
-    
+
     if (window.innerWidth <= 768) {
       sidebar.classList.remove('expanded');
     }
@@ -328,6 +330,8 @@
 
 </body>
 </html>
+
+
 
 
 
