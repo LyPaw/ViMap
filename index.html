@@ -66,7 +66,7 @@
       background: #0b5ed7;
     }
 
-    /* Menú lateral */
+
     nav {
       width: var(--menu-width);
       background: var(--menu-bg);
@@ -92,27 +92,74 @@
       margin-bottom: 12px;
     }
 
-    nav a {
+   
+    .category {
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 10px 16px;
+      color: var(--text-primary);
+      transition: background 0.2s;
+    }
+
+    .category:hover {
+      background: var(--menu-hover);
+    }
+
+    .category.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    .category::after {
+      content: '▶';
+      font-size: 0.8rem;
+      transition: transform 0.2s;
+    }
+
+    .category.expanded::after {
+      transform: rotate(90deg);
+    }
+
+
+    .submenu {
+      display: none;
+      margin-left: 20px;
+      margin-top: 8px;
+      padding-left: 0;
+    }
+
+    .submenu.show {
+      display: block;
+    }
+
+    .submenu li {
+      margin-bottom: 8px;
+    }
+
+    .submenu a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
       text-decoration: none;
       color: var(--text-primary);
       border-radius: 6px;
       transition: background 0.2s;
     }
 
-    nav a:hover {
+    .submenu a:hover {
       background: var(--menu-hover);
     }
 
-    nav a.active {
+    .submenu a.active {
       background: var(--accent);
       color: white;
     }
 
-    /* Área de contenido principal */
+  
     main {
       flex: 1;
       display: flex;
@@ -173,9 +220,26 @@
   <nav id="sidebar">
     <h1>🗺️ Mapas</h1>
     <ul>
-      <li><a href="#" class="map-link active" data-src="Videojuegos/Zelda/CronologiaZelda.html"><span>Cronología de Zelda</span></a></li>
-      <li><a href="#" class="map-link" data-src="Videojuegos/MonsterHunter/FranquiciaMonsterHunter.html"><span>Franquicia Monster Hunter</span></a></li>
-      <li><a href="#" class="map-link" data-src="Videojuegos/MonsterHunter/MonstruosMonsterHunter.html"><span>Monstruos Monster Hunter</span></a></li>
+     
+      <li>
+        <div class="category active" data-category="zelda">
+          <span>Cronología de Zelda</span>
+        </div>
+        <ul class="submenu show">
+          <li><a href="#" class="map-link" data-src="Videojuegos/Zelda/CronologiaZelda.html"><span>Cronología de Zelda</span></a></li>
+        </ul>
+      </li>
+
+     
+      <li>
+        <div class="category" data-category="monsterhunter">
+          <span>Monster Hunter</span>
+        </div>
+        <ul class="submenu">
+          <li><a href="#" class="map-link" data-src="Videojuegos/MonsterHunter/FranquiciaMonsterHunter.html"><span>Franquicia Monster Hunter</span></a></li>
+          <li><a href="#" class="map-link" data-src="Videojuegos/MonsterHunter/MonstruosMonsterHunter.html"><span>Monstruos Monster Hunter</span></a></li>
+        </ul>
+      </li>
     </ul>
   </nav>
 
@@ -191,19 +255,52 @@
     const mainContent = document.getElementById('main-content');
     const toggleBtn = document.getElementById('toggle-menu');
     const mapLinks = document.querySelectorAll('.map-link');
+    const categories = document.querySelectorAll('.category');
 
+  
     function toggleMenu() {
       sidebar.classList.toggle('expanded');
     }
 
     toggleBtn.addEventListener('click', toggleMenu);
 
+   
+    categories.forEach(category => {
+      category.addEventListener('click', function() {
+        const submenu = this.nextElementSibling;
+        const isExpanded = this.classList.contains('expanded');
+
+      
+        categories.forEach(cat => {
+          cat.classList.remove('expanded');
+          cat.nextElementSibling.classList.remove('show');
+        });
+
+      
+        if (!isExpanded) {
+          this.classList.add('expanded');
+          submenu.classList.add('show');
+        }
+      });
+    });
+
+   
     mapLinks.forEach(link => {
       link.addEventListener('click', function(e) {
         e.preventDefault();
 
+      
         mapLinks.forEach(el => el.classList.remove('active'));
         this.classList.add('active');
+
+       
+        categories.forEach(cat => cat.classList.remove('active'));
+
+       
+        const parentCategory = this.closest('li').querySelector('.category');
+        if (parentCategory) {
+          parentCategory.classList.add('active');
+        }
 
         const src = this.getAttribute('data-src');
         const title = this.textContent.trim();
@@ -211,14 +308,14 @@
         document.getElementById('map-frame').src = freshSrc;
         document.getElementById('map-title').textContent = title;
 
-      
+        
         if (window.innerWidth <= 768) {
           sidebar.classList.remove('expanded');
         }
       });
     });
 
-
+    
     if (window.innerWidth <= 768) {
       sidebar.classList.remove('expanded');
     }
@@ -226,6 +323,7 @@
 
 </body>
 </html>
+
 
 
 
