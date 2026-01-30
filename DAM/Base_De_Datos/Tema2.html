@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title>Markmap - Base de Datos Tema 2</title>
+<style>
+* { margin: 0; padding: 0; }
+html { font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; }
+#mindmap { display: block; width: 100vw; height: 100vh; }
+.markmap-dark { background: #27272a; color: white; }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/style.css">
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/index.js"></script>
+<script>(()=>{setTimeout(()=>{const{markmap:S,mm:Q}=window,$=new S.Toolbar;$.attach(Q);const I=$.render();I.setAttribute("style","position:absolute;bottom:20px;right:20px"),document.body.append(I)})})()</script>
+<script>((l,U,M,R)=>{const N=l();window.mm=N.Markmap.create("svg#mindmap",(U||N.deriveOptions)(R),M),window.matchMedia("(prefers-color-scheme: dark)").matches&&document.documentElement.classList.add("markmap-dark")})(()=>window.markmap,null,{"content":"Base de Datos - Tema 2: Modelo Relacional","children":[{"content":"Concepto de Modelo Relacional","children":[{"content":"Propuesto por E.F. Codd en 1970","children":[]},{"content":"Representación de datos en tablas","children":[]},{"content":"Fundamento matemático: Teoría de conjuntos y lógica de predicados","children":[]}],"payload":{"tag":"h2"}},{"content":"Estructura de una Tabla","children":[{"content":"Filas (Tuplas): Cada fila es un registro único","children":[]},{"content":"Columnas (Atributos): Definen las propiedades","children":[]},{"content":"Dominio: Conjunto de valores permitidos para un atributo","children":[]},{"content":"Grado: Número de atributos","children":[]},{"content":"Cardinalidad: Número de tuplas","children":[]}],"payload":{"tag":"h2"}},{"content":"Claves en el Modelo Relacional","children":[{"content":"Clave Primaria (PK)","children":[{"content":"Identificador único e irrepetible","children":[]},{"content":"No puede contener valores nulos","children":[]},{"content":"Ejemplo: DNI, ISBN","children":[]}],"payload":{"tag":"li"}},{"content":"Clave Foránea (FK)","children":[{"content":"Establece relación entre tablas","children":[]},{"content":"Referencia a PK de otra tabla","children":[]},{"content":"Mantiene integridad referencial","children":[]}],"payload":{"tag":"li"}},{"content":"Clave Candidata","children":[{"content":"Atributo(s) que podría ser PK","children":[]},{"content":"Una tabla puede tener varias","children":[]}],"payload":{"tag":"li"}}],"payload":{"tag":"h2"}},{"content":"Normalización","children":[{"content":"Objetivo: Eliminar redundancias y anomalías","children":[]},{"content":"Formas Normales","children":[{"content":"1FN: Eliminar grupos repetitivos, atributos atómicos","children":[]},{"content":"2FN: Depender completamente de la PK","children":[]},{"content":"3FN: Eliminar dependencias transitivas","children":[]}],"payload":{"tag":"li"}}],"payload":{"tag":"h2"}},{"content":"Relaciones entre Tablas","children":[{"content":"Uno a Uno (1:1)","children":[{"content":"Ejemplo: Persona - DNI","children":[]}],"payload":{"tag":"li"}},{"content":"Uno a Muchos (1:N)","children":[{"content":"Ejemplo: Cliente - Pedidos","children":[]}],"payload":{"tag":"li"}},{"content":"Muchos a Muchos (N:M)","children":[{"content":"Requiere tabla intermedia","children":[]},{"content":"Ejemplo: Estudiantes - Cursos","children":[]}],"payload":{"tag":"li"}}],"payload":{"tag":"h2"}}],"payload":{"tag":"h1"}})</script>
+</body>
+</html>
