@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title>Markmap - Base de Datos Tema 1</title>
+<style>
+* { margin: 0; padding: 0; }
+html { font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; }
+#mindmap { display: block; width: 100vw; height: 100vh; }
+.markmap-dark { background: #27272a; color: white; }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/style.css">
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/index.js"></script>
+<script>(()=>{setTimeout(()=>{const{markmap:S,mm:Q}=window,$=new S.Toolbar;$.attach(Q);const I=$.render();I.setAttribute("style","position:absolute;bottom:20px;right:20px"),document.body.append(I)})})()</script>
+<script>((l,U,M,R)=>{const N=l();window.mm=N.Markmap.create("svg#mindmap",(U||N.deriveOptions)(R),M),window.matchMedia("(prefers-color-scheme: dark)").matches&&document.documentElement.classList.add("markmap-dark")})(()=>window.markmap,null,{"content":"Base de Datos - Tema 1: Fundamentos","children":[{"content":"¿Qué es una Base de Datos?","children":[{"content":"Colección organizada de datos","children":[]},{"content":"Permite almacenar, recuperar y gestionar información","children":[]},{"content":"Ejemplos: MySQL, PostgreSQL, Oracle, MongoDB","children":[]}],"payload":{"tag":"h2"}},{"content":"Tipos de Bases de Datos","children":[{"content":"Relacionales (SQL)","children":[{"content":"Estructura en tablas con filas y columnas","children":[]},{"content":"Relaciones mediante claves primarias/foráneas","children":[]},{"content":"Ejemplos: MySQL, PostgreSQL, SQL Server","children":[]}],"payload":{"tag":"li"}},{"content":"No Relacionales (NoSQL)","children":[{"content":"Documentos (MongoDB)","children":[]},{"content":"Clave-Valor (Redis)","children":[]},{"content":"Grafos (Neo4j)","children":[]},{"content":"Columnares (Cassandra)","children":[]}],"payload":{"tag":"li"}}],"payload":{"tag":"h2"}},{"content":"Conceptos Fundamentales","children":[{"content":"Tabla: Estructura que almacena datos relacionados","children":[]},{"content":"Fila (Registro): Representa una instancia de entidad","children":[]},{"content":"Columna (Atributo): Propiedad de la entidad","children":[]},{"content":"Clave Primaria: Identificador único de un registro","children":[]},{"content":"Clave Foránea: Relación con otra tabla","children":[]}],"payload":{"tag":"h2"}},{"content":"Ventajas del Uso de Bases de Datos","children":[{"content":"Reducción de redundancia","children":[]},{"content":"Integridad de datos","children":[]},{"content":"Acceso concurrente","children":[]},{"content":"Seguridad y permisos","children":[]},{"content":"Recuperación ante fallos","children":[]}],"payload":{"tag":"h2"}}],"payload":{"tag":"h1"}})</script>
+</body>
+</html>
