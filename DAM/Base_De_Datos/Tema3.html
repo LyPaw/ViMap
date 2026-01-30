@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title>Markmap - Base de Datos Tema 3</title>
+<style>
+* { margin: 0; padding: 0; }
+html { font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'; }
+#mindmap { display: block; width: 100vw; height: 100vh; }
+.markmap-dark { background: #27272a; color: white; }
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/style.css">
+</head>
+<body>
+<svg id="mindmap"></svg>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/index.js"></script>
+<script>(()=>{setTimeout(()=>{const{markmap:S,mm:Q}=window,$=new S.Toolbar;$.attach(Q);const I=$.render();I.setAttribute("style","position:absolute;bottom:20px;right:20px"),document.body.append(I)})})()</script>
+<script>((l,U,M,R)=>{const N=l();window.mm=N.Markmap.create("svg#mindmap",(U||N.deriveOptions)(R),M),window.matchMedia("(prefers-color-scheme: dark)").matches&&document.documentElement.classList.add("markmap-dark")})(()=>window.markmap,null,{"content":"Base de Datos - Tema 3: SQL Básico","children":[{"content":"¿Qué es SQL?","children":[{"content":"Structured Query Language","children":[]},{"content":"Lenguaje estándar para gestionar BDR","children":[]},{"content":"Declarativo: Especifica QUÉ, no CÓMO","children":[]},{"content":"Estándares: SQL-86, SQL-92, SQL:1999, etc.","children":[]}],"payload":{"tag":"h2"}},{"content":"DDL (Data Definition Language)","children":[{"content":"CREATE: Crear estructuras","children":[{"content":"CREATE TABLE alumnos (...);","children":[]}],"payload":{"tag":"li"}},{"content":"ALTER: Modificar estructuras","children":[{"content":"ALTER TABLE alumnos ADD email VARCHAR(100);","children":[]}],"payload":{"tag":"li"}},{"content":"DROP: Eliminar estructuras","children":[{"content":"DROP TABLE alumnos;","children":[]}],"payload":{"tag":"li"}}],"payload":{"tag":"h2"}},{"content":"DML (Data Manipulation Language)","children":[{"content":"INSERT: Añadir registros","children":[{"content":"INSERT INTO alumnos (nombre, edad) VALUES ('Ana', 20);","children":[]}],"payload":{"tag":"li"}},{"content":"SELECT: Consultar datos","children":[{"content":"SELECT nombre, edad FROM alumnos WHERE edad > 18;","children":[]}],"payload":{"tag":"li"}},{"content":"UPDATE: Modificar registros","children":[{"content":"UPDATE alumnos SET edad = 21 WHERE nombre = 'Ana';","children":[]}],"payload":{"tag":"li"}},{"content":"DELETE: Eliminar registros","children":[{"content":"DELETE FROM alumnos WHERE nombre = 'Ana';","children":[]}],"payload":{"tag":"li"}}],"payload":{"tag":"h2"}},{"content":"Consultas SELECT Avanzadas","children":[{"content":"Cláusulas","children":[{"content":"WHERE: Filtrar registros","children":[]},{"content":"ORDER BY: Ordenar resultados","children":[]},{"content":"GROUP BY: Agrupar datos","children":[]},{"content":"HAVING: Filtrar grupos","children":[]}],"payload":{"tag":"li"}},{"content":"Funciones de Agregación","children":[{"content":"COUNT(), SUM(), AVG(), MAX(), MIN()","children":[]}],"payload":{"tag":"li"}},{"content":"JOINs: Combinar tablas","children":[{"content":"INNER JOIN: Coincidencias en ambas tablas","children":[]},{"content":"LEFT JOIN: Todos de la izquierda + coincidencias","children":[]},{"content":"RIGHT JOIN: Todos de la derecha + coincidencias","children":[]}],"payload":{"tag":"li"}}],"payload":{"tag":"h2"}},{"content":"Restricciones y Índices","children":[{"content":"Restricciones (Constraints)","children":[{"content":"PRIMARY KEY, FOREIGN KEY","children":[]},{"content":"UNIQUE, NOT NULL, CHECK","children":[]}],"payload":{"tag":"li"}},{"content":"Índices","children":[{"content":"Mejoran el rendimiento de consultas","children":[]},{"content":"CREATE INDEX idx_nombre ON alumnos(nombre);","children":[]}],"payload":{"tag":"li"}}],"payload":{"tag":"h2"}}],"payload":{"tag":"h1"}})</script>
+</body>
+</html>
