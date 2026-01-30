@@ -15,7 +15,10 @@
       --accent: #0d6efd;
       --menu-bg: #f1f3f5;
       --menu-hover: #e9ecef;
-      --menu-width: 240px;
+      --menu-width: 280px;
+      --submenu-indent: 20px;
+      --subsubmenu-indent: 40px;
+      --transition-speed: 0.3s;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -27,6 +30,7 @@
         --accent: #4dabf7;
         --menu-bg: #252525;
         --menu-hover: #333333;
+        --menu-width: 280px;
       }
     }
 
@@ -34,7 +38,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     }
 
     body {
@@ -42,39 +46,46 @@
       color: var(--text-primary);
       display: flex;
       min-height: 100vh;
+      overflow-x: hidden;
     }
-
 
     .toggle-btn {
       position: fixed;
       top: 16px;
       left: 16px;
       z-index: 1000;
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       background: var(--accent);
       color: white;
       border: none;
-      border-radius: 6px;
-      font-size: 20px;
+      border-radius: 8px;
+      font-size: 24px;
       cursor: pointer;
       display: none;
       align-items: center;
       justify-content: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      transition: all var(--transition-speed);
     }
 
     .toggle-btn:hover {
       background: #0b5ed7;
+      transform: scale(1.05);
+    }
+
+    .toggle-btn:active {
+      transform: scale(0.95);
     }
 
     /* Menú lateral */
     nav {
       width: var(--menu-width);
       background: var(--menu-bg);
-      padding: 24px 16px;
+      padding: 24px 16px 24px 20px;
       border-right: 1px solid var(--border-color);
       overflow-y: auto;
-      transition: left 0.3s ease;
+      transition: left var(--transition-speed) ease, transform var(--transition-speed) ease;
       z-index: 999;
       position: fixed;
       top: 0;
@@ -82,15 +93,19 @@
       bottom: 0;
       display: flex;
       flex-direction: column;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     }
 
     nav h1 {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: var(--text-primary);
-      margin: 0 0 24px 0;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-color);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin: 0 0 20px 0;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     nav ul {
@@ -98,75 +113,150 @@
       flex: 1;
     }
 
-    nav li {
-      margin-bottom: 12px;
+    nav > ul {
+      padding-left: 8px;
     }
 
-    /* Elemento padre (categoría) */
-    .category {
-      padding: 10px 16px;
+    nav li {
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    /* Elemento padre (categoría principal) */
+    .main-category {
+      padding: 14px 16px 14px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 1.15rem;
+      transition: all var(--transition-speed);
+      position: relative;
+      margin-top: 6px;
+    }
+
+    .main-category:hover {
+      background: var(--menu-hover);
+      transform: translateX(4px);
+    }
+
+    .main-category.active {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .main-category::after {
+      content: '▼';
+      font-size: 0.75rem;
+      position: absolute;
+      right: 16px;
+      transition: transform var(--transition-speed);
+      font-weight: normal;
+    }
+
+    .main-category:not(.expanded)::after {
+      transform: rotate(-90deg);
+    }
+
+    /* Subcategorías (Base de Datos, Java, etc.) */
+    .subcategory {
+      padding: 10px 16px 10px 40px;
       border-radius: 6px;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 12px;
       color: var(--text-primary);
-      transition: background 0.2s;
+      font-weight: 500;
+      transition: all var(--transition-speed);
+      position: relative;
+      margin: 4px 0;
     }
 
-    .category:hover {
+    .subcategory:hover {
       background: var(--menu-hover);
+      transform: translateX(4px);
     }
 
-    .category.active {
-      background: var(--accent);
-      color: white;
+    .subcategory.active {
+      background: rgba(13, 110, 253, 0.15);
+      color: var(--accent);
+      border-left: 3px solid var(--accent);
     }
 
-    .category::after {
-      content: '▶';
-      font-size: 0.8rem;
-      transition: transform 0.2s;
+    .subcategory::after {
+      content: '►';
+      font-size: 0.7rem;
+      position: absolute;
+      right: 16px;
+      transition: transform var(--transition-speed);
+      font-weight: normal;
     }
 
-    .category.expanded::after {
+    .subcategory.expanded::after {
       transform: rotate(90deg);
     }
 
-    /* Submenú (mapas hijos) */
-    .submenu {
+    /* Submenú (temas hijos) */
+    .submenu, .subsubmenu {
       display: none;
-      margin-left: 20px;
-      margin-top: 8px;
+      margin-top: 6px;
       padding-left: 0;
+      overflow: hidden;
+      transition: max-height var(--transition-speed) ease, opacity var(--transition-speed);
+      max-height: 0;
+      opacity: 0.8;
     }
 
-    .submenu.show {
+    .submenu.show, .subsubmenu.show {
       display: block;
+      max-height: 500px;
+      opacity: 1;
     }
 
-    .submenu li {
-      margin-bottom: 8px;
+    /* Temas específicos */
+    .subsubmenu li {
+      margin-bottom: 4px;
     }
 
-    .submenu a {
+    .subsubmenu a {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 8px 16px;
+      gap: 10px;
+      padding: 8px 16px 8px 65px;
       text-decoration: none;
       color: var(--text-primary);
       border-radius: 6px;
-      transition: background 0.2s;
+      transition: all var(--transition-speed);
+      font-size: 0.95rem;
+      position: relative;
     }
 
-    .submenu a:hover {
+    .subsubmenu a::before {
+      content: "•";
+      position: absolute;
+      left: 50px;
+      font-size: 1.4rem;
+      color: var(--accent);
+      line-height: 0.6;
+    }
+
+    .subsubmenu a:hover {
       background: var(--menu-hover);
+      transform: translateX(4px);
+      color: var(--accent);
     }
 
-    .submenu a.active {
-      background: var(--accent);
-      color: white;
+    .subsubmenu a.active {
+      background: rgba(13, 110, 253, 0.15);
+      color: var(--accent);
+      border-left: 3px solid var(--accent);
+      font-weight: 500;
+      transform: translateX(4px);
     }
 
     /* Área de contenido principal */
@@ -175,44 +265,95 @@
       display: flex;
       flex-direction: column;
       margin-left: var(--menu-width);
-      transition: margin-left 0.3s ease;
+      transition: margin-left var(--transition-speed) ease;
     }
 
     header {
-      padding: 16px 24px;
+      padding: 20px 32px;
       border-bottom: 1px solid var(--border-color);
-      font-size: 1.2rem;
-      font-weight: 600;
+      font-size: 1.6rem;
+      font-weight: 700;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
+      background: var(--bg-secondary);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    header::before {
+      content: "📄";
+      font-size: 1.8rem;
     }
 
     .map-container {
       flex: 1;
       background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .placeholder-content {
+      text-align: center;
+      max-width: 800px;
+      padding: 40px;
+      background: var(--bg-primary);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 1px solid var(--border-color);
+    }
+
+    .placeholder-content h2 {
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      color: var(--accent);
+    }
+
+    .placeholder-content p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      margin-bottom: 25px;
+      color: var(--text-primary);
+      opacity: 0.9;
+    }
+
+    .placeholder-content .preview {
+      background: var(--menu-bg);
+      border-radius: 12px;
+      padding: 25px;
+      margin-top: 20px;
+      text-align: left;
+      font-family: monospace;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      border-left: 4px solid var(--accent);
     }
 
     iframe {
       width: 100%;
       height: 100%;
       border: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
     /* Estilos para dispositivos móviles */
     @media (max-width: 768px) {
       .toggle-btn {
         display: flex;
-        top: 50%;
-        transform: translateY(-50%);
       }
 
       nav {
-        left: -100%;
+        left: calc(-100% + 60px);
+        width: 85%;
+        max-width: 320px;
+        box-shadow: 4px 0 15px rgba(0,0,0,0.2);
       }
 
       nav.expanded {
         left: 0;
+        transform: translateX(0);
       }
 
       main {
@@ -220,39 +361,176 @@
       }
 
       header {
-        padding-left: 60px;
+        padding-left: 24px;
+        font-size: 1.4rem;
+      }
+
+      header::before {
+        font-size: 1.5rem;
       }
     }
+
+    /* Animaciones */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .map-container {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    /* Badge para indicar nueva sección */
+    .new-badge {
+      background: #ff6b6b;
+      color: white;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: 8px;
+      font-weight: bold;
+    }
+
+    /* Sección de Videojuegos con iconos */
+    .subcategory[data-subcategory="zelda"]::before,
+    .subcategory[data-subcategory="monsterhunter"]::before,
+    .subcategory[data-subcategory="residentevil"]::before,
+    .subcategory[data-subcategory="littlenightmares"]::before {
+      font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
+      position: absolute;
+      left: 22px;
+      font-size: 1.2rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    .subcategory[data-subcategory="zelda"]::before { content: "⚔️"; }
+    .subcategory[data-subcategory="monsterhunter"]::before { content: "🐉"; }
+    .subcategory[data-subcategory="residentevil"]::before { content: "🧟"; }
+    .subcategory[data-subcategory="littlenightmares"]::before { content: "👧"; }
+
+    /* Sección DAM con iconos */
+    .subcategory[data-subcategory="basededatos"]::before { content: "🗃️"; position: absolute; left: 22px; font-size: 1.2rem; }
+    .subcategory[data-subcategory="java"]::before { content: "☕"; position: absolute; left: 22px; font-size: 1.2rem; }
+    .subcategory[data-subcategory="entornos"]::before { content: "💻"; position: absolute; left: 22px; font-size: 1.2rem; }
+    .subcategory[data-subcategory="redes"]::before { content: "🌐"; position: absolute; left: 22px; font-size: 1.2rem; }
   </style>
 </head>
 <body>
-
- 
   <button class="toggle-btn" id="toggle-menu">☰</button>
 
- 
   <nav id="sidebar">
-    <h1>🗺️ Mapas</h1>
+    <h1>🗺️ Mapas Interactivos</h1>
     <ul>
-      <!-- Categoría Zelda -->
+      <!-- Sección DAM -->
       <li>
-        <div class="category active" data-category="zelda">
-          <span>Zelda</span>
+        <div class="main-category expanded active" data-category="dam">
+          <span>DAM</span>
         </div>
         <ul class="submenu show">
-          <li><a href="#" class="map-link" data-src="Videojuegos/Zelda/CronologiaZelda.html"><span>Cronología de Zelda</span></a></li>
+          <!-- Base de Datos -->
+          <li>
+            <div class="subcategory expanded active" data-subcategory="basededatos">
+              <span>Base de Datos</span>
+            </div>
+            <ul class="subsubmenu show">
+              <li><a href="#" class="map-link active" data-src="placeholder"><span>Tema 1: Introducción a Bases de Datos</span></a></li>
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Tema 2: Modelo Relacional</span></a></li>
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Tema 3: SQL Básico</span></a></li>
+            </ul>
+          </li>
+          
+          <!-- Java -->
+          <li>
+            <div class="subcategory" data-subcategory="java">
+              <span>Java</span>
+            </div>
+            <ul class="subsubmenu">
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Tema 1: Fundamentos de Java</span></a></li>
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Tema 2: Programación Orientada a Objetos</span></a></li>
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Tema 3: Excepciones y Colecciones</span></a></li>
+            </ul>
+          </li>
+          
+          <!-- Entornos de Desarrollo -->
+          <li>
+            <div class="subcategory" data-subcategory="entornos">
+              <span>Entornos de Desarrollo</span>
+            </div>
+            <ul class="subsubmenu">
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Tema 1: Configuración de Entornos</span></a></li>
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Tema 2: Herramientas de Desarrollo</span></a></li>
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Tema 3: Control de Versiones</span></a></li>
+            </ul>
+          </li>
+          
+          <!-- Redes -->
+          <li>
+            <div class="subcategory" data-subcategory="redes">
+              <span>Redes</span>
+            </div>
+            <ul class="subsubmenu">
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Tema 1: Fundamentos de Redes</span></a></li>
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Tema 2: Protocolos de Comunicación</span></a></li>
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Tema 3: Seguridad en Redes</span></a></li>
+            </ul>
+          </li>
         </ul>
       </li>
-
-      <!-- Categoría Monster Hunter -->
+      
+      <!-- Sección Videojuegos -->
       <li>
-        <div class="category" data-category="monsterhunter">
-          <span>Monster Hunter</span>
+        <div class="main-category" data-category="videojuegos">
+          <span>Videojuegos <span class="new-badge">NUEVO</span></span>
         </div>
         <ul class="submenu">
-          <li><a href="#" class="map-link" data-src="Videojuegos/MonsterHunter/FranquiciaMonsterHunter.html"><span>Franquicia Monster Hunter</span></a></li>
-          <li><a href="#" class="map-link" data-src="Videojuegos/MonsterHunter/MonstruosMonsterHunter.html"><span>Monstruos Monster Hunter</span></a></li>
-          <li><a href="#" class="map-link" data-src="Videojuegos/MonsterHunter/ColaboracionesMonsterHunter.html"><span>Colaboraciones Monster Hunter</span></a></li>
+          <!-- Zelda -->
+          <li>
+            <div class="subcategory" data-subcategory="zelda">
+              <span>Zelda</span>
+            </div>
+            <ul class="subsubmenu">
+              <li><a href="#" class="map-link" data-src="Videojuegos/Zelda/CronologiaZelda.html"><span>Cronología de Zelda</span></a></li>
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Mapa del Reino de Hyrule</span></a></li>
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Línea Temporal Completa</span></a></li>
+            </ul>
+          </li>
+          
+          <!-- Monster Hunter -->
+          <li>
+            <div class="subcategory" data-subcategory="monsterhunter">
+              <span>Monster Hunter</span>
+            </div>
+            <ul class="subsubmenu">
+              <li><a href="#" class="map-link" data-src="Videojuegos/MonsterHunter/FranquiciaMonsterHunter.html"><span>Franquicia Monster Hunter</span></a></li>
+              <li><a href="#" class="map-link" data-src="Videojuegos/MonsterHunter/MonstruosMonsterHunter.html"><span>Monstruos Monster Hunter</span></a></li>
+              <li><a href="#" class="map-link" data-src="Videojuegos/MonsterHunter/ColaboracionesMonsterHunter.html"><span>Colaboraciones Monster Hunter</span></a></li>
+            </ul>
+          </li>
+          
+          <!-- Resident Evil -->
+          <li>
+            <div class="subcategory" data-subcategory="residentevil">
+              <span>Resident Evil</span>
+            </div>
+            <ul class="subsubmenu">
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Cronología de Resident Evil</span></a></li>
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Mapa de Raccoon City</span></a></li>
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Organizaciones y Personajes</span></a></li>
+            </ul>
+          </li>
+          
+          <!-- Little Nightmares -->
+          <li>
+            <div class="subcategory" data-subcategory="littlenightmares">
+              <span>Little Nightmares</span>
+            </div>
+            <ul class="subsubmenu">
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Mapa del Barco (The Maw)</span></a></li>
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Guía de Secretos y Coleccionables</span></a></li>
+              <li><a href="#" class="map-link" data-src="placeholder"><span>Análisis de la Historia</span></a></li>
+            </ul>
+          </li>
         </ul>
       </li>
     </ul>
@@ -260,108 +538,182 @@
 
   <!-- Contenido principal -->
   <main id="main-content">
-    <header id="map-title">Cronología de Zelda</header>
+    <header id="map-title">Tema 1: Introducción a Bases de Datos</header>
     <div class="map-container">
-      <iframe id="map-frame" src="Videojuegos/Zelda/CronologiaZelda.html" title="Mapa de Zelda"></iframe>
+      <div class="placeholder-content">
+        <h2>Contenido de la Asignatura</h2>
+        <p>Este es un ejemplo del contenido que se mostraría al seleccionar un tema específico. En una implementación real, aquí se cargaría un mapa interactivo o material educativo relacionado con el tema seleccionado.</p>
+        <p>La estructura está organizada para facilitar el estudio de los módulos del ciclo formativo de Desarrollo de Aplicaciones Multiplataforma (DAM), así como para explorar mapas interactivos de videojuegos populares.</p>
+        <div class="preview">
+          <strong>Ejemplo de estructura de base de datos:</strong><br>
+          CREATE TABLE alumnos (<br>
+          &nbsp;&nbsp;id INT PRIMARY KEY AUTO_INCREMENT,<br>
+          &nbsp;&nbsp;nombre VARCHAR(100) NOT NULL,<br>
+          &nbsp;&nbsp;email VARCHAR(100) UNIQUE,<br>
+          &nbsp;&nbsp;fecha_registro DATE<br>
+          );
+        </div>
+      </div>
     </div>
   </main>
 
   <script>
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('main-content');
-    const toggleBtn = document.getElementById('toggle-menu');
-    const mapLinks = document.querySelectorAll('.map-link');
-    const categories = document.querySelectorAll('.category');
+    document.addEventListener('DOMContentLoaded', () => {
+      const sidebar = document.getElementById('sidebar');
+      const mainContent = document.getElementById('main-content');
+      const toggleBtn = document.getElementById('toggle-menu');
+      const mapLinks = document.querySelectorAll('.map-link');
+      const mainCategories = document.querySelectorAll('.main-category');
+      const subCategories = document.querySelectorAll('.subcategory');
 
-    // Alternar menú
-    function toggleMenu() {
-      sidebar.classList.toggle('expanded');
-      if (sidebar.classList.contains('expanded')) {
-        toggleBtn.style.display = 'none';
-      } else {
-        toggleBtn.style.display = 'flex';
-      }
-    }
+      // Alternar menú en móvil
+      toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('expanded');
+        toggleBtn.textContent = sidebar.classList.contains('expanded') ? '✕' : '☰';
+      });
 
-    toggleBtn.addEventListener('click', toggleMenu);
+      // Cerrar menú al hacer clic en el contenido principal (móvil)
+      mainContent.addEventListener('click', () => {
+        if (window.innerWidth <= 768 && sidebar.classList.contains('expanded')) {
+          sidebar.classList.remove('expanded');
+          toggleBtn.textContent = '☰';
+        }
+      });
 
-    // Cerrar menú al hacer clic en el mapa (solo en móvil)
-    mainContent.addEventListener('click', function() {
-      if (window.innerWidth <= 768 && sidebar.classList.contains('expanded')) {
+      // Manejo de categorías principales (DAM, Videojuegos)
+      mainCategories.forEach(category => {
+        category.addEventListener('click', () => {
+          const isExpanded = category.classList.contains('expanded');
+          const submenu = category.nextElementSibling;
+          
+          // Colapsar todas las categorías principales
+          mainCategories.forEach(cat => {
+            cat.classList.remove('expanded');
+            cat.nextElementSibling.classList.remove('show');
+          });
+          
+          // Colapsar todas las subcategorías
+          subCategories.forEach(sub => {
+            sub.classList.remove('expanded');
+            if (sub.nextElementSibling) sub.nextElementSibling.classList.remove('show');
+          });
+          
+          // Expandir/cerrar la categoría actual
+          if (!isExpanded) {
+            category.classList.add('expanded');
+            submenu.classList.add('show');
+          }
+          
+          // Actualizar estado activo
+          mainCategories.forEach(cat => cat.classList.remove('active'));
+          category.classList.add('active');
+        });
+      });
+
+      // Manejo de subcategorías (Base de Datos, Java, Zelda, etc.)
+      subCategories.forEach(subcategory => {
+        subcategory.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isExpanded = subcategory.classList.contains('expanded');
+          const subsubmenu = subcategory.nextElementSibling;
+          
+          // Colapsar otras subcategorías dentro de la misma categoría principal
+          const parentCategory = subcategory.closest('ul.submenu');
+          if (parentCategory) {
+            parentCategory.querySelectorAll('.subcategory').forEach(sub => {
+              if (sub !== subcategory) {
+                sub.classList.remove('expanded');
+                if (sub.nextElementSibling) sub.nextElementSibling.classList.remove('show');
+              }
+            });
+          }
+          
+          // Toggle subcategoría actual
+          subcategory.classList.toggle('expanded', !isExpanded);
+          if (subsubmenu) {
+            subsubmenu.classList.toggle('show', !isExpanded);
+          }
+          
+          // Actualizar estado activo
+          subCategories.forEach(sub => sub.classList.remove('active'));
+          subcategory.classList.add('active');
+          
+          // Activar la categoría principal correspondiente
+          const mainCategory = subcategory.closest('li').querySelector('.main-category');
+          if (mainCategory) {
+            mainCategories.forEach(cat => cat.classList.remove('active'));
+            mainCategory.classList.add('active');
+          }
+        });
+      });
+
+      // Manejo de enlaces a mapas/temas
+      mapLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          
+          // Actualizar estado activo de enlaces
+          mapLinks.forEach(el => el.classList.remove('active'));
+          link.classList.add('active');
+          
+          // Actualizar título
+          const title = link.textContent.trim();
+          document.getElementById('map-title').textContent = title;
+          
+          // Cargar contenido (simulado)
+          const mapContainer = document.querySelector('.map-container');
+          mapContainer.innerHTML = `
+            <div class="placeholder-content">
+              <h2>${title}</h2>
+              <p>Contenido educativo interactivo para <strong>${title}</strong>.</p>
+              <p>En una implementación real, aquí se cargaría un mapa interactivo, diagrama o material educativo específico para este tema.</p>
+              <div class="preview">
+                <strong>Estructura del contenido:</strong><br>
+                • Introducción teórica<br>
+                • Ejemplos prácticos<br>
+                • Ejercicios interactivos<br>
+                • Recursos adicionales
+              </div>
+            </div>
+          `;
+          
+          // Cerrar menú en móvil tras seleccionar
+          if (window.innerWidth <= 768) {
+            sidebar.classList.remove('expanded');
+            toggleBtn.textContent = '☰';
+          }
+          
+          // Animación de entrada
+          mapContainer.style.opacity = 0;
+          mapContainer.style.transform = 'translateY(10px)';
+          setTimeout(() => {
+            mapContainer.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            mapContainer.style.opacity = 1;
+            mapContainer.style.transform = 'translateY(0)';
+          }, 10);
+        });
+      });
+
+      // Inicialización en móviles
+      if (window.innerWidth <= 768) {
         sidebar.classList.remove('expanded');
-        toggleBtn.style.display = 'flex';
-      }
-    });
-
-   
-    categories.forEach(category => {
-      category.addEventListener('click', function() {
-        const submenu = this.nextElementSibling;
-        const isExpanded = this.classList.contains('expanded');
-
-        categories.forEach(cat => {
+        mainCategories.forEach(cat => {
           cat.classList.remove('expanded');
           cat.nextElementSibling.classList.remove('show');
         });
-
-        if (!isExpanded) {
-          this.classList.add('expanded');
-          submenu.classList.add('show');
-        }
-      });
-    });
-
-    // Manejo de enlaces a mapas
-    mapLinks.forEach(link => {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-
-        mapLinks.forEach(el => el.classList.remove('active'));
-        this.classList.add('active');
-
-        categories.forEach(cat => cat.classList.remove('active'));
-        const parentCategory = this.closest('li').querySelector('.category');
-        if (parentCategory) {
-          parentCategory.classList.add('active');
-        }
-
-        const src = this.getAttribute('data-src');
-        const title = this.textContent.trim();
-        const freshSrc = src + '?_=' + Date.now();
-        document.getElementById('map-frame').src = freshSrc;
-        document.getElementById('map-title').textContent = title;
-
-        // Cerrar menú en móvil tras seleccionar
-        if (window.innerWidth <= 768) {
+        toggleBtn.style.display = 'flex';
+      }
+      
+      // Ajuste al redimensionar ventana
+      window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
           sidebar.classList.remove('expanded');
+          toggleBtn.style.display = 'none';
+        } else {
           toggleBtn.style.display = 'flex';
         }
       });
     });
-
-    // Inicialización en móviles
-    if (window.innerWidth <= 768) {
-      sidebar.classList.remove('expanded');
-    }
   </script>
-
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
