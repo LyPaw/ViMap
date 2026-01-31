@@ -8,4 +8,4 @@ You may share the material with attribution, but you may not use it commercially
 Full license text: https://creativecommons.org/licenses/by-nc-nd/4.0/
 
 Web:
-<a href="https://lypaw.github.io/Mapa_Visual_Qwen/" target="_blank">Mapa Visual interactivo</a>
+<a href="https://lypaw.github.io/ViMap/" target="_blank">ViMap</a>
