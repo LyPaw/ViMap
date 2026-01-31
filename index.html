@@ -13,23 +13,26 @@
         height: 100vh;
     }
 
-    /* Sidebar */
     .sidebar {
-        width: 260px;
+        width: 300px;
         background: #020617;
         border-right: 1px solid #1e293b;
         padding: 10px;
+        overflow-y: auto;
     }
 
-    .folder {
+    .folder, .subfolder {
         font-weight: bold;
         color: #cbd5e1;
         margin-top: 10px;
         cursor: pointer;
+        user-select: none;
     }
 
+    .subfolder { padding-left: 20px; font-size: 0.95em; }
+
     .file {
-        padding-left: 20px;
+        padding-left: 40px;
         cursor: pointer;
         color: #94a3b8;
         margin: 5px 0;
@@ -44,10 +47,20 @@
         padding: 2px 6px;
     }
 
-    /* Viewer */
+    .children {
+        display: none;
+    }
+
+    .folder.open > .children,
+    .subfolder.open > .children {
+        display: block;
+    }
+
+
     .viewer {
         flex: 1;
         padding: 20px;
+        overflow: auto;
     }
 
     pre {
@@ -58,7 +71,14 @@
         line-height: 1.6;
     }
 
-    /* Colores Java */
+    iframe {
+        width: 100%;
+        height: 80vh;
+        border: none;
+        border-radius: 10px;
+    }
+
+
     .keyword { color: #569cd6; font-weight: bold; }
     .class { color: #4ec9b0; font-weight: bold; }
     .string { color: #ce9178; }
@@ -83,20 +103,15 @@
 
 <script>
 const fileTree = {
-    Java: [
-        {
-            name: "Array_List.java",
-            url: "https://raw.githubusercontent.com/LyPaw/Mapa_Visual_Qwen/7b6a28803c8f9c605b9667dc6e093fde0c0d7289/DAM/Java/Array_List.java"
-        },
-        {
-            name: "Conjuntos.java",
-            url: "https://raw.githubusercontent.com/LyPaw/Mapa_Visual_Qwen/f6adf23ddd1bb4131322a256f696b81b24dd8dde/DAM/Java/Conjuntos.java"
-        },
-        {
-            name: "Mapas.java",
-            url: "https://raw.githubusercontent.com/LyPaw/Mapa_Visual_Qwen/b7aac9ea660f146c1ca0122b8fff4eeac1a88bf3/DAM/Java/Mapas.Java"
-        }
-    ]
+    Java: {
+        "Colecciones": [
+            { name: "ArrayList.java", url: "https://raw.github.com/LyPaw/Mapa_Visual_Qwen/2c933e0c543c9a55c242d2d9a39f187d546ba649/DAM/Java/Array_List.java" },
+            { name: "Conjuntos.java", url: "https://raw.github.com/LyPaw/Mapa_Visual_Qwen/2c933e0c543c9a55c242d2d9a39f187d546ba649/DAM/Java/Conjuntos.java" }
+            { name: "Mapas.java", url: "https://raw.github.com/LyPaw/Mapa_Visual_Qwen/2c933e0c543c9a55c242d2d9a39f187d546ba649/DAM/Java/Mapas.Java" }
+        ],
+        "Variables": [  
+        ],
+    }
 };
 
 const sidebar = document.getElementById("sidebar");
@@ -107,15 +122,51 @@ for (const lang in fileTree) {
     const folder = document.createElement("div");
     folder.className = "folder";
     folder.textContent = "📁 " + lang;
-    sidebar.appendChild(folder);
 
-    fileTree[lang].forEach(file => {
-        const fileEl = document.createElement("div");
-        fileEl.className = "file";
-        fileEl.textContent = "📄 " + file.name;
-        fileEl.onclick = () => loadFile(file, fileEl);
-        sidebar.appendChild(fileEl);
+    const childrenContainer = document.createElement("div");
+    childrenContainer.className = "children";
+
+    const topics = fileTree[lang];
+    for (const topic in topics) {
+        const subfolder = document.createElement("div");
+        subfolder.className = "subfolder";
+        subfolder.textContent = "📂 " + topic;
+
+        const subChildren = document.createElement("div");
+        subChildren.className = "children";
+
+        topics[topic].forEach(file => {
+            const fileEl = document.createElement("div");
+            fileEl.className = "file";
+            fileEl.textContent = "📄 " + file.name;
+            fileEl.onclick = () => loadFile(file, fileEl);
+            subChildren.appendChild(fileEl);
+        });
+
+        subfolder.appendChild(subChildren);
+
+
+        subfolder.addEventListener("click", e => {
+            e.stopPropagation();
+            subfolder.classList.toggle("open");
+        });
+
+        childrenContainer.appendChild(subfolder);
+    }
+
+    folder.appendChild(childrenContainer);
+
+
+    folder.addEventListener("click", () => {
+        folder.classList.toggle("open");
+
+        const subfolders = folder.querySelectorAll(".subfolder");
+        subfolders.forEach(sf => {
+            sf.classList.add("open");
+        });
     });
+
+    sidebar.appendChild(folder);
 }
 
 function loadFile(file, el) {
@@ -123,12 +174,16 @@ function loadFile(file, el) {
     el.classList.add("active");
 
     titleEl.textContent = file.name;
-    codeEl.textContent = "⏳ Cargando...";
+    codeEl.innerHTML = "⏳ Cargando…";
 
-    fetch(file.url)
-        .then(r => r.text())
-        .then(text => codeEl.innerHTML = highlightJava(text))
-        .catch(() => codeEl.textContent = "❌ Error al cargar archivo");
+    if (file.name.endsWith(".pdf")) {
+        codeEl.innerHTML = `<iframe src="${file.url}"></iframe>`;
+    } else {
+        fetch(file.url)
+            .then(r => r.text())
+            .then(text => codeEl.innerHTML = highlightJava(text))
+            .catch(() => codeEl.textContent = "❌ Error al cargar archivo");
+    }
 }
 
 function highlightJava(code) {
@@ -144,8 +199,3 @@ function highlightJava(code) {
 
 </body>
 </html>
-
-
-
-
-
