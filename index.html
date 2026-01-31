@@ -116,19 +116,19 @@ const fileTree = {
        "Colecciones": [
     { 
         "name": "Array_List.java",
-        "url": "https://raw.githubusercontent.com/LyPaw/ViMap/4292da45da77e88398d117b33fa7c736c195cba8/DAM/Java/Array_List.java"
+        "url": "https://raw.githubusercontent.com/LyPaw/ViMap/4292da45da77e88398d117b33fa7c736c195cba8/DAM/Java/Array_List.java  "
     },
     { 
         "name": "Conjuntos.java",
-        "url": "https://raw.githubusercontent.com/LyPaw/ViMap/4292da45da77e88398d117b33fa7c736c195cba8/DAM/Java/Conjuntos.java"
+        "url": "https://raw.githubusercontent.com/LyPaw/ViMap/4292da45da77e88398d117b33fa7c736c195cba8/DAM/Java/Conjuntos.java  "
     },
     { 
         "name": "Mapas.java",
-        "url": "https://raw.githubusercontent.com/LyPaw/ViMap/4292da45da77e88398d117b33fa7c736c195cba8/DAM/Java/Mapas.java"
+        "url": "https://raw.githubusercontent.com/LyPaw/ViMap/4292da45da77e88398d117b33fa7c736c195cba8/DAM/Java/Mapas.java  "
     },
     { 
         "name": "Arrays.pdf",
-        "url": "https://raw.githubusercontent.com/LyPaw/ViMap/5e959e7c71fad2fe9fe95ba49aa2879ec2deef53/DAM/Java/Arrays.pdf"
+        "url": "https://raw.githubusercontent.com/LyPaw/ViMap/5e959e7c71fad2fe9fe95ba49aa2879ec2deef53/DAM/Java/Arrays.pdf  "
     },
 ],
         "Variables": [  
@@ -229,7 +229,7 @@ function loadFile(file, el, parentFolder, parentSubfolder) {
 
     if (file.name.endsWith(".pdf")) {
         // Usar Google Docs Viewer para visualizar PDFs
-        const pdfViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(cleanUrl)}&embedded=true`;
+        const pdfViewerUrl = `https://docs.google.com/gview?url=  ${encodeURIComponent(cleanUrl)}&embedded=true`;
         codeEl.innerHTML = `<iframe class="pdf-viewer" src="${pdfViewerUrl}"></iframe>`;
     } else {
         fetch(cleanUrl)
@@ -249,119 +249,23 @@ function loadFile(file, el, parentFolder, parentSubfolder) {
     }
 }
 
-function highlightJava(code) {
-    // Primero escapamos el HTML para seguridad
-    code = code
+function escapeHTML(str) {
+    return str
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
-    
-    // Dividir el código en líneas para procesar cada una
-    const lines = code.split('\n');
-    const result = [];
-    
-    // Palabras clave de Java
-    const keywords = /\b(class|public|private|protected|static|void|new|return|if|else|for|while|do|switch|case|break|continue|int|double|float|boolean|char|String|Set|HashSet|Map|HashMap|List|ArrayList|import|package|extends|implements|interface|abstract|final|try|catch|finally|throw|throws|this|super|instanceof|true|false|null)\b/g;
-    
-    // Clases comunes (que empiezan con mayúscula)
-    const classes = /\b([A-Z][a-zA-Z0-9_]*)\b/g;
-    
-    // Números
-    const numbers = /\b(\d+\.?\d*)\b/g;
-    
-    for (let line of lines) {
-        // Saltar líneas vacías
-        if (line.trim() === '') {
-            result.push('');
-            continue;
-        }
-        
-        // Procesar la línea completa para detectar patrones
-        let processed = line;
-        
-        // 1. Detectar y procesar cadenas de texto (strings)
-        let stringParts = [];
-        let inString = false;
-        let currentString = '';
-        let quoteChar = '';
-        let buffer = '';
-        
-        for (let i = 0; i < processed.length; i++) {
-            const char = processed[i];
-            const nextChar = processed[i + 1] || '';
-            
-            if ((char === '"' || char === "'") && (i === 0 || processed[i - 1] !== '\\')) {
-                if (!inString) {
-                    // Inicio de string
-                    inString = true;
-                    quoteChar = char;
-                    if (buffer) stringParts.push({type: 'code', content: buffer});
-                    buffer = '';
-                    currentString = char;
-                } else if (char === quoteChar) {
-                    // Fin de string
-                    currentString += char;
-                    stringParts.push({type: 'string', content: currentString});
-                    currentString = '';
-                    inString = false;
-                    quoteChar = '';
-                } else {
-                    currentString += char;
-                }
-            } else if (inString) {
-                currentString += char;
-            } else {
-                buffer += char;
-            }
-        }
-        
-        if (buffer) stringParts.push({type: 'code', content: buffer});
-        
-        // 2. Procesar cada parte
-        let finalLine = '';
-        for (let part of stringParts) {
-            if (part.type === 'string') {
-                finalLine += `<span class="string">${part.content}</span>`;
-            } else {
-                // Procesar código (no string)
-                let codePart = part.content;
-                
-                // Detectar comentarios de una línea
-                const commentIndex = codePart.indexOf('//');
-                if (commentIndex !== -1) {
-                    const codeBefore = codePart.substring(0, commentIndex);
-                    const comment = codePart.substring(commentIndex);
-                    codePart = codeBefore + `<span class="comment">${comment}</span>`;
-                }
-                
-                // Reemplazar keywords
-                codePart = codePart.replace(keywords, match => {
-                    return `<span class="keyword">${match}</span>`;
-                });
-                
-                // Reemplazar números
-                codePart = codePart.replace(numbers, match => {
-                    return `<span class="number">${match}</span>`;
-                });
-                
-                // Reemplazar clases (solo si no son keywords)
-                codePart = codePart.replace(classes, match => {
-                    const lower = match.toLowerCase();
-                    const keywordList = ['class', 'public', 'private', 'protected', 'static', 'void', 'new', 'return', 'if', 'else', 'for', 'while', 'int', 'double', 'float', 'boolean', 'char', 'string', 'set', 'hashset', 'map', 'hashmap', 'list', 'arraylist', 'import', 'package', 'extends', 'implements', 'interface', 'abstract', 'final', 'try', 'catch', 'finally', 'throw', 'throws', 'this', 'super', 'instanceof', 'true', 'false', 'null'];
-                    if (keywordList.includes(lower)) {
-                        return match; // Ya fue procesado como keyword
-                    }
-                    return `<span class="class">${match}</span>`;
-                });
-                
-                finalLine += codePart;
-            }
-        }
-        
-        result.push(finalLine);
-    }
-    
-    return result.join('\n');
+}
+
+function escapeHTML(str) {
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+function highlightJava(code) {
+    // Solo escapar HTML, sin resaltar keywords, strings ni comentarios
+    return escapeHTML(code);
 }
 </script>
 
