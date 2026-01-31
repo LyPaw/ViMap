@@ -85,6 +85,14 @@
     .string { color: #ce9178; }
     .comment { color: #6a9955; font-style: italic; }
     .number { color: #b5cea8; }
+    
+    /* Estilo para el visor de PDF */
+    .pdf-viewer {
+        width: 100%;
+        height: 85vh;
+        border: none;
+        border-radius: 10px;
+    }
 </style>
 </head>
 
@@ -92,7 +100,7 @@
 
 <div class="sidebar">
     <div class="logo">
-        <img src="Logo/logo.svg" alt="Logo" />
+        <img src="Logo/logo.svg" alt="Logo" style="max-width: 100%; height: auto;" />
     </div>
     <div id="sidebar"></div>
 </div>
@@ -120,7 +128,7 @@ const fileTree = {
     },
     { 
         "name": "Arrays.pdf",
-        "url": "https://raw.github.com/LyPaw/ViMap/5e959e7c71fad2fe9fe95ba49aa2879ec2deef53/DAM/Java/Arrays.pdf"
+        "url": "https://raw.githubusercontent.com/LyPaw/ViMap/5e959e7c71fad2fe9fe95ba49aa2879ec2deef53/DAM/Java/Arrays.pdf"
     },
 ],
         "Variables": [  
@@ -132,10 +140,14 @@ const sidebar = document.getElementById("sidebar");
 const codeEl = document.getElementById("code");
 const titleEl = document.getElementById("title");
 
+// Mantener track de las carpetas abiertas
+const openFolders = new Set();
+
 for (const lang in fileTree) {
     const folder = document.createElement("div");
     folder.className = "folder";
     folder.textContent = "📁 " + lang;
+    folder.dataset.folder = lang;
 
     const childrenContainer = document.createElement("div");
     childrenContainer.className = "children";
@@ -145,6 +157,7 @@ for (const lang in fileTree) {
         const subfolder = document.createElement("div");
         subfolder.className = "subfolder";
         subfolder.textContent = "📂 " + topic;
+        subfolder.dataset.subfolder = topic;
 
         const subChildren = document.createElement("div");
         subChildren.className = "children";
@@ -153,50 +166,86 @@ for (const lang in fileTree) {
             const fileEl = document.createElement("div");
             fileEl.className = "file";
             fileEl.textContent = "📄 " + file.name;
-            fileEl.onclick = () => loadFile(file, fileEl);
+            fileEl.dataset.file = file.name;
+            fileEl.onclick = (e) => {
+                e.stopPropagation();
+                loadFile(file, fileEl, folder, subfolder);
+            };
             subChildren.appendChild(fileEl);
         });
 
         subfolder.appendChild(subChildren);
 
-
         subfolder.addEventListener("click", e => {
             e.stopPropagation();
             subfolder.classList.toggle("open");
+            if (subfolder.classList.contains("open")) {
+                openFolders.add(`${lang}-${topic}`);
+            } else {
+                openFolders.delete(`${lang}-${topic}`);
+            }
         });
+
+        // Restaurar estado si estaba abierto
+        if (openFolders.has(`${lang}-${topic}`)) {
+            subfolder.classList.add("open");
+        }
 
         childrenContainer.appendChild(subfolder);
     }
 
     folder.appendChild(childrenContainer);
 
-
-    folder.addEventListener("click", () => {
+    folder.addEventListener("click", (e) => {
+        e.stopPropagation();
         folder.classList.toggle("open");
-
+        
+        // Abrir/cerrar todos los subfolders
         const subfolders = folder.querySelectorAll(".subfolder");
-        subfolders.forEach(sf => {
-            sf.classList.add("open");
-        });
+        if (folder.classList.contains("open")) {
+            subfolders.forEach(sf => sf.classList.add("open"));
+        }
     });
 
     sidebar.appendChild(folder);
 }
 
-function loadFile(file, el) {
+function loadFile(file, el, parentFolder, parentSubfolder) {
+    // Mantener las carpetas abiertas
+    if (parentFolder && !parentFolder.classList.contains("open")) {
+        parentFolder.classList.add("open");
+    }
+    if (parentSubfolder && !parentSubfolder.classList.contains("open")) {
+        parentSubfolder.classList.add("open");
+    }
+
     document.querySelectorAll(".file").forEach(f => f.classList.remove("active"));
     el.classList.add("active");
 
     titleEl.textContent = file.name;
     codeEl.innerHTML = "⏳ Cargando…";
 
+    const cleanUrl = file.url.trim();
+
     if (file.name.endsWith(".pdf")) {
-        codeEl.innerHTML = `<iframe src="${file.url}"></iframe>`;
+        // Usar Google Docs Viewer para visualizar PDFs
+        const pdfViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(cleanUrl)}&embedded=true`;
+        codeEl.innerHTML = `<iframe class="pdf-viewer" src="${pdfViewerUrl}"></iframe>`;
     } else {
-        fetch(file.url)
-            .then(r => r.text())
-            .then(text => codeEl.innerHTML = highlightJava(text))
-            .catch(() => codeEl.textContent = "❌ Error al cargar archivo");
+        fetch(cleanUrl)
+            .then(r => {
+                if (!r.ok) throw new Error('Archivo no encontrado');
+                return r.text();
+            })
+            .then(text => {
+                codeEl.innerHTML = highlightJava(text);
+                // Scroll automático al principio
+                codeEl.scrollTop = 0;
+            })
+            .catch(err => {
+                console.error("Error:", err);
+                codeEl.innerHTML = `<span style="color: #f87171;">❌ Error al cargar archivo. Verifica la URL o el archivo puede no existir.</span>`;
+            });
     }
 }
 
@@ -213,52 +262,26 @@ function highlightJava(code) {
     return code
         // STRINGS primero (evita que // dentro de strings se trate como comentario)
         .replace(/("(?:[^"\\]|\\.)*")/g, "<span class='string'>$1</span>")
-        // COMENTARIOS
+        // COMENTARIOS de una línea
         .replace(/(\/\/.*)/g, "<span class='comment'>$1</span>")
-        // KEYWORDS (con \B para evitar coincidir dentro de etiquetas HTML como <span class='...'>)
-        .replace(/\B\b(class|public|private|protected|static|void|new|return|if|else|for|while|int|double|float|boolean|char|String|Set|HashSet|Map|HashMap)\b\B/g,
+        // COMENTARIOS de bloque
+        .replace(/(\/\*[\s\S]*?\*\/)/g, "<span class='comment'>$1</span>")
+        // KEYWORDS
+        .replace(/\b(class|public|private|protected|static|void|new|return|if|else|for|while|do|switch|case|break|continue|int|double|float|boolean|char|String|Set|HashSet|Map|HashMap|List|ArrayList|import|package|extends|implements|interface|abstract|final|try|catch|finally|throw|throws|this|super|instanceof|true|false|null)\b/g,
                  "<span class='keyword'>$1</span>")
-        // CLASES (solo si no son keywords ya resaltadas)
-        .replace(/\b([A-Z][a-zA-Z0-9_]*)\b/g, "<span class='class'>$1</span>")
         // NÚMEROS
-        .replace(/\b(\d+)\b/g, "<span class='number'>$1</span>");
-}
-
-function loadFile(file, el) {
-    document.querySelectorAll(".file").forEach(f => f.classList.remove("active"));
-    el.classList.add("active");
-
-    titleEl.textContent = file.name;
-    codeEl.innerHTML = "⏳ Cargando…";
-
-    const cleanUrl = file.url.trim(); // ¡ES CLAVE! Elimina espacios al final de la URL
-
-    if (file.name.endsWith(".pdf")) {
-        codeEl.innerHTML = `<iframe src="${cleanUrl}"></iframe>`;
-    } else {
-        fetch(cleanUrl)
-            .then(r => {
-                if (!r.ok) throw new Error('Archivo no encontrado');
-                return r.text();
-            })
-            .then(text => codeEl.innerHTML = highlightJava(text))
-            .catch(() => codeEl.textContent = "❌ Error al cargar archivo. Verifica la URL.");
-    }
+        .replace(/\b(\d+\.?\d*)\b/g, "<span class='number'>$1</span>")
+        // CLASES (solo si no son keywords ya resaltadas)
+        .replace(/(?<!['"])(\b[A-Z][a-zA-Z0-9_]*\b)(?!['"])/g, match => {
+            // Evitar resaltar keywords ya procesadas
+            const keywords = ['class', 'public', 'private', 'protected', 'static', 'void', 'new', 'return', 'if', 'else', 'for', 'while', 'int', 'double', 'float', 'boolean', 'char', 'String', 'Set', 'HashSet', 'Map', 'HashMap', 'List', 'ArrayList'];
+            if (keywords.includes(match.toLowerCase())) {
+                return match;
+            }
+            return `<span class='class'>${match}</span>`;
+        });
 }
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
