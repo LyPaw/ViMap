@@ -257,35 +257,62 @@ function escapeHTML(str) {
 }
 
 function highlightJava(code) {
-    // Primero escapamos HTML
+    // Escapar HTML primero para seguridad
     code = escapeHTML(code);
-
-    // Separar líneas para procesarlas (opcional, pero más seguro)
-    const lines = code.split('\n');
-    const result = [];
-
-    for (let line of lines) {
-        let processedLine = line;
-
-        // Resaltar comentarios de una línea (//) en verde
-        const commentIndex = processedLine.indexOf('//');
-        if (commentIndex !== -1) {
-            const codePart = processedLine.substring(0, commentIndex);
-            const commentPart = processedLine.substring(commentIndex);
-            processedLine = codePart + `<span style="color: green;">${commentPart}</span>`;
+    
+    // Array para almacenar las partes que necesitan protección
+    const protectedParts = [];
+    
+    // 1. Proteger strings (cadenas de texto)
+    code = code.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, match => {
+        protectedParts.push({type: 'string', content: match});
+        return `__STRING_${protectedParts.length - 1}__`;
+    });
+    
+    // 2. Proteger comentarios de una línea
+    code = code.replace(/\/\/.*/g, match => {
+        protectedParts.push({type: 'comment', content: match});
+        return `__COMMENT_${protectedParts.length - 1}__`;
+    });
+    
+    // 3. Proteger comentarios de bloque
+    code = code.replace(/\/\*[\s\S]*?\*\//g, match => {
+        protectedParts.push({type: 'comment', content: match});
+        return `__COMMENT_${protectedParts.length - 1}__`;
+    });
+    
+    // 4. Resaltar keywords
+    const keywords = /\b(class|public|private|protected|static|void|new|return|if|else|for|while|do|switch|case|break|continue|int|double|float|boolean|char|String|Set|HashSet|Map|HashMap|List|ArrayList|import|package|extends|implements|interface|abstract|final|try|catch|finally|throw|throws|this|super|instanceof|true|false|null|var|System|out|println|print|length|size|add|remove|get|put|contains|equals|toString)\b/g;
+    code = code.replace(keywords, '<span class="keyword">$&</span>');
+    
+    // 5. Resaltar números
+    code = code.replace(/\b(\d+\.?\d*([eE][+-]?\d+)?)\b/g, '<span class="number">$1</span>');
+    
+    // 6. Resaltar clases (nombres que empiezan con mayúscula)
+    const classRegex = /\b([A-Z][a-zA-Z0-9_]*)\b/g;
+    code = code.replace(classRegex, match => {
+        const lower = match.toLowerCase();
+        const keywordList = ['class', 'public', 'private', 'protected', 'static', 'void', 'new', 'return', 'if', 'else', 'for', 'while', 'int', 'double', 'float', 'boolean', 'char', 'string', 'set', 'hashset', 'map', 'hashmap', 'list', 'arraylist', 'import', 'package', 'extends', 'implements', 'interface', 'abstract', 'final', 'try', 'catch', 'finally', 'throw', 'throws', 'this', 'super', 'instanceof', 'true', 'false', 'null', 'var', 'system', 'out'];
+        if (keywordList.includes(lower)) {
+            return match; // Ya está resaltado como keyword
         }
-
-        // Resaltar variables en morado
-        // Consideramos "variable" cualquier identificador que comience con letra minúscula
-        processedLine = processedLine.replace(/\b([a-z][a-zA-Z0-9_]*)\b/g, `<span style="color: purple;">$1</span>`);
-
-        result.push(processedLine);
-    }
-
-    return result.join('\n');
+        return `<span class="class">${match}</span>`;
+    });
+    
+    // 7. Restaurar strings y comentarios protegidos
+    code = code.replace(/__STRING_(\d+)__/g, (_, index) => {
+        return `<span class="string">${protectedParts[index].content}</span>`;
+    });
+    
+    code = code.replace(/__COMMENT_(\d+)__/g, (_, index) => {
+        return `<span class="comment">${protectedParts[index].content}</span>`;
+    });
+    
+    return code;
 }
 </script>
 
 </body>
 </html>
+
 
