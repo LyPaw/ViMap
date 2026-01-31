@@ -414,6 +414,189 @@
     .subcategory[data-subcategory="java"]::before { content: "☕"; position: absolute; left: 22px; font-size: 1.2rem; }
     .subcategory[data-subcategory="entornos"]::before { content: "💻"; position: absolute; left: 22px; font-size: 1.2rem; }
     .subcategory[data-subcategory="redes"]::before { content: "🌐"; position: absolute; left: 22px; font-size: 1.2rem; }
+
+    /* Estilos para el editor de código tipo IntelliJ */
+    .code-editor-container {
+      width: 95%;
+      max-width: 1200px;
+      height: 90%;
+      background: #1e1e1e;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .editor-header {
+      background: #252525;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #3e3e3e;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 0.9rem;
+      color: #9cdcfe;
+    }
+
+    .editor-tabs {
+      display: flex;
+      background: #2d2d2d;
+      padding: 0 10px;
+      border-bottom: 1px solid #3e3e3e;
+    }
+
+    .editor-tab {
+      padding: 8px 15px;
+      background: #252525;
+      border: 1px solid #3e3e3e;
+      border-bottom: none;
+      border-radius: 4px 4px 0 0;
+      margin-right: 5px;
+      color: #d4d4d4;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .editor-tab.active {
+      background: #1e1e1e;
+      border-bottom: 1px solid #1e1e1e;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .editor-tab::before {
+      content: "•";
+      margin-right: 8px;
+      font-size: 1.2rem;
+    }
+
+    .editor-tab.active::before {
+      color: #4ec9b0;
+    }
+
+    .editor-toolbar {
+      display: flex;
+      padding: 8px 15px;
+      background: #252525;
+      border-bottom: 1px solid #3e3e3e;
+      font-size: 0.8rem;
+      color: #808080;
+    }
+
+    .editor-toolbar button {
+      background: none;
+      border: none;
+      color: #808080;
+      margin-right: 12px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    .editor-toolbar button:hover {
+      background: #3e3e3e;
+      color: #d4d4d4;
+    }
+
+    .editor-toolbar button.run {
+      background: #0d6efd;
+      color: white;
+      border-radius: 4px;
+    }
+
+    .editor-content {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .line-numbers {
+      background: #252525;
+      padding: 15px 0;
+      text-align: right;
+      color: #858585;
+      font-family: 'Fira Code', 'Courier New', monospace;
+      font-size: 0.9rem;
+      user-select: none;
+      border-right: 1px solid #3e3e3e;
+      min-width: 50px;
+    }
+
+    .line-numbers span {
+      display: block;
+      padding: 0 10px;
+      line-height: 1.5;
+    }
+
+    .code-area {
+      flex: 1;
+      padding: 15px;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      font-family: 'Fira Code', 'Courier New', monospace;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    /* Syntax highlighting */
+    .keyword { color: #569cd6; }
+    .string { color: #ce9178; }
+    .comment { color: #6a9955; }
+    .function { color: #dcdcaa; }
+    .class-name { color: #4ec9b0; }
+    .operator { color: #d4d4d4; }
+    .punctuation { color: #d4d4d4; }
+    .annotation { color: #c586c0; }
+    .system { color: #4ec9b0; }
+
+    .editor-footer {
+      background: #252525;
+      padding: 5px 15px;
+      font-size: 0.75rem;
+      color: #808080;
+      border-top: 1px solid #3e3e3e;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .execution-output {
+      background: #1e1e1e;
+      border-top: 1px solid #3e3e3e;
+      padding: 15px;
+      font-family: 'Fira Code', 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: #d4d4d4;
+      max-height: 30%;
+      overflow: auto;
+    }
+
+    .execution-output .output-title {
+      color: #569cd6;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+
+    .execution-output .output-title::before {
+      content: "▶";
+      margin-right: 8px;
+    }
+
+    .execution-output .output-line {
+      line-height: 1.5;
+    }
+
+    .execution-output .system-out {
+      color: #ce9178;
+    }
   </style>
 </head>
 <body>
@@ -424,10 +607,10 @@
     <ul>
       <!-- Sección DAM -->
       <li>
-        <div class="main-category  active" data-category="dam">
+        <div class="main-category" data-category="dam">
           <span>DAM</span>
         </div>
-        <ul class="submenu show">
+        <ul class="submenu">
           <!-- Base de Datos -->
           <li>
             <div class="subcategory" data-subcategory="basededatos">
@@ -443,7 +626,10 @@
               <span>Java</span>
             </div>
             <ul class="subsubmenu">
-              <li><a href="DAM/Java/Array_List.java" class="map-link" data-src="placeholder"><span>ArrayList</span></a></li>
+              <li><a href="#" class="map-link" data-topic="arraylist"><span>ArrayList</span></a></li>
+              <li><a href="#" class="map-link"><span>HashMap</span></a></li>
+              <li><a href="#" class="map-link"><span>Streams API</span></a></li>
+              <li><a href="#" class="map-link"><span>Excepciones</span></a></li>
             </ul>
           </li>
           
@@ -453,6 +639,9 @@
               <span>Entornos de Desarrollo</span>
             </div>
             <ul class="subsubmenu">
+              <li><a href="#" class="map-link"><span>IntelliJ IDEA</span></a></li>
+              <li><a href="#" class="map-link"><span>Eclipse</span></a></li>
+              <li><a href="#" class="map-link"><span>VS Code</span></a></li>
             </ul>
           </li>
           
@@ -462,6 +651,8 @@
               <span>Redes</span>
             </div>
             <ul class="subsubmenu">
+              <li><a href="#" class="map-link"><span>Modelo OSI</span></a></li>
+              <li><a href="#" class="map-link"><span>Protocolos TCP/IP</span></a></li>
             </ul>
           </li>
         </ul>
@@ -479,6 +670,9 @@
               <span>Zelda</span>
             </div>
             <ul class="subsubmenu">
+              <li><a href="#" class="map-link"><span>Armas y objetos</span></a></li>
+              <li><a href="#" class="map-link"><span>Mapa del reino</span></a></li>
+              <li><a href="#" class="map-link"><span>Misiones secundarias</span></a></li>
             </ul>
           </li>
           
@@ -488,6 +682,9 @@
               <span>Monster Hunter</span>
             </div>
             <ul class="subsubmenu">
+              <li><a href="#" class="map-link"><span>Armas y armaduras</span></a></li>
+              <li><a href="#" class="map-link"><span>Monstruos</span></a></li>
+              <li><a href="#" class="map-link"><span>Recetas de fabricación</span></a></li>
             </ul>
           </li>
           
@@ -497,6 +694,8 @@
               <span>Resident Evil</span>
             </div>
             <ul class="subsubmenu">
+              <li><a href="#" class="map-link"><span>Mapas de mansiones</span></a></li>
+              <li><a href="#" class="map-link"><span>Inventario y objetos</span></a></li>
             </ul>
           </li>
           
@@ -506,6 +705,8 @@
               <span>Little Nightmares</span>
             </div>
             <ul class="subsubmenu">
+              <li><a href="#" class="map-link"><span>Niveles y secretos</span></a></li>
+              <li><a href="#" class="map-link"><span>Coleccionables</span></a></li>
             </ul>
           </li>
         </ul>
@@ -513,7 +714,23 @@
     </ul>
   </nav>
 
-
+  <main id="main-content">
+    <header id="map-title">Mapas Interactivos</header>
+    <div class="map-container">
+      <div class="placeholder-content">
+        <h2>Bienvenido a Mapas Interactivos</h2>
+        <p>Selecciona un tema en el menú lateral para comenzar.</p>
+        <p>Explora contenido educativo interactivo organizado por categorías. Desde estructuras de datos en Java hasta mapas de tus videojuegos favoritos.</p>
+        <div class="preview">
+          <strong>Ejemplo de contenido:</strong><br>
+          • Mapas conceptuales<br>
+          • Diagramas interactivos<br>
+          • Ejemplos de código con sintaxis resaltada<br>
+          • Guías paso a paso
+        </div>
+      </div>
+    </div>
+  </main>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -523,6 +740,8 @@
       const mapLinks = document.querySelectorAll('.map-link');
       const mainCategories = document.querySelectorAll('.main-category');
       const subCategories = document.querySelectorAll('.subcategory');
+      const mapTitle = document.getElementById('map-title');
+      const mapContainer = document.querySelector('.map-container');
 
       // Alternar menú en móvil
       toggleBtn.addEventListener('click', () => {
@@ -565,6 +784,25 @@
           // Actualizar estado activo
           mainCategories.forEach(cat => cat.classList.remove('active'));
           category.classList.add('active');
+          
+          // Actualizar el título principal
+          mapTitle.textContent = category.textContent.trim();
+          
+          // Mostrar contenido inicial para la categoría
+          if (!isExpanded) {
+            mapContainer.innerHTML = `
+              <div class="placeholder-content">
+                <h2>${category.textContent.trim()}</h2>
+                <p>Selecciona una subcategoría en el menú para explorar temas específicos.</p>
+                <div class="preview">
+                  <strong>Contenido disponible:</strong><br>
+                  • ${category.nextElementSibling.querySelectorAll('.subcategory').length} subcategorías<br>
+                  • Múltiples temas educativos<br>
+                  • Ejemplos prácticos y recursos
+                </div>
+              </div>
+            `;
+          }
         });
       });
 
@@ -596,11 +834,23 @@
           subCategories.forEach(sub => sub.classList.remove('active'));
           subcategory.classList.add('active');
           
-          // Activar la categoría principal correspondiente
-          const mainCategory = subcategory.closest('li').querySelector('.main-category');
-          if (mainCategory) {
-            mainCategories.forEach(cat => cat.classList.remove('active'));
-            mainCategory.classList.add('active');
+          // Actualizar el título principal
+          mapTitle.textContent = subcategory.textContent.trim();
+          
+          // Mostrar contenido inicial para la subcategoría
+          if (!isExpanded) {
+            mapContainer.innerHTML = `
+              <div class="placeholder-content">
+                <h2>${subcategory.textContent.trim()}</h2>
+                <p>Selecciona un tema específico en el menú para ver contenido detallado.</p>
+                <div class="preview">
+                  <strong>Temas disponibles:</strong><br>
+                  • ${subsubmenu.querySelectorAll('li').length} temas educativos<br>
+                  • Ejemplos prácticos<br>
+                  • Ejercicios interactivos
+                </div>
+              </div>
+            `;
           }
         });
       });
@@ -616,24 +866,130 @@
           
           // Actualizar título
           const title = link.textContent.trim();
-          document.getElementById('map-title').textContent = title;
+          mapTitle.textContent = title;
           
-          // Cargar contenido (simulado)
-          const mapContainer = document.querySelector('.map-container');
-          mapContainer.innerHTML = `
-            <div class="placeholder-content">
-              <h2>${title}</h2>
-              <p>Contenido educativo interactivo para <strong>${title}</strong>.</p>
-              <p>En una implementación real, aquí se cargaría un mapa interactivo, diagrama o material educativo específico para este tema.</p>
-              <div class="preview">
-                <strong>Estructura del contenido:</strong><br>
-                • Introducción teórica<br>
-                • Ejemplos prácticos<br>
-                • Ejercicios interactivos<br>
-                • Recursos adicionales
+          // Verificar si es el tema de ArrayList para mostrar el editor de código
+          if (link.dataset.topic === 'arraylist') {
+            // Mostrar editor de código estilo IntelliJ
+            mapContainer.innerHTML = `
+              <div class="code-editor-container">
+                <div class="editor-header">
+                  DAM/Java/Array_List.java
+                </div>
+                <div class="editor-tabs">
+                  <div class="editor-tab active">Array_List.java</div>
+                  <div class="editor-tab">Main.java</div>
+                  <div class="editor-tab">README.md</div>
+                </div>
+                <div class="editor-toolbar">
+                  <button title="Run"><i>▶</i> Run</button>
+                  <button title="Debug">🐞 Debug</button>
+                  <button class="run" title="Run ArrayListExample">Run ArrayListExample</button>
+                  <span style="margin-left: auto">Ln 15, Col 32</span>
+                  <span>UTF-8</span>
+                  <span>LF</span>
+                </div>
+                <div class="editor-content">
+                  <div class="line-numbers">
+                    <span>1</span>
+                    <span>2</span>
+                    <span>3</span>
+                    <span>4</span>
+                    <span>5</span>
+                    <span>6</span>
+                    <span>7</span>
+                    <span>8</span>
+                    <span>9</span>
+                    <span>10</span>
+                    <span>11</span>
+                    <span>12</span>
+                    <span>13</span>
+                    <span>14</span>
+                    <span>15</span>
+                    <span>16</span>
+                    <span>17</span>
+                    <span>18</span>
+                    <span>19</span>
+                    <span>20</span>
+                    <span>21</span>
+                    <span>22</span>
+                    <span>23</span>
+                    <span>24</span>
+                    <span>25</span>
+                    <span>26</span>
+                    <span>27</span>
+                  </div>
+                  <div class="code-area">
+                    <span class="keyword">import</span> java.util.ArrayList;<br>
+                    <span class="keyword">import</span> java.util.List;<br>
+                    <br>
+                    <span class="keyword">public</span> <span class="keyword">class</span> <span class="class-name">ArrayListExample</span> {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="function">main</span>(<span class="class-name">String</span>[] args) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Crear un ArrayList de Strings</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;<span class="class-name">String</span>&gt; nombres = <span class="keyword">new</span> <span class="class-name">ArrayList</span>&lt;&gt;();<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Añadir elementos al ArrayList</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nombres.<span class="function">add</span>(<span class="string">"Ana"</span>);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nombres.<span class="function">add</span>(<span class="string">"Luis"</span>);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nombres.<span class="function">add</span>(<span class="string">"Carlos"</span>);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nombres.<span class="function">add</span>(<span class="string">"María"</span>);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nombres.<span class="function">add</span>(<span class="string">"Javier"</span>);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Mostrar la lista completa</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="system">System</span>.<span class="function">out</span>.<span class="function">println</span>(<span class="string">"Lista original: "</span> + nombres);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Eliminar un elemento por valor</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nombres.<span class="function">remove</span>(<span class="string">"Luis"</span>);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="system">System</span>.<span class="function">out</span>.<span class="function">println</span>(<span class="string">"Después de eliminar 'Luis': "</span> + nombres);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Eliminar un elemento por índice</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nombres.<span class="function">remove</span>(<span class="number">2</span>);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="system">System</span>.<span class="function">out</span>.<span class="function">println</span>(<span class="string">"Después de eliminar el elemento en la posición 2: "</span> + nombres);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Obtener un elemento por índice</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="class-name">String</span> primero = nombres.<span class="function">get</span>(<span class="number">0</span>);<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="system">System</span>.<span class="function">out</span>.<span class="function">println</span>(<span class="string">"Primer elemento: "</span> + primero);<br>
+                    <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Tamaño actual de la lista</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="system">System</span>.<span class="function">out</span>.<span class="function">println</span>(<span class="string">"Número de elementos: "</span> + nombres.<span class="function">size</span>());<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    }
+                  </div>
+                </div>
+                <div class="execution-output">
+                  <div class="output-title">Run ArrayListExample</div>
+                  <div class="output-line system-out">Lista original: [Ana, Luis, Carlos, María, Javier]</div>
+                  <div class="output-line system-out">Después de eliminar 'Luis': [Ana, Carlos, María, Javier]</div>
+                  <div class="output-line system-out">Después de eliminar el elemento en la posición 2: [Ana, Carlos, Javier]</div>
+                  <div class="output-line system-out">Primer elemento: Ana</div>
+                  <div class="output-line system-out">Número de elementos: 3</div>
+                  <div class="output-line" style="color:#4ec9b0;margin-top:8px">Process finished with exit code 0</div>
+                </div>
+                <div class="editor-footer">
+                  <div>ArrayListExample.java</div>
+                  <div>Spaces: 4</div>
+                  <div>UTF-8</div>
+                  <div>100%</div>
+                </div>
               </div>
-            </div>
-          `;
+            `;
+          } else {
+            // Mostrar contenido genérico para otros temas
+            mapContainer.innerHTML = `
+              <div class="placeholder-content">
+                <h2>${title}</h2>
+                <p>Contenido educativo interactivo para <strong>${title}</strong>.</p>
+                <p>En una implementación real, aquí se cargaría un mapa interactivo, diagrama o material educativo específico para este tema.</p>
+                <div class="preview">
+                  <strong>Estructura del contenido:</strong><br>
+                  • Introducción teórica<br>
+                  • Ejemplos prácticos<br>
+                  • Ejercicios interactivos<br>
+                  • Recursos adicionales
+                </div>
+              </div>
+            `;
+          }
           
           // Cerrar menú en móvil tras seleccionar
           if (window.innerWidth <= 768) {
@@ -671,11 +1027,25 @@
           toggleBtn.style.display = 'flex';
         }
       });
+      
+      // Configurar pestañas del editor
+      document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('editor-tab')) {
+          document.querySelectorAll('.editor-tab').forEach(tab => {
+            tab.classList.remove('active');
+          });
+          e.target.classList.add('active');
+        }
+        
+        // Botón Run en el editor
+        if (e.target.tagName === 'BUTTON' && e.target.title.includes('Run')) {
+          const output = document.querySelector('.execution-output');
+          if (output) {
+            output.scrollIntoView({behavior: 'smooth'});
+          }
+        }
+      });
     });
   </script>
 </body>
 </html>
-
-
-
-
