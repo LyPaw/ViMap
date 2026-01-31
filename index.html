@@ -1,1051 +1,1216 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <link rel="icon" type="image/svg+xml" href="Logo/logo.svg">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="author" content="Manuel Fuentes Cruz">
-  <title>Mapas Interactivos</title>
-  <style>
-    :root {
-      --bg-primary: #ffffff;
-      --bg-secondary: #f8f9fa;
-      --text-primary: #212529;
-      --border-color: #dee2e6;
-      --accent: #0d6efd;
-      --menu-bg: #f1f3f5;
-      --menu-hover: #e9ecef;
-      --menu-width: 280px;
-      --submenu-indent: 20px;
-      --subsubmenu-indent: 40px;
-      --transition-speed: 0.3s;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg-primary: #121212;
-        --bg-secondary: #1e1e1e;
-        --text-primary: #e0e0e0;
-        --border-color: #333333;
-        --accent: #4dabf7;
-        --menu-bg: #252525;
-        --menu-hover: #333333;
-        --menu-width: 280px;
-      }
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      display: flex;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    .toggle-btn {
-      position: fixed;
-      top: 16px;
-      left: 16px;
-      z-index: 1000;
-      width: 44px;
-      height: 44px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 24px;
-      cursor: pointer;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-      transition: all var(--transition-speed);
-    }
-
-    .toggle-btn:hover {
-      background: #0b5ed7;
-      transform: scale(1.05);
-    }
-
-    .toggle-btn:active {
-      transform: scale(0.95);
-    }
-
-    /* Menú lateral */
-    nav {
-      width: var(--menu-width);
-      background: var(--menu-bg);
-      padding: 24px 16px 24px 20px;
-      border-right: 1px solid var(--border-color);
-      overflow-y: auto;
-      transition: left var(--transition-speed) ease, transform var(--transition-speed) ease;
-      z-index: 999;
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    }
-
-    nav h1 {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--accent);
-      margin: 0 0 20px 0;
-      padding-bottom: 16px;
-      border-bottom: 2px solid var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    nav ul {
-      list-style: none;
-      flex: 1;
-    }
-
-    nav > ul {
-      padding-left: 8px;
-    }
-
-    nav li {
-      margin-bottom: 8px;
-      position: relative;
-    }
-
-    /* Elemento padre (categoría principal) */
-    .main-category {
-      padding: 14px 16px 14px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      color: var(--text-primary);
-      font-weight: 600;
-      font-size: 1.15rem;
-      transition: all var(--transition-speed);
-      position: relative;
-      margin-top: 6px;
-    }
-
-    .main-category:hover {
-      background: var(--menu-hover);
-      transform: translateX(4px);
-    }
-
-    .main-category.active {
-      background: var(--accent);
-      color: white;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
-
-    .main-category::after {
-      content: '▼';
-      font-size: 0.75rem;
-      position: absolute;
-      right: 16px;
-      transition: transform var(--transition-speed);
-      font-weight: normal;
-    }
-
-    .main-category:not(.expanded)::after {
-      transform: rotate(-90deg);
-    }
-
-    /* Subcategorías (Base de Datos, Java, etc.) */
-    .subcategory {
-      padding: 10px 16px 10px 40px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: var(--text-primary);
-      font-weight: 500;
-      transition: all var(--transition-speed);
-      position: relative;
-      margin: 4px 0;
-    }
-
-    .subcategory:hover {
-      background: var(--menu-hover);
-      transform: translateX(4px);
-    }
-
-    .subcategory.active {
-      background: rgba(13, 110, 253, 0.15);
-      color: var(--accent);
-      border-left: 3px solid var(--accent);
-    }
-
-    .subcategory::after {
-      content: '►';
-      font-size: 0.7rem;
-      position: absolute;
-      right: 16px;
-      transition: transform var(--transition-speed);
-      font-weight: normal;
-    }
-
-    .subcategory.expanded::after {
-      transform: rotate(90deg);
-    }
-
-    /* Submenú (temas hijos) */
-    .submenu, .subsubmenu {
-      display: none;
-      margin-top: 6px;
-      padding-left: 0;
-      overflow: hidden;
-      transition: max-height var(--transition-speed) ease, opacity var(--transition-speed);
-      max-height: 0;
-      opacity: 0.8;
-    }
-
-    .submenu.show, .subsubmenu.show {
-      display: block;
-      max-height: 500px;
-      opacity: 1;
-    }
-
-    /* Temas específicos */
-    .subsubmenu li {
-      margin-bottom: 4px;
-    }
-
-    .subsubmenu a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 16px 8px 65px;
-      text-decoration: none;
-      color: var(--text-primary);
-      border-radius: 6px;
-      transition: all var(--transition-speed);
-      font-size: 0.95rem;
-      position: relative;
-    }
-
-    .subsubmenu a::before {
-      content: "•";
-      position: absolute;
-      left: 50px;
-      font-size: 1.4rem;
-      color: var(--accent);
-      line-height: 0.6;
-    }
-
-    .subsubmenu a:hover {
-      background: var(--menu-hover);
-      transform: translateX(4px);
-      color: var(--accent);
-    }
-
-    .subsubmenu a.active {
-      background: rgba(13, 110, 253, 0.15);
-      color: var(--accent);
-      border-left: 3px solid var(--accent);
-      font-weight: 500;
-      transform: translateX(4px);
-    }
-
-    /* Área de contenido principal */
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      margin-left: var(--menu-width);
-      transition: margin-left var(--transition-speed) ease;
-    }
-
-    header {
-      padding: 20px 32px;
-      border-bottom: 1px solid var(--border-color);
-      font-size: 1.6rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      background: var(--bg-secondary);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-
-    header::before {
-      content: "📄";
-      font-size: 1.8rem;
-    }
-
-    .map-container {
-      flex: 1;
-      background: var(--bg-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .placeholder-content {
-      text-align: center;
-      max-width: 800px;
-      padding: 40px;
-      background: var(--bg-primary);
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      border: 1px solid var(--border-color);
-    }
-
-    .placeholder-content h2 {
-      font-size: 2.2rem;
-      margin-bottom: 20px;
-      color: var(--accent);
-    }
-
-    .placeholder-content p {
-      font-size: 1.2rem;
-      line-height: 1.6;
-      margin-bottom: 25px;
-      color: var(--text-primary);
-      opacity: 0.9;
-    }
-
-    .placeholder-content .preview {
-      background: var(--menu-bg);
-      border-radius: 12px;
-      padding: 25px;
-      margin-top: 20px;
-      text-align: left;
-      font-family: monospace;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      border-left: 4px solid var(--accent);
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    /* Estilos para dispositivos móviles */
-    @media (max-width: 768px) {
-      .toggle-btn {
-        display: flex;
-      }
-
-      nav {
-        left: calc(-100% + 60px);
-        width: 85%;
-        max-width: 320px;
-        box-shadow: 4px 0 15px rgba(0,0,0,0.2);
-      }
-
-      nav.expanded {
-        left: 0;
-        transform: translateX(0);
-      }
-
-      main {
-        margin-left: 0;
-      }
-
-      header {
-        padding-left: 24px;
-        font-size: 1.4rem;
-      }
-
-      header::before {
-        font-size: 1.5rem;
-      }
-    }
-
-    /* Animaciones */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .map-container {
-      animation: fadeIn 0.5s ease-out forwards;
-    }
-
-    /* Badge para indicar nueva sección */
-    .new-badge {
-      background: #ff6b6b;
-      color: white;
-      font-size: 0.7rem;
-      padding: 2px 6px;
-      border-radius: 10px;
-      margin-left: 8px;
-      font-weight: bold;
-    }
-
-    /* Sección de Videojuegos con iconos */
-    .subcategory[data-subcategory="zelda"]::before,
-    .subcategory[data-subcategory="monsterhunter"]::before,
-    .subcategory[data-subcategory="residentevil"]::before,
-    .subcategory[data-subcategory="littlenightmares"]::before {
-      font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
-      position: absolute;
-      left: 22px;
-      font-size: 1.2rem;
-      width: 20px;
-      text-align: center;
-    }
-
-    .subcategory[data-subcategory="zelda"]::before { content: "⚔️"; }
-    .subcategory[data-subcategory="monsterhunter"]::before { content: "🐉"; }
-    .subcategory[data-subcategory="residentevil"]::before { content: "🧟"; }
-    .subcategory[data-subcategory="littlenightmares"]::before { content: "👧"; }
-
-    /* Sección DAM con iconos */
-    .subcategory[data-subcategory="basededatos"]::before { content: "🗃️"; position: absolute; left: 22px; font-size: 1.2rem; }
-    .subcategory[data-subcategory="java"]::before { content: "☕"; position: absolute; left: 22px; font-size: 1.2rem; }
-    .subcategory[data-subcategory="entornos"]::before { content: "💻"; position: absolute; left: 22px; font-size: 1.2rem; }
-    .subcategory[data-subcategory="redes"]::before { content: "🌐"; position: absolute; left: 22px; font-size: 1.2rem; }
-
-    /* Estilos para el editor de código tipo IntelliJ */
-    .code-editor-container {
-      width: 95%;
-      max-width: 1200px;
-      height: 90%;
-      background: #1e1e1e;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .editor-header {
-      background: #252525;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #3e3e3e;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      font-size: 0.9rem;
-      color: #9cdcfe;
-    }
-
-    .editor-tabs {
-      display: flex;
-      background: #2d2d2d;
-      padding: 0 10px;
-      border-bottom: 1px solid #3e3e3e;
-    }
-
-    .editor-tab {
-      padding: 8px 15px;
-      background: #252525;
-      border: 1px solid #3e3e3e;
-      border-bottom: none;
-      border-radius: 4px 4px 0 0;
-      margin-right: 5px;
-      color: #d4d4d4;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .editor-tab.active {
-      background: #1e1e1e;
-      border-bottom: 1px solid #1e1e1e;
-      color: #fff;
-      font-weight: 500;
-    }
-
-    .editor-tab::before {
-      content: "•";
-      margin-right: 8px;
-      font-size: 1.2rem;
-    }
-
-    .editor-tab.active::before {
-      color: #4ec9b0;
-    }
-
-    .editor-toolbar {
-      display: flex;
-      padding: 8px 15px;
-      background: #252525;
-      border-bottom: 1px solid #3e3e3e;
-      font-size: 0.8rem;
-      color: #808080;
-    }
-
-    .editor-toolbar button {
-      background: none;
-      border: none;
-      color: #808080;
-      margin-right: 12px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      padding: 2px 6px;
-      border-radius: 3px;
-    }
-
-    .editor-toolbar button:hover {
-      background: #3e3e3e;
-      color: #d4d4d4;
-    }
-
-    .editor-toolbar button.run {
-      background: #0d6efd;
-      color: white;
-      border-radius: 4px;
-    }
-
-    .editor-content {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    .line-numbers {
-      background: #252525;
-      padding: 15px 0;
-      text-align: right;
-      color: #858585;
-      font-family: 'Fira Code', 'Courier New', monospace;
-      font-size: 0.9rem;
-      user-select: none;
-      border-right: 1px solid #3e3e3e;
-      min-width: 50px;
-    }
-
-    .line-numbers span {
-      display: block;
-      padding: 0 10px;
-      line-height: 1.5;
-    }
-
-    .code-area {
-      flex: 1;
-      padding: 15px;
-      background: #1e1e1e;
-      color: #d4d4d4;
-      font-family: 'Fira Code', 'Courier New', monospace;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      overflow: auto;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-
-    /* Syntax highlighting */
-    .keyword { color: #569cd6; }
-    .string { color: #ce9178; }
-    .comment { color: #6a9955; }
-    .function { color: #dcdcaa; }
-    .class-name { color: #4ec9b0; }
-    .operator { color: #d4d4d4; }
-    .punctuation { color: #d4d4d4; }
-    .annotation { color: #c586c0; }
-    .system { color: #4ec9b0; }
-
-    .editor-footer {
-      background: #252525;
-      padding: 5px 15px;
-      font-size: 0.75rem;
-      color: #808080;
-      border-top: 1px solid #3e3e3e;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .execution-output {
-      background: #1e1e1e;
-      border-top: 1px solid #3e3e3e;
-      padding: 15px;
-      font-family: 'Fira Code', 'Courier New', monospace;
-      font-size: 0.9rem;
-      color: #d4d4d4;
-      max-height: 30%;
-      overflow: auto;
-    }
-
-    .execution-output .output-title {
-      color: #569cd6;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-    }
-
-    .execution-output .output-title::before {
-      content: "▶";
-      margin-right: 8px;
-    }
-
-    .execution-output .output-line {
-      line-height: 1.5;
-    }
-
-    .execution-output .system-out {
-      color: #ce9178;
-    }
-  </style>
-</head>
-<body>
-  <button class="toggle-btn" id="toggle-menu">☰</button>
-
-  <nav id="sidebar">
-    <h1>🗺️ Mapas Interactivos</h1>
-    <ul>
-      <!-- Sección DAM -->
-      <li>
-        <div class="main-category" data-category="dam">
-          <span>DAM</span>
-        </div>
-        <ul class="submenu">
-          <!-- Base de Datos -->
-          <li>
-            <div class="subcategory" data-subcategory="basededatos">
-              <span>Base de Datos</span>
-            </div>
-            <ul class="subsubmenu">
-            </ul>
-          </li>
-          
-          <!-- Java -->
-          <li>
-            <div class="subcategory" data-subcategory="java">
-              <span>Java</span>
-            </div>
-            <ul class="subsubmenu">
-              <li><a href="#" class="map-link" data-topic="arraylist"><span>ArrayList</span></a></li>
-              <li><a href="#" class="map-link"><span>HashMap</span></a></li>
-              <li><a href="#" class="map-link"><span>Streams API</span></a></li>
-              <li><a href="#" class="map-link"><span>Excepciones</span></a></li>
-            </ul>
-          </li>
-          
-          <!-- Entornos de Desarrollo -->
-          <li>
-            <div class="subcategory" data-subcategory="entornos">
-              <span>Entornos de Desarrollo</span>
-            </div>
-            <ul class="subsubmenu">
-              <li><a href="#" class="map-link"><span>IntelliJ IDEA</span></a></li>
-              <li><a href="#" class="map-link"><span>Eclipse</span></a></li>
-              <li><a href="#" class="map-link"><span>VS Code</span></a></li>
-            </ul>
-          </li>
-          
-          <!-- Redes -->
-          <li>
-            <div class="subcategory" data-subcategory="redes">
-              <span>Redes</span>
-            </div>
-            <ul class="subsubmenu">
-              <li><a href="#" class="map-link"><span>Modelo OSI</span></a></li>
-              <li><a href="#" class="map-link"><span>Protocolos TCP/IP</span></a></li>
-            </ul>
-          </li>
-        </ul>
-      </li>
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+// =================================================================================================
+// SISTEMA DE GESTIÓN DE APUNTES PARA GITHUB - VERSIÓN SIMPLIFICADA
+// =================================================================================================
+// Este componente implementa una interfaz elegante y futurista para visualizar apuntes académicos
+// directamente desde un repositorio de GitHub. Características principales:
+// - Navegación jerárquica por cursos, asignaturas y temas
+// - Visualización de archivos de código (.java, .sql, etc.) directamente desde el repositorio
+// - Resaltado de sintaxis para múltiples lenguajes de programación
+// - Diseño responsive con estética de libro digital y elementos futuristas
+// - Optimizado para funcionar en GitHub Pages sin backend
+// - Sin ejecución de código, solo visualización de contenido
+// =================================================================================================
+
+const App = () => {
+  // =================================================================================================
+  // CONFIGURACIÓN DE RUTAS PARA ARCHIVOS EN EL REPOSITORIO
+  // =================================================================================================
+  // Estructura de carpetas esperada en el repositorio:
+  // raiz-del-repo/
+  //   ├── notes/
+  //   │   ├── DAM/
+  //   │   │   ├── Programacion/
+  //   │   │   │   ├── Java_Basico/
+  //   │   │   │   │   ├── HolaMundo.java
+  //   │   │   │   │   └── Variables.java
+  //   │   │   │   ├── POO/
+  //   │   │   │   │   ├── Coche.java
+  //   │   │   │   │   └── Herencia.java
+  //   │   │   ├── Base_de_Datos/
+  //   │   │   │   ├── SQL_Basico/
+  //   │   │   │   │   ├── ConsultaBasica.sql
+  //   │   │   │   │   └── JoinEjemplo.sql
+  //   │   │   ├── Sistemas_Informaticos/
+  //   │   │   └── Entornos_de_Desarrollo/
+  //   │   └── DAW/
+  //   └── index.html (este archivo)
+  
+  // Base path para los archivos de notas (ajustar según la estructura del repositorio)
+  const BASE_NOTES_PATH = 'notes';
+  
+  // =================================================================================================
+  // ESTADO DE LA APLICACIÓN - GESTIÓN DE DATOS Y NAVEGACIÓN
+  // =================================================================================================
+  
+  // Estado para el curso actual seleccionado (por defecto DAM)
+  const [currentCourse, setCurrentCourse] = useState('DAM');
+  
+  // Estado para la asignatura actual seleccionada
+  const [currentSubject, setCurrentSubject] = useState('Programacion');
+  
+  // Estado para el tema actual seleccionado dentro de una asignatura
+  const [currentTopic, setCurrentTopic] = useState('Java_Basico');
+  
+  // Estado para los archivos disponibles en el tema actual
+  const [topicFiles, setTopicFiles] = useState([]);
+  
+  // Estado para el archivo actualmente seleccionado para previsualización
+  const [selectedFile, setSelectedFile] = useState(null);
+  
+  // Estado para el contenido del archivo seleccionado
+  const [fileContent, setFileContent] = useState('');
+  
+  // Estado para el modo oscuro/claro (por defecto oscuro para estética futurista)
+  const [darkMode, setDarkMode] = useState(true);
+  
+  // Estado para la animación de carga al procesar archivos
+  const [isLoading, setIsLoading] = useState(false);
+  
+  // Estado para el historial de navegación (simulando breadcrumbs)
+  const [navigationHistory, setNavigationHistory] = useState(['DAM', 'Programacion', 'Java_Basico']);
+  
+  // Estado para el tema de color de la interfaz
+  const [accentColor, setAccentColor] = useState('#6366f1'); // Color por defecto: índigo
+  
+  // Estado para el error al cargar archivos
+  const [loadError, setLoadError] = useState(null);
+  
+  // Referencia para el área de código
+  const codeAreaRef = useRef(null);
+  
+  // =================================================================================================
+  // CONFIGURACIÓN DE ESTRUCTURA DE CURSOS Y ASIGNATURAS
+  // =================================================================================================
+  
+  // Mapeo de nombres amigables para mostrar en la interfaz
+  const courseDisplayNames = useMemo(() => ({
+    'DAM': 'DAM (Desarrollo de Aplicaciones Multiplataforma)',
+    'DAW': 'DAW (Desarrollo de Aplicaciones Web)'
+  }), []);
+  
+  const subjectDisplayNames = useMemo(() => ({
+    'Programacion': 'Programación',
+    'Base_de_Datos': 'Base de Datos',
+    'Sistemas_Informaticos': 'Sistemas Informáticos',
+    'Entornos_de_Desarrollo': 'Entornos de Desarrollo'
+  }), []);
+  
+  const topicDisplayNames = useMemo(() => ({
+    'Java_Basico': 'Java Básico',
+    'POO': 'Programación Orientada a Objetos',
+    'Estructuras_de_Datos': 'Estructuras de Datos',
+    'Excepciones': 'Manejo de Excepciones',
+    'Colecciones': 'Colecciones Java',
+    'SQL_Basico': 'SQL Básico',
+    'Consultas_Avanzadas': 'Consultas Avanzadas',
+    'Procedimientos': 'Procedimientos Almacenados',
+    'Triggers': 'Triggers y Eventos',
+    'Modelado': 'Modelado de Datos',
+    'Arquitectura': 'Arquitectura de Computadores',
+    'Redes': 'Fundamentos de Redes',
+    'Sistemas_Operativos': 'Sistemas Operativos',
+    'Virtualizacion': 'Virtualización',
+    'Git': 'Control de Versiones con Git',
+    'Maven': 'Gestión de Proyectos con Maven',
+    'Docker': 'Contenerización con Docker',
+    'Metodologias_Agiles': 'Metodologías Ágiles'
+  }), []);
+  
+  // Estructura estática de temas por asignatura (sin gestión dinámica)
+  const topicsStructure = useMemo(() => ({
+    'Programacion': ['Java_Basico', 'POO', 'Estructuras_de_Datos', 'Excepciones', 'Colecciones'],
+    'Base_de_Datos': ['SQL_Basico', 'Consultas_Avanzadas', 'Procedimientos', 'Triggers', 'Modelado'],
+    'Sistemas_Informaticos': ['Arquitectura', 'Redes', 'Sistemas_Operativos', 'Virtualizacion'],
+    'Entornos_de_Desarrollo': ['Git', 'Maven', 'Docker', 'Metodologias_Agiles']
+  }), []);
+  
+  // =================================================================================================
+  // FUNCIONES DE CARGA DE ARCHIVOS DESDE EL REPOSITORIO
+  // =================================================================================================
+  
+  // Función para cargar la lista de archivos de un tema específico
+  const loadTopicFiles = useCallback(async (course, subject, topic) => {
+    setIsLoading(true);
+    setLoadError(null);
+    
+    try {
+      // Simular la carga de archivos (en producción, esto se reemplazaría con una llamada a un índice JSON)
+      const simulatedFiles = getSimulatedFiles(course, subject, topic);
+      setTopicFiles(simulatedFiles);
       
-      <!-- Sección Videojuegos -->
-      <li>
-        <div class="main-category" data-category="videojuegos">
-          <span>Videojuegos</span>
-        </div>
-        <ul class="submenu">
-          <!-- Zelda -->
-          <li>
-            <div class="subcategory" data-subcategory="zelda">
-              <span>Zelda</span>
-            </div>
-            <ul class="subsubmenu">
-              <li><a href="#" class="map-link"><span>Armas y objetos</span></a></li>
-              <li><a href="#" class="map-link"><span>Mapa del reino</span></a></li>
-              <li><a href="#" class="map-link"><span>Misiones secundarias</span></a></li>
-            </ul>
-          </li>
-          
-          <!-- Monster Hunter -->
-          <li>
-            <div class="subcategory" data-subcategory="monsterhunter">
-              <span>Monster Hunter</span>
-            </div>
-            <ul class="subsubmenu">
-              <li><a href="#" class="map-link"><span>Armas y armaduras</span></a></li>
-              <li><a href="#" class="map-link"><span>Monstruos</span></a></li>
-              <li><a href="#" class="map-link"><span>Recetas de fabricación</span></a></li>
-            </ul>
-          </li>
-          
-          <!-- Resident Evil -->
-          <li>
-            <div class="subcategory" data-subcategory="residentevil">
-              <span>Resident Evil</span>
-            </div>
-            <ul class="subsubmenu">
-              <li><a href="#" class="map-link"><span>Mapas de mansiones</span></a></li>
-              <li><a href="#" class="map-link"><span>Inventario y objetos</span></a></li>
-            </ul>
-          </li>
-          
-          <!-- Little Nightmares -->
-          <li>
-            <div class="subcategory" data-subcategory="littlenightmares">
-              <span>Little Nightmares</span>
-            </div>
-            <ul class="subsubmenu">
-              <li><a href="#" class="map-link"><span>Niveles y secretos</span></a></li>
-              <li><a href="#" class="map-link"><span>Coleccionables</span></a></li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </nav>
+      // Si hay archivos, seleccionar el primero automáticamente
+      if (simulatedFiles.length > 0 && !selectedFile) {
+        await loadFileContent(course, subject, topic, simulatedFiles[0].name);
+      }
+    } catch (error) {
+      console.error('Error al cargar archivos del tema:', error);
+      setLoadError('No se pudieron cargar los archivos. Verifica la estructura de carpetas en el repositorio.');
+      setTopicFiles([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [selectedFile]);
+  
+  // Función para cargar el contenido de un archivo específico
+  const loadFileContent = useCallback(async (course, subject, topic, fileName) => {
+    setIsLoading(true);
+    setLoadError(null);
+    
+    try {
+      // Obtener contenido simulado (en producción, reemplazar con fetch al archivo real)
+      const content = getSimulatedFileContent(fileName);
+      
+      // Actualizar el estado con el contenido del archivo
+      setSelectedFile(fileName);
+      setFileContent(content);
+      
+      // Actualizar historial de navegación
+      setNavigationHistory([course, subject, topic, fileName]);
+    } catch (error) {
+      console.error('Error al cargar el archivo:', error);
+      setLoadError(`Error al cargar el archivo: ${error.message}`);
+      setFileContent(`// Error: No se pudo cargar el contenido del archivo ${fileName}`);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+  
+  // =================================================================================================
+  // DATOS DE SIMULACIÓN - ESTRUCTURA DE ARCHIVOS Y CONTENIDOS
+  // =================================================================================================
+  // NOTA: En una implementación real para GitHub, estos datos se cargarían desde archivos reales
+  // en el repositorio. Esta simulación permite que la aplicación funcione sin conexión y muestre
+  // ejemplos significativos mientras se configura la estructura real del repositorio.
+  
+  // Función para obtener archivos simulados según la ruta
+  const getSimulatedFiles = useCallback((course, subject, topic) => {
+    // Definir la estructura simulada de archivos
+    const simulatedStructure = {
+      'DAM': {
+        'Programacion': {
+          'Java_Basico': [
+            { name: 'HolaMundo.java', type: 'java', size: '0.3 KB', lastModified: '2026-01-15' },
+            { name: 'Variables.java', type: 'java', size: '0.5 KB', lastModified: '2026-01-16' },
+            { name: 'Condicionales.java', type: 'java', size: '0.7 KB', lastModified: '2026-01-17' },
+            { name: 'Bucles.java', type: 'java', size: '0.8 KB', lastModified: '2026-01-18' }
+          ],
+          'POO': [
+            { name: 'ClaseCoche.java', type: 'java', size: '1.2 KB', lastModified: '2026-01-20' },
+            { name: 'Herencia.java', type: 'java', size: '1.5 KB', lastModified: '2026-01-21' },
+            { name: 'Interfaces.java', type: 'java', size: '1.3 KB', lastModified: '2026-01-22' },
+            { name: 'Polimorfismo.java', type: 'java', size: '1.7 KB', lastModified: '2026-01-23' }
+          ],
+          'Estructuras_de_Datos': [
+            { name: 'Arrays.java', type: 'java', size: '0.9 KB', lastModified: '2026-01-25' },
+            { name: 'ArrayList.java', type: 'java', size: '1.1 KB', lastModified: '2026-01-26' },
+            { name: 'HashMap.java', type: 'java', size: '1.4 KB', lastModified: '2026-01-27' }
+          ]
+        },
+        'Base_de_Datos': {
+          'SQL_Basico': [
+            { name: 'CrearTablas.sql', type: 'sql', size: '0.4 KB', lastModified: '2026-01-30' },
+            { name: 'InsertarDatos.sql', type: 'sql', size: '0.6 KB', lastModified: '2026-01-31' },
+            { name: 'ConsultasBasicas.sql', type: 'sql', size: '0.8 KB', lastModified: '2026-02-01' }
+          ],
+          'Consultas_Avanzadas': [
+            { name: 'Joins.sql', type: 'sql', size: '1.0 KB', lastModified: '2026-02-03' },
+            { name: 'Subconsultas.sql', type: 'sql', size: '1.2 KB', lastModified: '2026-02-04' },
+            { name: 'FuncionesAgregacion.sql', type: 'sql', size: '0.9 KB', lastModified: '2026-02-05' }
+          ]
+        },
+        'Sistemas_Informaticos': {
+          'Arquitectura': [
+            { name: 'ComponentesPC.txt', type: 'txt', size: '1.5 KB', lastModified: '2026-02-10' },
+            { name: 'MemoriaCache.txt', type: 'txt', size: '1.8 KB', lastModified: '2026-02-11' }
+          ],
+          'Redes': [
+            { name: 'ModeloOSI.txt', type: 'txt', size: '2.1 KB', lastModified: '2026-02-13' },
+            { name: 'Protocolos.txt', type: 'txt', size: '1.9 KB', lastModified: '2026-02-14' }
+          ]
+        },
+        'Entornos_de_Desarrollo': {
+          'Git': [
+            { name: 'ComandosBasicos.md', type: 'md', size: '1.2 KB', lastModified: '2026-02-18' },
+            { name: 'FlujoDeTrabajo.md', type: 'md', size: '1.7 KB', lastModified: '2026-02-19' }
+          ],
+          'Docker': [
+            { name: 'Dockerfile.ejemplo', type: 'dockerfile', size: '0.6 KB', lastModified: '2026-02-22' },
+            { name: 'docker-compose.yml', type: 'yml', size: '0.8 KB', lastModified: '2026-02-23' }
+          ]
+        }
+      },
+      'DAW': {
+        'Programacion': {
+          'JavaScript_Basico': [
+            { name: 'Fundamentos.js', type: 'js', size: '0.7 KB', lastModified: '2026-02-25' },
+            { name: 'DOM.js', type: 'js', size: '1.1 KB', lastModified: '2026-02-26' }
+          ]
+        }
+      }
+    };
+    
+    // Retornar los archivos simulados para la ruta especificada
+    return simulatedStructure[course]?.[subject]?.[topic] || [];
+  }, []);
+  
+  // Función para obtener contenido simulado de archivos
+  const getSimulatedFileContent = useCallback((fileName) => {
+    const fileContents = {
+      'HolaMundo.java': `// Clase principal para imprimir un mensaje
+public class HolaMundo {
+    public static void main(String[] args) {
+        // Imprimir mensaje en consola
+        System.out.println("¡Hola, mundo desde DAM!");
+        
+        // Ejemplo de variable
+        String saludo = "Bienvenido al ciclo de DAM";
+        int anio = 2026;
+        
+        System.out.println(saludo + " - Año: " + anio);
+        
+        // Operación matemática simple
+        int resultado = 15 + 27;
+        System.out.println("15 + 27 = " + resultado);
+    }
+}`,
+      'Variables.java': `// Ejemplo de declaración de variables en Java
+public class Variables {
+    public static void main(String[] args) {
+        // Variables primitivas
+        int edad = 25;
+        double altura = 1.75;
+        char inicial = 'J';
+        boolean esEstudiante = true;
+        String nombre = "Juan Pérez";
+        
+        // Constantes
+        final double PI = 3.14159;
+        final int DIAS_SEMANA = 7;
+        
+        // Mostrar valores
+        System.out.println("Nombre: " + nombre);
+        System.out.println("Edad: " + edad + " años");
+        System.out.println("Altura: " + altura + " metros");
+        System.out.println("Inicial: " + inicial);
+        System.out.println("¿Es estudiante? " + (esEstudiante ? "Sí" : "No"));
+        System.out.println("Valor de PI: " + PI);
+        System.out.println("Días en una semana: " + DIAS_SEMANA);
+        
+        // Operaciones con variables
+        int a = 10, b = 5;
+        System.out.println("\\nOperaciones:");
+        System.out.println("Suma: " + (a + b));
+        System.out.println("Resta: " + (a - b));
+        System.out.println("Multiplicación: " + (a * b));
+        System.out.println("División: " + (a / b));
+    }
+}`,
+      'CrearTablas.sql': `-- Creación de tablas para base de datos de ejemplo
+CREATE TABLE IF NOT EXISTS estudiantes (
+    id_estudiante INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(50) NOT NULL,
+    apellido VARCHAR(50) NOT NULL,
+    fecha_nacimiento DATE,
+    email VARCHAR(100) UNIQUE,
+    telefono VARCHAR(20),
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-  <main id="main-content">
-    <header id="map-title">Mapas Interactivos</header>
-    <div class="map-container">
-      <div class="placeholder-content">
-        <h2>Bienvenido a Mapas Interactivos</h2>
-        <p>Selecciona un tema en el menú lateral para comenzar.</p>
-        <p>Explora contenido educativo interactivo organizado por categorías. Desde estructuras de datos en Java hasta mapas de tus videojuegos favoritos.</p>
-        <div class="preview">
-          <strong>Ejemplo de contenido:</strong><br>
-          • Mapas conceptuales<br>
-          • Diagramas interactivos<br>
-          • Ejemplos de código con sintaxis resaltada<br>
-          • Guías paso a paso
+CREATE TABLE IF NOT EXISTS cursos (
+    id_curso INT PRIMARY KEY AUTO_INCREMENT,
+    nombre_curso VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    creditos INT DEFAULT 3,
+    duracion_semanas INT
+);
+
+CREATE TABLE IF NOT EXISTS inscripciones (
+    id_inscripcion INT PRIMARY KEY AUTO_INCREMENT,
+    id_estudiante INT,
+    id_curso INT,
+    fecha_inscripcion DATE DEFAULT (CURRENT_DATE),
+    calificacion DECIMAL(5,2),
+    FOREIGN KEY (id_estudiante) REFERENCES estudiantes(id_estudiante),
+    FOREIGN KEY (id_curso) REFERENCES cursos(id_curso)
+);
+
+-- Insertar datos de ejemplo
+INSERT INTO cursos (nombre_curso, descripcion, creditos, duracion_semanas) VALUES
+('Programación Java', 'Fundamentos de programación en Java', 6, 16),
+('Bases de Datos', 'Diseño y gestión de bases de datos relacionales', 5, 14),
+('Sistemas Operativos', 'Conceptos fundamentales de sistemas operativos', 4, 12);`,
+      'ClaseCoche.java': `// Clase que representa un coche
+public class Coche {
+    // Atributos (campos)
+    private String marca;
+    private String modelo;
+    private int anio;
+    private String color;
+    private double kilometraje;
+    private boolean motorEncendido;
+    
+    // Constructor
+    public Coche(String marca, String modelo, int anio, String color) {
+        this.marca = marca;
+        this.modelo = modelo;
+        this.anio = anio;
+        this.color = color;
+        this.kilometraje = 0.0;
+        this.motorEncendido = false;
+    }
+    
+    // Métodos getters
+    public String getMarca() { return marca; }
+    public String getModelo() { return modelo; }
+    public int getAnio() { return anio; }
+    public String getColor() { return color; }
+    public double getKilometraje() { return kilometraje; }
+    
+    // Métodos setters
+    public void setColor(String color) { this.color = color; }
+    public void setKilometraje(double kilometraje) { 
+        if (kilometraje >= this.kilometraje) {
+            this.kilometraje = kilometraje;
+        }
+    }
+    
+    // Métodos de comportamiento
+    public void arrancar() {
+        if (!motorEncendido) {
+            motorEncendido = true;
+            System.out.println("El " + marca + " " + modelo + " ha arrancado.");
+        } else {
+            System.out.println("El motor ya está encendido.");
+        }
+    }
+    
+    public void apagar() {
+        if (motorEncendido) {
+            motorEncendido = false;
+            System.out.println("El " + marca + " " + modelo + " se ha apagado.");
+        } else {
+            System.out.println("El motor ya está apagado.");
+        }
+    }
+    
+    public void conducir(double km) {
+        if (motorEncendido) {
+            kilometraje += km;
+            System.out.println("Has conducido " + km + " km. Kilometraje total: " + kilometraje + " km");
+        } else {
+            System.out.println("¡No puedes conducir con el motor apagado!");
+        }
+    }
+    
+    // Método toString para representación en cadena
+    @Override
+    public String toString() {
+        return "Coche{" +
+                "marca='" + marca + '\\'' +
+                ", modelo='" + modelo + '\\'' +
+                ", año=" + anio +
+                ", color='" + color + '\\'' +
+                ", kilometraje=" + kilometraje + " km" +
+                ", motorEncendido=" + motorEncendido +
+                '}';
+    }
+    
+    // Método main para pruebas
+    public static void main(String[] args) {
+        // Crear un objeto Coche
+        Coche miCoche = new Coche("Toyota", "Corolla", 2023, "Azul");
+        
+        // Mostrar información inicial
+        System.out.println("Información del coche:");
+        System.out.println(miCoche);
+        
+        // Probar métodos
+        miCoche.arrancar();
+        miCoche.conducir(150.5);
+        miCoche.conducir(85.3);
+        miCoche.apagar();
+        
+        // Cambiar color
+        miCoche.setColor("Rojo");
+        System.out.println("\\nDespués de cambiar el color:");
+        System.out.println(miCoche);
+    }
+}`,
+      'Fundamentos.js': `// Fundamentos de JavaScript para DAW
+console.log("=== Fundamentos de JavaScript ===");
+
+// Variables y tipos de datos
+let nombre = "Ana García";
+const EDAD = 28;
+var esDesarrolladora = true;
+let altura = 1.68;
+let lenguajes = ["HTML", "CSS", "JavaScript", "PHP"];
+let vacio = null;
+let indefinido = undefined;
+
+console.log("Nombre:", nombre);
+console.log("Edad:", EDAD);
+console.log("¿Es desarrolladora?", esDesarrolladora);
+console.log("Altura:", altura, "metros");
+console.log("Lenguajes:", lenguajes.join(", "));
+
+// Operaciones matemáticas
+let a = 15, b = 7;
+console.log("\\nOperaciones matemáticas:");
+console.log(\`\${a} + \${b} = \${a + b}\`);
+console.log(\`\${a} - \${b} = \${a - b}\`);
+console.log(\`\${a} * \${b} = \${a * b}\`);
+console.log(\`\${a} / \${b} = \${(a / b).toFixed(2)}\`);
+console.log(\`\${a} % \${b} = \${a % b}\`);
+
+// Estructuras de control
+console.log("\\nEstructuras de control:");
+let hora = 14;
+if (hora < 12) {
+    console.log("Buenos días");
+} else if (hora < 18) {
+    console.log("Buenas tardes");
+} else {
+    console.log("Buenas noches");
+}
+
+// Bucle for
+console.log("\\nBucle for:");
+for (let i = 1; i <= 5; i++) {
+    console.log(\`Iteración \${i}\`);
+}
+
+// Funciones
+console.log("\\nFunciones:");
+function calcularAreaRectangulo(base, altura) {
+    return base * altura;
+}
+
+const area = calcularAreaRectangulo(10, 5);
+console.log("Área del rectángulo: " + area + " unidades cuadradas");
+
+// Objetos
+console.log("\\nObjetos:");
+const estudiante = {
+    nombre: "Carlos Méndez",
+    edad: 22,
+    carrera: "DAW",
+    mostrarInfo: function() {
+        return \`\${this.nombre}, \${this.edad} años, estudia \${this.carrera}\`;
+    }
+};
+
+console.log(estudiante.mostrarInfo());
+
+// Arrays y métodos
+console.log("\\nArrays y métodos:");
+let numeros = [1, 2, 3, 4, 5];
+console.log("Array original:", numeros);
+console.log("Doble de cada número:", numeros.map(n => n * 2));
+console.log("Números pares:", numeros.filter(n => n % 2 === 0));
+console.log("Suma total:", numeros.reduce((acc, n) => acc + n, 0));
+
+console.log("\\n=== Fin de los fundamentos ===");`
+    };
+    
+    return fileContents[fileName] || `// Contenido no disponible para: ${fileName}\n// Verifica que el archivo exista en el repositorio`;
+  }, []);
+  
+  // =================================================================================================
+  // FUNCIONES DE NAVEGACIÓN Y GESTIÓN DE HISTORIAL
+  // =================================================================================================
+  
+  // Función para cambiar de curso
+  const handleCourseChange = useCallback((course) => {
+    setCurrentCourse(course);
+    const firstSubject = Object.keys(topicsStructure)[0];
+    setCurrentSubject(firstSubject);
+    setCurrentTopic(topicsStructure[firstSubject][0]);
+    setNavigationHistory([course, firstSubject, topicsStructure[firstSubject][0]]);
+    setSelectedFile(null);
+    setFileContent('');
+    setTopicFiles([]);
+    
+    // Cargar archivos del primer tema
+    loadTopicFiles(course, firstSubject, topicsStructure[firstSubject][0]);
+  }, [topicsStructure, loadTopicFiles]);
+  
+  // Función para cambiar de asignatura
+  const handleSubjectChange = useCallback((subject) => {
+    setCurrentSubject(subject);
+    setCurrentTopic(topicsStructure[subject][0]);
+    setNavigationHistory([currentCourse, subject, topicsStructure[subject][0]]);
+    setSelectedFile(null);
+    setFileContent('');
+    setTopicFiles([]);
+    
+    // Cargar archivos del primer tema de la asignatura
+    loadTopicFiles(currentCourse, subject, topicsStructure[subject][0]);
+  }, [currentCourse, topicsStructure, loadTopicFiles]);
+  
+  // Función para cambiar de tema
+  const handleTopicChange = useCallback((topic) => {
+    setCurrentTopic(topic);
+    setNavigationHistory([currentCourse, currentSubject, topic]);
+    setSelectedFile(null);
+    setFileContent('');
+    setTopicFiles([]);
+    
+    // Cargar archivos del tema seleccionado
+    loadTopicFiles(currentCourse, currentSubject, topic);
+  }, [currentCourse, currentSubject, loadTopicFiles]);
+  
+  // Función para manejar la selección de un archivo
+  const handleFileSelect = useCallback((fileName) => {
+    loadFileContent(currentCourse, currentSubject, currentTopic, fileName);
+  }, [currentCourse, currentSubject, currentTopic, loadFileContent]);
+  
+  // Función para navegar hacia atrás en el historial
+  const handleBackNavigation = useCallback(() => {
+    if (navigationHistory.length > 1) {
+      const newHistory = [...navigationHistory];
+      newHistory.pop();
+      
+      if (newHistory.length === 1) {
+        // Volver al curso
+        handleCourseChange(newHistory[0]);
+      } else if (newHistory.length === 2) {
+        // Volver a la asignatura
+        handleSubjectChange(newHistory[1]);
+      } else if (newHistory.length === 3) {
+        // Volver al tema
+        handleTopicChange(newHistory[2]);
+      }
+    }
+  }, [navigationHistory, handleCourseChange, handleSubjectChange, handleTopicChange]);
+  
+  // =================================================================================================
+  // FUNCIONES DE INTERFAZ DE USUARIO Y UTILIDADES
+  // =================================================================================================
+  
+  // Función para formatear fechas
+  const formatDate = useCallback((dateString) => {
+    if (!dateString) return 'Sin fecha';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }, []);
+  
+  // Función para obtener el icono según la extensión del archivo
+  const getFileIcon = useCallback((fileName) => {
+    const extension = fileName.split('.').pop().toLowerCase();
+    
+    switch(extension) {
+      case 'java':
+        return '☕'; // Café para Java
+      case 'sql':
+        return '🗃️'; // Base de datos
+      case 'js':
+        return '📜'; // JavaScript
+      case 'py':
+        return '🐍'; // Python
+      case 'html':
+        return '🌐'; // HTML
+      case 'css':
+        return '🎨'; // CSS
+      case 'json':
+        return '🔧'; // JSON
+      case 'xml':
+        return '📐'; // XML
+      case 'md':
+        return '📝'; // Markdown
+      case 'txt':
+        return '📄'; // Texto
+      case 'sh':
+      case 'bash':
+        return '💻'; // Terminal
+      case 'yml':
+      case 'yaml':
+        return '⚙️'; // Configuración
+      case 'dockerfile':
+        return '🐋'; // Docker
+      default:
+        return '📎'; // Archivo genérico
+    }
+  }, []);
+  
+  // Función para obtener el color de acento según el tipo de archivo
+  const getFileColor = useCallback((fileName) => {
+    const extension = fileName.split('.').pop().toLowerCase();
+    
+    switch(extension) {
+      case 'java':
+        return 'from-yellow-400 to-orange-500';
+      case 'sql':
+        return 'from-blue-400 to-cyan-500';
+      case 'js':
+        return 'from-yellow-300 to-yellow-500';
+      case 'py':
+        return 'from-green-400 to-blue-500';
+      case 'html':
+        return 'from-orange-400 to-red-500';
+      case 'css':
+        return 'from-blue-400 to-cyan-400';
+      case 'json':
+        return 'from-purple-400 to-pink-500';
+      case 'md':
+        return 'from-gray-400 to-gray-600';
+      case 'dockerfile':
+        return 'from-blue-500 to-cyan-600';
+      default:
+        return 'from-gray-400 to-gray-600';
+    }
+  }, []);
+  
+  // Función para el resaltado de sintaxis
+  const highlightCode = useCallback((code, language) => {
+    if (!code) return '';
+    
+    // Definir patrones de resaltado según el lenguaje
+    const patterns = {
+      java: [
+        { pattern: /(public|private|protected|static|final|class|interface|extends|implements|new|return|if|else|switch|case|break|for|while|do|try|catch|throw|throws|import|package|void|boolean|byte|char|short|int|long|float|double|String)/g, className: 'text-purple-400 font-medium' },
+        { pattern: /\/\/.*/g, className: 'text-green-400 italic' },
+        { pattern: /\/\*[\s\S]*?\*\//g, className: 'text-green-500 italic' },
+        { pattern: /(".*?")/g, className: 'text-yellow-300' },
+        { pattern: /(\b\d+\b)/g, className: 'text-cyan-300' },
+        { pattern: /\b(true|false|null)\b/g, className: 'text-blue-300' }
+      ],
+      sql: [
+        { pattern: /(SELECT|FROM|WHERE|JOIN|ON|GROUP BY|HAVING|ORDER BY|INSERT INTO|VALUES|UPDATE|SET|DELETE|CREATE|TABLE|ALTER|DROP|DATABASE|SCHEMA|VIEW|INDEX|PROCEDURE|FUNCTION|TRIGGER|BEGIN|END|COMMIT|ROLLBACK|GRANT|REVOKE|UNION|DISTINCT|AS|AND|OR|NOT|LIKE|IN|BETWEEN|IS NULL|PRIMARY KEY|FOREIGN KEY|REFERENCES|CONSTRAINT)/gi, className: 'text-purple-400 font-medium' },
+        { pattern: /--.*/g, className: 'text-green-400 italic' },
+        { pattern: /\/\*[\s\S]*?\*\//g, className: 'text-green-500 italic' },
+        { pattern: /(".*?"|'.*?')/g, className: 'text-yellow-300' },
+        { pattern: /(\b\d+\b)/g, className: 'text-cyan-300' }
+      ],
+      javascript: [
+        { pattern: /(function|const|let|var|if|else|switch|case|break|for|while|do|try|catch|throw|return|import|export|class|extends|super|this|new|typeof|instanceof|void|delete|in|of|await|async|yield|const|let|var|true|false|null|undefined)/g, className: 'text-purple-400 font-medium' },
+        { pattern: /\/\/.*/g, className: 'text-green-400 italic' },
+        { pattern: /\/\*[\s\S]*?\*\//g, className: 'text-green-500 italic' },
+        { pattern: /(".*?"|'.*?')/g, className: 'text-yellow-300' },
+        { pattern: /(\b\d+\b)/g, className: 'text-cyan-300' }
+      ],
+      dockerfile: [
+        { pattern: /(FROM|RUN|COPY|ADD|CMD|ENTRYPOINT|EXPOSE|ENV|ARG|VOLUME|WORKDIR|USER|HEALTHCHECK|ONBUILD)/g, className: 'text-purple-400 font-medium' },
+        { pattern: /#.*/g, className: 'text-green-400 italic' },
+        { pattern: /(".*?"|'.*?')/g, className: 'text-yellow-300' }
+      ],
+      yaml: [
+        { pattern: /#.*/g, className: 'text-green-400 italic' },
+        { pattern: /(\w+):/g, className: 'text-blue-300 font-medium' },
+        { pattern: /(".*?"|'.*?')/g, className: 'text-yellow-300' }
+      ]
+    };
+    
+    // Seleccionar patrones según el lenguaje
+    let selectedPatterns = patterns.javascript; // Por defecto
+    
+    if (language === 'java') selectedPatterns = patterns.java;
+    else if (language === 'sql') selectedPatterns = patterns.sql;
+    else if (language === 'js') selectedPatterns = patterns.javascript;
+    else if (language === 'dockerfile') selectedPatterns = patterns.dockerfile;
+    else if (language === 'yml' || language === 'yaml') selectedPatterns = patterns.yaml;
+    
+    // Aplicar resaltado
+    let highlighted = code;
+    selectedPatterns.forEach(({ pattern, className }) => {
+      highlighted = highlighted.replace(pattern, match => 
+        `<span class="${className}">${match}</span>`
+      );
+    });
+    
+    return highlighted;
+  }, []);
+  
+  // =================================================================================================
+  // EFECTOS SECUNDARIOS - REACCIONES A CAMBIOS DE ESTADO
+  // =================================================================================================
+  
+  // Efecto para actualizar el tema de color del sistema
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode);
+  }, [darkMode]);
+  
+  // Efecto para inicializar la aplicación
+  useEffect(() => {
+    // Cargar archivos del tema inicial
+    loadTopicFiles(currentCourse, currentSubject, currentTopic);
+  }, [loadTopicFiles, currentCourse, currentSubject, currentTopic]);
+  
+  // =================================================================================================
+  // COMPONENTES DE LA INTERFAZ DE USUARIO
+  // =================================================================================================
+  
+  // Componente para el Sidebar de navegación
+  const Sidebar = () => (
+    <motion.div 
+      initial={{ x: -300 }}
+      animate={{ x: 0 }}
+      transition={{ type: "spring", damping: 25, stiffness: 150 }}
+      className={`w-72 h-full bg-gradient-to-b ${darkMode ? 'from-gray-900 to-gray-800' : 'from-gray-50 to-gray-100'} border-r ${darkMode ? 'border-gray-700' : 'border-gray-200'} flex flex-col`}
+    >
+      {/* Header del Sidebar */}
+      <div className={`p-5 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-xl">
+            D
+          </div>
+          <div>
+            <h2 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>DAM/DAW Notes</h2>
+            <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>Sistema de gestión de apuntes</p>
+          </div>
         </div>
       </div>
+      
+      {/* Selector de curso */}
+      <div className={`p-4 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+        <label className={`block text-xs font-medium mb-2 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>CURSO ACTUAL</label>
+        <select 
+          value={currentCourse}
+          onChange={(e) => handleCourseChange(e.target.value)}
+          className={`w-full p-2 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-medium focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:outline-none`}
+        >
+          <option value="DAM">DAM (Desarrollo de Aplicaciones Multiplataforma)</option>
+          <option value="DAW">DAW (Desarrollo de Aplicaciones Web)</option>
+        </select>
+      </div>
+      
+      {/* Lista de asignaturas */}
+      <div className="p-4 border-b border-gray-700">
+        <div className="flex justify-between items-center mb-3">
+          <label className="block text-xs font-medium text-gray-400">ASIGNATURAS</label>
+          <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full">
+            {Object.keys(topicsStructure).length}
+          </span>
+        </div>
+        
+        <div className="space-y-1 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+          {Object.keys(topicsStructure).map((subject) => (
+            <motion.button
+              key={subject}
+              whileHover={{ x: 5 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => handleSubjectChange(subject)}
+              className={`w-full flex items-center space-x-3 p-3 rounded-lg transition-all ${
+                currentSubject === subject 
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/20' 
+                  : `${darkMode ? 'hover:bg-gray-700/50' : 'hover:bg-gray-100'} ${darkMode ? 'text-gray-300' : 'text-gray-700'}`
+              }`}
+            >
+              <div className={`w-2 h-2 rounded-full ${currentSubject === subject ? 'bg-white' : 'bg-purple-400'}`}></div>
+              <span className="font-medium">{subjectDisplayNames[subject] || subject}</span>
+            </motion.button>
+          ))}
+        </div>
+      </div>
+      
+      {/* Lista de temas */}
+      <div className="p-4 flex-1 overflow-y-auto custom-scrollbar">
+        <div className="flex justify-between items-center mb-3">
+          <label className="block text-xs font-medium text-gray-400">TEMAS</label>
+          <span className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full">
+            {topicsStructure[currentSubject]?.length || 0}
+          </span>
+        </div>
+        
+        <div className="space-y-1">
+          {topicsStructure[currentSubject]?.map((topic) => (
+            <motion.div
+              key={topic}
+              layout
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-700/30 transition-colors"
+            >
+              <motion.button
+                whileHover={{ x: 5 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => handleTopicChange(topic)}
+                className={`flex-1 flex items-center space-x-3 p-2 rounded-lg text-left transition-all ${
+                  currentTopic === topic 
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/20' 
+                    : `${darkMode ? 'hover:bg-gray-700/50' : 'hover:bg-gray-100'} ${darkMode ? 'text-gray-300' : 'text-gray-700'}`
+                }`}
+              >
+                <div className={`w-1.5 h-1.5 rounded-full ${currentTopic === topic ? 'bg-white' : 'bg-indigo-400'}`}></div>
+                <span className="text-sm font-medium">{topicDisplayNames[topic] || topic.replace(/_/g, ' ')}</span>
+              </motion.button>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Footer del Sidebar */}
+      <div className={`p-4 border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'} text-center`}>
+        <div className="flex items-center justify-center space-x-2 text-xs text-gray-400">
+          <div className="w-2 h-2 rounded-full bg-green-500"></div>
+          <span>Sistema optimizado para GitHub</span>
+        </div>
+        <div className="mt-1 text-xs text-gray-500">
+          v2.1.0 • DAM/DAW Notes
+        </div>
+      </div>
+    </motion.div>
+  );
+  
+  // Componente para el área de previsualización de código
+  const CodePreview = () => {
+    // Determinar el lenguaje para el resaltado según la extensión
+    const language = selectedFile?.endsWith('.java') ? 'java' : 
+                     selectedFile?.endsWith('.sql') ? 'sql' : 
+                     selectedFile?.endsWith('.js') ? 'js' :
+                     selectedFile?.endsWith('.dockerfile') ? 'dockerfile' :
+                     selectedFile?.endsWith('.yml') || selectedFile?.endsWith('.yaml') ? 'yaml' : 'javascript';
+    
+    return (
+      <div className="flex-1 flex flex-col bg-gray-900 rounded-xl overflow-hidden border border-gray-800 shadow-2xl">
+        {/* Header del editor */}
+        <div className="bg-gray-800/80 border-b border-gray-700 p-3 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="flex space-x-1.5">
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="text-xs font-mono text-gray-400">DAM/DAW-IDE</span>
+              <span className="text-xs text-indigo-400 font-medium">•</span>
+              <span className="text-xs text-gray-300 truncate max-w-xs">
+                {selectedFile ? `${currentCourse}/${currentSubject}/${currentTopic}/${selectedFile}` : 'Sin archivo seleccionado'}
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        {/* Área de contenido */}
+        <div 
+          ref={codeAreaRef}
+          className="flex-1 overflow-auto p-4 font-mono text-sm custom-scrollbar bg-gray-900"
+        >
+          {selectedFile ? (
+            <div 
+              dangerouslySetInnerHTML={{ 
+                __html: highlightCode(fileContent, language) 
+              }} 
+              className="text-gray-200 whitespace-pre-wrap"
+            />
+          ) : (
+            <div className="text-center text-gray-500 p-12">
+              <div className="text-5xl mb-4">👨‍💻</div>
+              <h3 className="text-xl font-medium mb-2">Selecciona un archivo para ver el código</h3>
+              <p className="text-gray-400">Navega por los temas en el panel izquierdo y selecciona un archivo para previsualizar su contenido</p>
+              <p className="text-gray-500 mt-2 text-sm">Los archivos se cargan directamente desde el repositorio de GitHub</p>
+            </div>
+          )}
+        </div>
+        
+        {/* Barra de estado */}
+        <div className="bg-gray-800/80 border-t border-gray-700 p-2 text-xs text-gray-400">
+          <div className="flex justify-between">
+            <div>
+              <span className="mx-2">Ln {fileContent.split('\n').length}, Col 1</span>
+              <span className="mx-2">UTF-8</span>
+              <span className="mx-2">{language.toUpperCase()}</span>
+            </div>
+            <div>
+              <span className="mx-2">{selectedFile?.split('.').pop().toUpperCase()} • {Math.round(fileContent.length / 1024)} KB</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
+  // Componente para la lista de archivos
+  const FileList = () => {
+    return (
+      <div className="bg-gray-800/50 rounded-xl border border-gray-700 p-5">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-bold text-white flex items-center">
+            <span className="mr-2">📁</span>
+            Archivos de {topicDisplayNames[currentTopic] || currentTopic.replace(/_/g, ' ')}
+          </h3>
+          <span className="text-sm bg-blue-500/20 text-blue-300 px-3 py-1 rounded-full">
+            {topicFiles.length} archivo{topicFiles.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+        
+        {/* Indicador de carga */}
+        {isLoading && (
+          <div className="text-center py-4">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mb-2"></div>
+            <p className="text-gray-400">Cargando archivos desde el repositorio...</p>
+          </div>
+        )}
+        
+        {/* Lista de archivos */}
+        {!isLoading && topicFiles.length > 0 ? (
+          <div className="space-y-2 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
+            {topicFiles.map((file, index) => (
+              <motion.div
+                key={file.name}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                whileHover={{ x: 5 }}
+                className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-all ${
+                  selectedFile === file.name
+                    ? 'bg-gradient-to-r from-indigo-500 to-purple-600 border border-indigo-400 shadow-lg shadow-indigo-500/20'
+                    : `${darkMode ? 'hover:bg-gray-700/50' : 'hover:bg-gray-100'} ${darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`
+                }`}
+                onClick={() => handleFileSelect(file.name)}
+              >
+                <div className="flex items-center space-x-3 flex-1">
+                  <div className={`text-2xl ${getFileColor(file.name)}`}>
+                    {getFileIcon(file.name)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className={`font-medium truncate ${selectedFile === file.name ? 'text-white' : darkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                      {file.name}
+                    </div>
+                    <div className={`text-xs ${selectedFile === file.name ? 'text-indigo-100' : 'text-gray-400'}`}>
+                      {file.size} • Última modificación: {formatDate(file.lastModified)}
+                    </div>
+                  </div>
+                </div>
+                <div className={`text-xs font-mono px-2 py-1 rounded ${
+                  file.name.endsWith('.java') ? 'bg-yellow-500/20 text-yellow-300' :
+                  file.name.endsWith('.sql') ? 'bg-blue-500/20 text-blue-300' :
+                  file.name.endsWith('.js') ? 'bg-yellow-400/20 text-yellow-300' :
+                  file.name.endsWith('.py') ? 'bg-green-500/20 text-green-300' :
+                  file.name.endsWith('.dockerfile') ? 'bg-blue-500/20 text-blue-300' :
+                  file.name.endsWith('.yml') || file.name.endsWith('.yaml') ? 'bg-cyan-500/20 text-cyan-300' :
+                  'bg-gray-500/20 text-gray-300'
+                }`}>
+                  {file.name.split('.').pop().toUpperCase()}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          !isLoading && (
+            <div className="text-center py-8 text-gray-500">
+              <div className="text-3xl mb-3">📭</div>
+              <p className="font-medium">No hay archivos en este tema</p>
+              <p className="text-sm mt-1">Añade archivos .java, .sql, etc. en la carpeta correspondiente del repositorio</p>
+              <p className="text-xs mt-2 bg-gray-700/50 text-gray-400 p-2 rounded">
+                Ruta esperada: {BASE_NOTES_PATH}/{currentCourse}/{currentSubject}/{currentTopic}/
+              </p>
+            </div>
+          )
+        )}
+        
+        {/* Mensaje de error */}
+        {loadError && (
+          <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-300 text-sm">
+            <div className="flex items-start">
+              <span className="text-xl mr-2">⚠️</span>
+              <div>
+                <p className="font-medium">Error al cargar archivos</p>
+                <p>{loadError}</p>
+                <p className="mt-1 text-xs opacity-80">
+                  Verifica que la estructura de carpetas exista en el repositorio y que los archivos sean accesibles.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+  
+  // Componente para el panel de navegación (breadcrumbs)
+  const NavigationPanel = () => (
+    <div className="bg-gray-800/50 rounded-xl border border-gray-700 p-4 mb-6">
+      <div className="flex items-center space-x-2 text-sm text-gray-300">
+        <button 
+          onClick={handleBackNavigation}
+          disabled={navigationHistory.length <= 1}
+          className={`p-1 rounded ${navigationHistory.length > 1 ? 'hover:bg-gray-700 text-indigo-400' : 'text-gray-600 cursor-not-allowed'}`}
+        >
+          ◀
+        </button>
+        {navigationHistory.map((item, index) => {
+          // Obtener nombre para mostrar
+          let displayName = item;
+          if (index === 0) displayName = courseDisplayNames[item] || item;
+          else if (index === 1) displayName = subjectDisplayNames[item] || item.replace(/_/g, ' ');
+          else if (index === 2) displayName = topicDisplayNames[item] || item.replace(/_/g, ' ');
+          
+          return (
+            <React.Fragment key={index}>
+              <span className={index === navigationHistory.length - 1 ? 'text-white font-medium' : ''}>
+                {displayName}
+              </span>
+              {index < navigationHistory.length - 1 && (
+                <span className="text-gray-500">/</span>
+              )}
+            </React.Fragment>
+          );
+        })}
+      </div>
     </div>
-  </main>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const sidebar = document.getElementById('sidebar');
-      const mainContent = document.getElementById('main-content');
-      const toggleBtn = document.getElementById('toggle-menu');
-      const mapLinks = document.querySelectorAll('.map-link');
-      const mainCategories = document.querySelectorAll('.main-category');
-      const subCategories = document.querySelectorAll('.subcategory');
-      const mapTitle = document.getElementById('map-title');
-      const mapContainer = document.querySelector('.map-container');
-
-      // Alternar menú en móvil
-      toggleBtn.addEventListener('click', () => {
-        sidebar.classList.toggle('expanded');
-        toggleBtn.textContent = sidebar.classList.contains('expanded') ? '✕' : '☰';
-      });
-
-      // Cerrar menú al hacer clic en el contenido principal (móvil)
-      mainContent.addEventListener('click', () => {
-        if (window.innerWidth <= 768 && sidebar.classList.contains('expanded')) {
-          sidebar.classList.remove('expanded');
-          toggleBtn.textContent = '☰';
-        }
-      });
-
-      // Manejo de categorías principales (DAM, Videojuegos)
-      mainCategories.forEach(category => {
-        category.addEventListener('click', () => {
-          const isExpanded = category.classList.contains('expanded');
-          const submenu = category.nextElementSibling;
-          
-          // Colapsar todas las categorías principales
-          mainCategories.forEach(cat => {
-            cat.classList.remove('expanded');
-            cat.nextElementSibling.classList.remove('show');
-          });
-          
-          // Colapsar todas las subcategorías
-          subCategories.forEach(sub => {
-            sub.classList.remove('expanded');
-            if (sub.nextElementSibling) sub.nextElementSibling.classList.remove('show');
-          });
-          
-          // Expandir/cerrar la categoría actual
-          if (!isExpanded) {
-            category.classList.add('expanded');
-            submenu.classList.add('show');
-          }
-          
-          // Actualizar estado activo
-          mainCategories.forEach(cat => cat.classList.remove('active'));
-          category.classList.add('active');
-          
-          // Actualizar el título principal
-          mapTitle.textContent = category.textContent.trim();
-          
-          // Mostrar contenido inicial para la categoría
-          if (!isExpanded) {
-            mapContainer.innerHTML = `
-              <div class="placeholder-content">
-                <h2>${category.textContent.trim()}</h2>
-                <p>Selecciona una subcategoría en el menú para explorar temas específicos.</p>
-                <div class="preview">
-                  <strong>Contenido disponible:</strong><br>
-                  • ${category.nextElementSibling.querySelectorAll('.subcategory').length} subcategorías<br>
-                  • Múltiples temas educativos<br>
-                  • Ejemplos prácticos y recursos
-                </div>
-              </div>
-            `;
-          }
-        });
-      });
-
-      // Manejo de subcategorías (Base de Datos, Java, Zelda, etc.)
-      subCategories.forEach(subcategory => {
-        subcategory.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const isExpanded = subcategory.classList.contains('expanded');
-          const subsubmenu = subcategory.nextElementSibling;
-          
-          // Colapsar otras subcategorías dentro de la misma categoría principal
-          const parentCategory = subcategory.closest('ul.submenu');
-          if (parentCategory) {
-            parentCategory.querySelectorAll('.subcategory').forEach(sub => {
-              if (sub !== subcategory) {
-                sub.classList.remove('expanded');
-                if (sub.nextElementSibling) sub.nextElementSibling.classList.remove('show');
-              }
-            });
-          }
-          
-          // Toggle subcategoría actual
-          subcategory.classList.toggle('expanded', !isExpanded);
-          if (subsubmenu) {
-            subsubmenu.classList.toggle('show', !isExpanded);
-          }
-          
-          // Actualizar estado activo
-          subCategories.forEach(sub => sub.classList.remove('active'));
-          subcategory.classList.add('active');
-          
-          // Actualizar el título principal
-          mapTitle.textContent = subcategory.textContent.trim();
-          
-          // Mostrar contenido inicial para la subcategoría
-          if (!isExpanded) {
-            mapContainer.innerHTML = `
-              <div class="placeholder-content">
-                <h2>${subcategory.textContent.trim()}</h2>
-                <p>Selecciona un tema específico en el menú para ver contenido detallado.</p>
-                <div class="preview">
-                  <strong>Temas disponibles:</strong><br>
-                  • ${subsubmenu.querySelectorAll('li').length} temas educativos<br>
-                  • Ejemplos prácticos<br>
-                  • Ejercicios interactivos
-                </div>
-              </div>
-            `;
-          }
-        });
-      });
-
-      // Manejo de enlaces a mapas/temas
-      mapLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          
-          // Actualizar estado activo de enlaces
-          mapLinks.forEach(el => el.classList.remove('active'));
-          link.classList.add('active');
-          
-          // Actualizar título
-          const title = link.textContent.trim();
-          mapTitle.textContent = title;
-          
-          // Verificar si es el tema de ArrayList para mostrar el editor de código
-          if (link.dataset.topic === 'arraylist') {
-            // Mostrar editor de código estilo IntelliJ
-            mapContainer.innerHTML = `
-              <div class="code-editor-container">
-                <div class="editor-header">
-                  DAM/Java/Array_List.java
-                </div>
-                <div class="editor-tabs">
-                  <div class="editor-tab active">Array_List.java</div>
-                  <div class="editor-tab">Main.java</div>
-                  <div class="editor-tab">README.md</div>
-                </div>
-                <div class="editor-toolbar">
-                  <button title="Run"><i>▶</i> Run</button>
-                  <button title="Debug">🐞 Debug</button>
-                  <button class="run" title="Run ArrayListExample">Run ArrayListExample</button>
-                  <span style="margin-left: auto">Ln 15, Col 32</span>
-                  <span>UTF-8</span>
-                  <span>LF</span>
-                </div>
-                <div class="editor-content">
-                  <div class="line-numbers">
-                    <span>1</span>
-                    <span>2</span>
-                    <span>3</span>
-                    <span>4</span>
-                    <span>5</span>
-                    <span>6</span>
-                    <span>7</span>
-                    <span>8</span>
-                    <span>9</span>
-                    <span>10</span>
-                    <span>11</span>
-                    <span>12</span>
-                    <span>13</span>
-                    <span>14</span>
-                    <span>15</span>
-                    <span>16</span>
-                    <span>17</span>
-                    <span>18</span>
-                    <span>19</span>
-                    <span>20</span>
-                    <span>21</span>
-                    <span>22</span>
-                    <span>23</span>
-                    <span>24</span>
-                    <span>25</span>
-                    <span>26</span>
-                    <span>27</span>
-                  </div>
-                  <div class="code-area">
-                    <span class="keyword">import</span> java.util.ArrayList;<br>
-                    <span class="keyword">import</span> java.util.List;<br>
-                    <br>
-                    <span class="keyword">public</span> <span class="keyword">class</span> <span class="class-name">ArrayListExample</span> {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="function">main</span>(<span class="class-name">String</span>[] args) {<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Crear un ArrayList de Strings</span><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;<span class="class-name">String</span>&gt; nombres = <span class="keyword">new</span> <span class="class-name">ArrayList</span>&lt;&gt;();<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Añadir elementos al ArrayList</span><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nombres.<span class="function">add</span>(<span class="string">"Ana"</span>);<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nombres.<span class="function">add</span>(<span class="string">"Luis"</span>);<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nombres.<span class="function">add</span>(<span class="string">"Carlos"</span>);<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nombres.<span class="function">add</span>(<span class="string">"María"</span>);<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nombres.<span class="function">add</span>(<span class="string">"Javier"</span>);<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Mostrar la lista completa</span><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="system">System</span>.<span class="function">out</span>.<span class="function">println</span>(<span class="string">"Lista original: "</span> + nombres);<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Eliminar un elemento por valor</span><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nombres.<span class="function">remove</span>(<span class="string">"Luis"</span>);<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="system">System</span>.<span class="function">out</span>.<span class="function">println</span>(<span class="string">"Después de eliminar 'Luis': "</span> + nombres);<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Eliminar un elemento por índice</span><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nombres.<span class="function">remove</span>(<span class="number">2</span>);<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="system">System</span>.<span class="function">out</span>.<span class="function">println</span>(<span class="string">"Después de eliminar el elemento en la posición 2: "</span> + nombres);<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Obtener un elemento por índice</span><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="class-name">String</span> primero = nombres.<span class="function">get</span>(<span class="number">0</span>);<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="system">System</span>.<span class="function">out</span>.<span class="function">println</span>(<span class="string">"Primer elemento: "</span> + primero);<br>
-                    <br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Tamaño actual de la lista</span><br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="system">System</span>.<span class="function">out</span>.<span class="function">println</span>(<span class="string">"Número de elementos: "</span> + nombres.<span class="function">size</span>());<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                    }
-                  </div>
-                </div>
-                <div class="execution-output">
-                  <div class="output-title">Run ArrayListExample</div>
-                  <div class="output-line system-out">Lista original: [Ana, Luis, Carlos, María, Javier]</div>
-                  <div class="output-line system-out">Después de eliminar 'Luis': [Ana, Carlos, María, Javier]</div>
-                  <div class="output-line system-out">Después de eliminar el elemento en la posición 2: [Ana, Carlos, Javier]</div>
-                  <div class="output-line system-out">Primer elemento: Ana</div>
-                  <div class="output-line system-out">Número de elementos: 3</div>
-                  <div class="output-line" style="color:#4ec9b0;margin-top:8px">Process finished with exit code 0</div>
-                </div>
-                <div class="editor-footer">
-                  <div>ArrayListExample.java</div>
-                  <div>Spaces: 4</div>
-                  <div>UTF-8</div>
-                  <div>100%</div>
-                </div>
-              </div>
-            `;
-          } else {
-            // Mostrar contenido genérico para otros temas
-            mapContainer.innerHTML = `
-              <div class="placeholder-content">
-                <h2>${title}</h2>
-                <p>Contenido educativo interactivo para <strong>${title}</strong>.</p>
-                <p>En una implementación real, aquí se cargaría un mapa interactivo, diagrama o material educativo específico para este tema.</p>
-                <div class="preview">
-                  <strong>Estructura del contenido:</strong><br>
-                  • Introducción teórica<br>
-                  • Ejemplos prácticos<br>
-                  • Ejercicios interactivos<br>
-                  • Recursos adicionales
-                </div>
-              </div>
-            `;
-          }
-          
-          // Cerrar menú en móvil tras seleccionar
-          if (window.innerWidth <= 768) {
-            sidebar.classList.remove('expanded');
-            toggleBtn.textContent = '☰';
-          }
-          
-          // Animación de entrada
-          mapContainer.style.opacity = 0;
-          mapContainer.style.transform = 'translateY(10px)';
-          setTimeout(() => {
-            mapContainer.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-            mapContainer.style.opacity = 1;
-            mapContainer.style.transform = 'translateY(0)';
-          }, 10);
-        });
-      });
-
-      // Inicialización en móviles
-      if (window.innerWidth <= 768) {
-        sidebar.classList.remove('expanded');
-        mainCategories.forEach(cat => {
-          cat.classList.remove('expanded');
-          cat.nextElementSibling.classList.remove('show');
-        });
-        toggleBtn.style.display = 'flex';
-      }
+  );
+  
+  // =================================================================================================
+  // RENDERIZADO PRINCIPAL DE LA APLICACIÓN
+  // =================================================================================================
+  
+  return (
+    <div className={`min-h-screen flex ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'} font-sans`}>
+      {/* Sidebar de navegación */}
+      <Sidebar />
       
-      // Ajuste al redimensionar ventana
-      window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) {
-          sidebar.classList.remove('expanded');
-          toggleBtn.style.display = 'none';
-        } else {
-          toggleBtn.style.display = 'flex';
-        }
-      });
+      {/* Área de contenido principal */}
+      <div className="flex-1 flex flex-col p-6 overflow-auto custom-scrollbar">
+        {/* Header con controles superiores */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500">
+              DAM/DAW Notes Studio
+            </h1>
+            <p className={`mt-1 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              Visualizador de apuntes y código fuente desde GitHub
+            </p>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            {/* Selector de tema de color */}
+            <div className="relative group">
+              <div className="flex items-center space-x-2 p-2 bg-gray-800/50 rounded-lg border border-gray-700 cursor-pointer hover:bg-gray-800/70 transition-colors">
+                <div className="w-4 h-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                <span className="text-sm font-medium">Tema</span>
+                <span>▼</span>
+              </div>
+              
+              {/* Panel de selección de color */}
+              <div className="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg p-3 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
+                <div className="grid grid-cols-3 gap-2">
+                  {['#6366f1', '#8b5cf6', '#ec4899', '#ef4444', '#f59e0b', '#10b981'].map((color) => (
+                    <div
+                      key={color}
+                      className="w-8 h-8 rounded-full cursor-pointer border-2 border-gray-600 hover:scale-110 transition-transform"
+                      style={{ backgroundColor: color }}
+                      onClick={() => setAccentColor(color)}
+                      title={`Cambiar a tema ${color}`}
+                    />
+                  ))}
+                </div>
+                <p className="text-xs text-gray-400 mt-2 text-center">
+                  (Los cambios de color son solo visuales)
+                </p>
+              </div>
+            </div>
+            
+            {/* Toggle de modo oscuro */}
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className={`p-2 rounded-lg transition-colors ${
+                darkMode 
+                  ? 'bg-yellow-400/20 text-yellow-300 hover:bg-yellow-400/30' 
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+              title={darkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+            >
+              {darkMode ? '☀️' : '🌙'}
+            </button>
+          </div>
+        </div>
+        
+        {/* Panel de navegación (breadcrumbs) */}
+        <NavigationPanel />
+        
+        {/* Contenido principal: Lista de archivos y editor */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
+          {/* Columna izquierda: Lista de archivos */}
+          <div className="lg:col-span-1">
+            <FileList />
+          </div>
+          
+          {/* Columna derecha: Editor de código */}
+          <div className="lg:col-span-2">
+            <CodePreview />
+          </div>
+        </div>
+        
+        {/* Panel de información */}
+        <div className={`mt-8 p-5 bg-gray-800/30 rounded-xl border border-gray-700`}>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div className="mb-4 md:mb-0">
+              <h3 className="text-lg font-bold text-white mb-2 flex items-center">
+                <span className="mr-2">ℹ️</span>
+                Información del sistema
+              </h3>
+              <ul className="text-gray-300 text-sm space-y-1">
+                <li>• Los archivos se cargan directamente desde el repositorio de GitHub</li>
+                <li>• La estructura de carpetas debe seguir el patrón: <code className="bg-gray-700 px-1 rounded">{BASE_NOTES_PATH}/[curso]/[asignatura]/[tema]/</code></li>
+                <li>• Esta es una vista de solo lectura. El código no se ejecuta, solo se visualiza</li>
+                <li>• El resaltado de sintaxis funciona para Java, SQL, JavaScript, Dockerfile y YAML</li>
+              </ul>
+            </div>
+            <div className="text-center md:text-right">
+              <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
+                v2.1.0
+              </div>
+              <p className="text-gray-400 mt-1">Optimizado para GitHub Pages</p>
+              <button 
+                onClick={() => window.open('https://github.com/tu-usuario/tu-repositorio', '_blank')}
+                className="mt-2 inline-flex items-center space-x-2 bg-gray-700 hover:bg-gray-600 text-white text-sm px-4 py-2 rounded-lg transition-colors"
+              >
+                <span>→</span>
+                <span>Ver repositorio</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Footer */}
+        <div className={`mt-8 pt-6 border-t ${darkMode ? 'border-gray-800' : 'border-gray-200'} text-center text-sm ${darkMode ? 'text-gray-500' : 'text-gray-600'}`}>
+          <p>DAM/DAW Notes Studio • Visualizador de apuntes académicos • v2.1.0</p>
+          <p className="mt-1">Sistema de visualización de código fuente optimizado para GitHub Pages</p>
+        </div>
+      </div>
       
-      // Configurar pestañas del editor
-      document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('editor-tab')) {
-          document.querySelectorAll('.editor-tab').forEach(tab => {
-            tab.classList.remove('active');
-          });
-          e.target.classList.add('active');
+      {/* Estilos personalizados para scrollbars y animaciones */}
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: ${darkMode ? 'rgba(31, 41, 55, 0.5)' : 'rgba(243, 244, 246, 0.8)'};
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: ${darkMode ? 'rgba(79, 70, 229, 0.5)' : 'rgba(124, 58, 237, 0.3)'};
+          border-radius: 10px;
+          border: 2px solid transparent;
+          background-clip: content-box;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: ${darkMode ? 'rgba(99, 102, 241, 0.7)' : 'rgba(124, 58, 237, 0.5)'};
         }
         
-        // Botón Run en el editor
-        if (e.target.tagName === 'BUTTON' && e.target.title.includes('Run')) {
-          const output = document.querySelector('.execution-output');
-          if (output) {
-            output.scrollIntoView({behavior: 'smooth'});
-          }
+        @keyframes pulse-slow {
+          0% { opacity: 0.5; }
+          50% { opacity: 1; }
+          100% { opacity: 0.5; }
         }
-      });
-    });
-  </script>
-</body>
-</html>
+        .animate-pulse-slow {
+          animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default App;
