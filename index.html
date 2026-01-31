@@ -124,7 +124,7 @@ const fileTree = {
     },
     { 
         "name": "Mapas.java",
-        "url": "https://raw.githubusercontent.com/LyPaw/ViMap/4292da45da77e88398d117b33fa7c736c195cba8/DAM/Java/Mapas.java  "
+        "url": "https://raw.githubusercontent.com/LyPaw/ViMap/1c308929ca24a4fd8909fe4123b8ef6eef80f0ec/DAM/Java/Mapas.Java"
     },
     { 
         "name": "Arrays.pdf",
@@ -256,18 +256,36 @@ function escapeHTML(str) {
         .replace(/>/g, "&gt;");
 }
 
-function escapeHTML(str) {
-    return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-}
-
 function highlightJava(code) {
-    // Solo escapar HTML, sin resaltar keywords, strings ni comentarios
-    return escapeHTML(code);
+    // Primero escapamos HTML
+    code = escapeHTML(code);
+
+    // Separar líneas para procesarlas (opcional, pero más seguro)
+    const lines = code.split('\n');
+    const result = [];
+
+    for (let line of lines) {
+        let processedLine = line;
+
+        // Resaltar comentarios de una línea (//) en verde
+        const commentIndex = processedLine.indexOf('//');
+        if (commentIndex !== -1) {
+            const codePart = processedLine.substring(0, commentIndex);
+            const commentPart = processedLine.substring(commentIndex);
+            processedLine = codePart + `<span style="color: green;">${commentPart}</span>`;
+        }
+
+        // Resaltar variables en morado
+        // Consideramos "variable" cualquier identificador que comience con letra minúscula
+        processedLine = processedLine.replace(/\b([a-z][a-zA-Z0-9_]*)\b/g, `<span style="color: purple;">$1</span>`);
+
+        result.push(processedLine);
+    }
+
+    return result.join('\n');
 }
 </script>
 
 </body>
 </html>
+
