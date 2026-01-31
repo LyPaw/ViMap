@@ -187,19 +187,34 @@ function loadFile(file, el) {
     }
 }
 
+function escapeHTML(str) {
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
 function highlightJava(code) {
+    code = escapeHTML(code);
+
     return code
+        // Comentarios
         .replace(/(\/\/.*)/g, '<span class="comment">$1</span>')
+        // Strings
         .replace(/("(?:[^"\\]|\\.)*")/g, '<span class="string">$1</span>')
-        .replace(/\b(class|public|private|protected|static|void|new|return|if|else|for|while|int|double|float|boolean|char|String)\b/g,
+        // Keywords
+        .replace(/\b(class|public|private|protected|static|void|new|return|if|else|for|while|int|double|float|boolean|char|String|Set|HashSet|Map|HashMap)\b/g,
                  '<span class="keyword">$1</span>')
+        // Clases
         .replace(/\b([A-Z][a-zA-Z0-9_]*)\b/g, '<span class="class">$1</span>')
+        // Números
         .replace(/\b(\d+)\b/g, '<span class="number">$1</span>');
 }
 </script>
 
 </body>
 </html>
+
 
 
 
