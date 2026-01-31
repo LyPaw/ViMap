@@ -45,7 +45,7 @@
         line-height: 1.6;
     }
 
-    /* 🎨 Colores tipo VSCode */
+    
     .keyword { color: #569cd6; font-weight: bold; }
     .class { color: #4ec9b0; font-weight: bold; }
     .string { color: #ce9178; }
@@ -69,8 +69,10 @@ const files = [
         name: "Array_List.java",
         url: "https://raw.githubusercontent.com/LyPaw/Mapa_Visual_Qwen/7b6a28803c8f9c605b9667dc6e093fde0c0d7289/DAM/Java/Array_List.java"
     }
-    // 👉 aquí puedes añadir más archivos:
-    // { name: "Otro.java", url: "https://raw.githubusercontent.com/..." }
+
+        name: "Array_List.java",
+        url: "https://raw.githubusercontent.com/LyPaw/Mapa_Visual_Qwen/7b6a28803c8f9c605b9667dc6e093fde0c0d7289/DAM/Java/Array_List.java"
+    
 ];
 
 const tabs = document.getElementById("tabs");
@@ -97,7 +99,6 @@ function loadFile(file, tab) {
         .catch(() => codeEl.textContent = "❌ Error al cargar archivo");
 }
 
-// 🎨 Resaltado básico Java
 function highlightJava(code) {
     return code
         .replace(/(\/\/.*)/g, '<span class="comment">$1</span>')
@@ -111,3 +112,4 @@ function highlightJava(code) {
 
 </body>
 </html>
+
