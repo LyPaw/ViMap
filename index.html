@@ -207,22 +207,45 @@ function highlightJava(code) {
     code = escapeHTML(code);
 
     return code
-        // Comentarios
-        .replace(/(\/\/.*)/g, '<span class="comment">$1</span>')
-        // Strings
-        .replace(/("(?:[^"\\]|\\.)*")/g, '<span class="string">$1</span>')
-        // Keywords
-        .replace(/\b(class|public|private|protected|static|void|new|return|if|else|for|while|int|double|float|boolean|char|String|Set|HashSet|Map|HashMap)\b/g,
-                 '<span class="keyword">$1</span>')
-        // Clases
-        .replace(/\b([A-Z][a-zA-Z0-9_]*)\b/g, '<span class="class">$1</span>')
-        // Números
-        .replace(/\b(\d+)\b/g, '<span class="number">$1</span>');
+        // STRINGS primero (evita que // dentro de strings se trate como comentario)
+        .replace(/("(?:[^"\\]|\\.)*")/g, "<span class='string'>$1</span>")
+        // COMENTARIOS
+        .replace(/(\/\/.*)/g, "<span class='comment'>$1</span>")
+        // KEYWORDS (con \B para evitar coincidir dentro de etiquetas HTML como <span class='...'>)
+        .replace(/\B\b(class|public|private|protected|static|void|new|return|if|else|for|while|int|double|float|boolean|char|String|Set|HashSet|Map|HashMap)\b\B/g,
+                 "<span class='keyword'>$1</span>")
+        // CLASES (solo si no son keywords ya resaltadas)
+        .replace(/\b([A-Z][a-zA-Z0-9_]*)\b/g, "<span class='class'>$1</span>")
+        // NÚMEROS
+        .replace(/\b(\d+)\b/g, "<span class='number'>$1</span>");
+}
+
+function loadFile(file, el) {
+    document.querySelectorAll(".file").forEach(f => f.classList.remove("active"));
+    el.classList.add("active");
+
+    titleEl.textContent = file.name;
+    codeEl.innerHTML = "⏳ Cargando…";
+
+    const cleanUrl = file.url.trim(); // ¡ES CLAVE! Elimina espacios al final de la URL
+
+    if (file.name.endsWith(".pdf")) {
+        codeEl.innerHTML = `<iframe src="${cleanUrl}"></iframe>`;
+    } else {
+        fetch(cleanUrl)
+            .then(r => {
+                if (!r.ok) throw new Error('Archivo no encontrado');
+                return r.text();
+            })
+            .then(text => codeEl.innerHTML = highlightJava(text))
+            .catch(() => codeEl.textContent = "❌ Error al cargar archivo. Verifica la URL.");
+    }
 }
 </script>
 
 </body>
 </html>
+
 
 
 
