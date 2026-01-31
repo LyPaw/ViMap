@@ -1,47 +1,112 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Viewer - Array_List.java</title>
-    <style>
-        /* aquí va todo tu CSS personalizado (el que ya incluiste) */
-        body {
-            font-family: monospace;
-            background: #1e1e1e;
-            color: #d4d4d4;
-            padding: 20px;
-        }
-        .code-content {
-            white-space: pre;
-            background: #2d2d2d;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Java Code Viewer</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Consolas, monospace;
+        background: #0f172a;
+        color: #d4d4d4;
+    }
+
+    .top-bar {
+        display: flex;
+        gap: 10px;
+        padding: 12px;
+        background: #1e293b;
+        border-bottom: 1px solid #334155;
+    }
+
+    .tab {
+        background: #334155;
+        padding: 8px 14px;
+        border-radius: 8px 8px 0 0;
+        cursor: pointer;
+        color: #cbd5e1;
+        transition: 0.2s;
+    }
+
+    .tab.active {
+        background: #4f46e5;
+        color: white;
+    }
+
+    .viewer {
+        padding: 20px;
+    }
+
+    pre {
+        background: #1e1e1e;
+        padding: 20px;
+        border-radius: 10px;
+        overflow-x: auto;
+        line-height: 1.6;
+    }
+
+    /* 🎨 Colores tipo VSCode */
+    .keyword { color: #569cd6; font-weight: bold; }
+    .class { color: #4ec9b0; font-weight: bold; }
+    .string { color: #ce9178; }
+    .comment { color: #6a9955; font-style: italic; }
+    .number { color: #b5cea8; }
+    .type { color: #9cdcfe; }
+</style>
 </head>
+
 <body>
 
-<h1>Visor de Código Java</h1>
-<div class="code-content" id="code">Cargando archivo...</div>
+<div class="top-bar" id="tabs"></div>
+
+<div class="viewer">
+    <pre id="code">Selecciona un archivo…</pre>
+</div>
 
 <script>
-    // Raw URL de GitHub del .java
-    const url = "https://raw.githubusercontent.com/LyPaw/Mapa_Visual_Qwen/7b6a28803c8f9c605b9667dc6e093fde0c0d7289/DAM/Java/Array_List.java";
+const files = [
+    {
+        name: "Array_List.java",
+        url: "https://raw.githubusercontent.com/LyPaw/Mapa_Visual_Qwen/7b6a28803c8f9c605b9667dc6e093fde0c0d7289/DAM/Java/Array_List.java"
+    }
+    // 👉 aquí puedes añadir más archivos:
+    // { name: "Otro.java", url: "https://raw.githubusercontent.com/..." }
+];
 
-    fetch(url)
-        .then(response => {
-            if (!response.ok) throw new Error("No se pudo cargar el archivo");
-            return response.text();
+const tabs = document.getElementById("tabs");
+const codeEl = document.getElementById("code");
+
+files.forEach((file, index) => {
+    const tab = document.createElement("div");
+    tab.className = "tab";
+    tab.textContent = file.name;
+    tab.onclick = () => loadFile(file, tab);
+    tabs.appendChild(tab);
+    if (index === 0) loadFile(file, tab);
+});
+
+function loadFile(file, tab) {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+
+    fetch(file.url)
+        .then(r => r.text())
+        .then(text => {
+            codeEl.innerHTML = highlightJava(text);
         })
-        .then(code => {
-            // Ponemos el contenido dentro del div
-            document.getElementById("code").textContent = code;
-        })
-        .catch(error => {
-            document.getElementById("code").textContent = "❌ Error: " + error;
-        });
+        .catch(() => codeEl.textContent = "❌ Error al cargar archivo");
+}
+
+// 🎨 Resaltado básico Java
+function highlightJava(code) {
+    return code
+        .replace(/(\/\/.*)/g, '<span class="comment">$1</span>')
+        .replace(/("(?:[^"\\]|\\.)*")/g, '<span class="string">$1</span>')
+        .replace(/\b(class|public|private|protected|static|void|new|return|if|else|for|while|int|double|float|boolean|char|String)\b/g,
+                 '<span class="keyword">$1</span>')
+        .replace(/\b([A-Z][a-zA-Z0-9_]*)\b/g, '<span class="class">$1</span>')
+        .replace(/\b(\d+)\b/g, '<span class="number">$1</span>');
+}
 </script>
 
 </body>
