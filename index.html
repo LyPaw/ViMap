@@ -2,38 +2,51 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Java Code Viewer</title>
+<title>Code Viewer - Lenguajes</title>
 <style>
     body {
         margin: 0;
         font-family: Consolas, monospace;
         background: #0f172a;
         color: #d4d4d4;
-    }
-
-    .top-bar {
         display: flex;
-        gap: 10px;
-        padding: 12px;
-        background: #1e293b;
-        border-bottom: 1px solid #334155;
+        height: 100vh;
     }
 
-    .tab {
-        background: #334155;
-        padding: 8px 14px;
-        border-radius: 8px 8px 0 0;
-        cursor: pointer;
+    /* Sidebar */
+    .sidebar {
+        width: 260px;
+        background: #020617;
+        border-right: 1px solid #1e293b;
+        padding: 10px;
+    }
+
+    .folder {
+        font-weight: bold;
         color: #cbd5e1;
-        transition: 0.2s;
+        margin-top: 10px;
+        cursor: pointer;
     }
 
-    .tab.active {
+    .file {
+        padding-left: 20px;
+        cursor: pointer;
+        color: #94a3b8;
+        margin: 5px 0;
+    }
+
+    .file:hover { color: white; }
+
+    .file.active {
+        color: #fff;
         background: #4f46e5;
-        color: white;
+        border-radius: 6px;
+        padding: 2px 6px;
     }
 
+    /* Viewer */
     .viewer {
+        flex: 1;
         padding: 20px;
     }
 
@@ -45,65 +58,71 @@
         line-height: 1.6;
     }
 
-    
+    /* Colores Java */
     .keyword { color: #569cd6; font-weight: bold; }
     .class { color: #4ec9b0; font-weight: bold; }
     .string { color: #ce9178; }
     .comment { color: #6a9955; font-style: italic; }
     .number { color: #b5cea8; }
-    .type { color: #9cdcfe; }
 </style>
 </head>
 
 <body>
 
-<div class="top-bar" id="tabs"></div>
+<div class="sidebar" id="sidebar"></div>
 
 <div class="viewer">
-    <pre id="code">Selecciona un archivo…</pre>
+    <h2 id="title">Selecciona un archivo</h2>
+    <pre id="code">📂 Elige un archivo de la izquierda…</pre>
 </div>
 
 <script>
-const files = [
-    {
-        name: "Array_List.java",
-        url: "https://raw.githubusercontent.com/LyPaw/Mapa_Visual_Qwen/7b6a28803c8f9c605b9667dc6e093fde0c0d7289/DAM/Java/Array_List.java"
-    }
-    ,
+const fileTree = {
+    Java: [
+        {
+            name: "Array_List.java",
+            url: "https://raw.githubusercontent.com/LyPaw/Mapa_Visual_Qwen/7b6a28803c8f9c605b9667dc6e093fde0c0d7289/DAM/Java/Array_List.java"
+        },
+        {
+            name: "Conjuntos.java",
+            url: "https://raw.githubusercontent.com/LyPaw/Mapa_Visual_Qwen/f6adf23ddd1bb4131322a256f696b81b24dd8dde/DAM/Java/Conjuntos.java"
+        },
+        {
+            name: "Mapas.java",
+            url: "https://raw.githubusercontent.com/LyPaw/Mapa_Visual_Qwen/f6adf23ddd1bb4131322a256f696b81b24dd8dde/DAM/Java/Mapas.java"
+        }
+    ]
+};
 
-    {   
-        name: "Conjuntos.java",
-        url: "https://github.com/LyPaw/Mapa_Visual_Qwen/blob/f6adf23ddd1bb4131322a256f696b81b24dd8dde/DAM/Java/Conjuntos.java"
-    }
-    ,
-
-    {   
-        name: "Mapas.java",
-        url: "https://github.com/LyPaw/Mapa_Visual_Qwen/blob/f6adf23ddd1bb4131322a256f696b81b24dd8dde/DAM/Java/Mapas.java"
-    }
-];
-
-const tabs = document.getElementById("tabs");
+const sidebar = document.getElementById("sidebar");
 const codeEl = document.getElementById("code");
+const titleEl = document.getElementById("title");
 
-files.forEach((file, index) => {
-    const tab = document.createElement("div");
-    tab.className = "tab";
-    tab.textContent = file.name;
-    tab.onclick = () => loadFile(file, tab);
-    tabs.appendChild(tab);
-    if (index === 0) loadFile(file, tab);
-});
+for (const lang in fileTree) {
+    const folder = document.createElement("div");
+    folder.className = "folder";
+    folder.textContent = "📁 " + lang;
+    sidebar.appendChild(folder);
 
-function loadFile(file, tab) {
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    tab.classList.add("active");
+    fileTree[lang].forEach(file => {
+        const fileEl = document.createElement("div");
+        fileEl.className = "file";
+        fileEl.textContent = "📄 " + file.name;
+        fileEl.onclick = () => loadFile(file, fileEl);
+        sidebar.appendChild(fileEl);
+    });
+}
+
+function loadFile(file, el) {
+    document.querySelectorAll(".file").forEach(f => f.classList.remove("active"));
+    el.classList.add("active");
+
+    titleEl.textContent = file.name;
+    codeEl.textContent = "⏳ Cargando...";
 
     fetch(file.url)
         .then(r => r.text())
-        .then(text => {
-            codeEl.innerHTML = highlightJava(text);
-        })
+        .then(text => codeEl.innerHTML = highlightJava(text))
         .catch(() => codeEl.textContent = "❌ Error al cargar archivo");
 }
 
@@ -120,7 +139,3 @@ function highlightJava(code) {
 
 </body>
 </html>
-
-
-
-
