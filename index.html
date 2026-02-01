@@ -101,109 +101,36 @@
         border-radius: 10px;
     }
 
-    .markdown table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        background: #1e1e1e;
-        color: #e5e7eb;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .markdown table thead {
-        background: #2d2d2d;
-    }
-
-    .markdown table th {
-        background: #252526;
-        color: #ffffff;
-        font-weight: bold;
-        padding: 12px 15px;
-        text-align: left;
-        border-bottom: 2px solid #4f46e5;
-    }
-
-    .markdown table td {
-        padding: 10px 15px;
-        border-bottom: 1px solid #3a3a3a;
-        color: #e5e7eb;
-    }
-
-    .markdown table tr {
-        border-bottom: 1px solid #3a3a3a;
-    }
-
-    .markdown table tr:last-child td {
-        border-bottom: none;
-    }
-
-    .markdown table tr:hover td {
-        background: #2a2a2a;
-    }
-
-    .markdown table tbody tr:nth-child(even) td {
-        background: #252525;
-    }
-
-    .markdown table tbody tr:nth-child(odd) td {
-        background: #1e1e1e;
-    }
-
-    .markdown h1 { color: #e5e7eb; margin: 0; }
-    .markdown h2 { color: #c7d2fe; margin: 0; }
-    .markdown h3 { color: #a5b4fc; margin: 0; }
-    .markdown p { margin: 0; line-height: 1.45; }
-    .markdown ul, .markdown ol { margin: 0; }
-    .markdown li { margin: 0; }
-    .markdown code { 
-        background: #111827;
-        border-radius: 4px;
-        color: #fca5a5;
-    }
-    .markdown pre { 
-        background: #111827;
-        padding: 12px 14px;
-        border-radius: 10px;
-        overflow-x: auto;
-        line-height: 1.45;
-        box-shadow: inset 0 0 0 1px #1e293b;
-    }
-    .markdown pre code {
-        background: none;
-        padding: 0;
-        color: #e5e7eb;
-        font-family: Consolas, monospace;
-    }
-    .markdown pre::-webkit-scrollbar { height: 8px; }
-    .markdown pre::-webkit-scrollbar-thumb {
-        background: #334155;
-        border-radius: 4px;
-    }
-    .markdown .language-mermaid {
-        display: flex;
-        justify-content: center;
-        margin: 20px 0;
-    }
-    .markdown .language-mermaid svg {
-        background: #1e1e1e;
-        border-radius: 10px;
-        padding: 10px;
-    }
-    .markdown .language-mermaid .label,
-    .markdown .language-mermaid .edgeLabel,
-    .markdown .language-mermaid .nodeLabel {
-        fill: #0f172a;
-    }
-    .markdown .language-mermaid .edgePath path,
-    .markdown .language-mermaid .cluster rect {
-        stroke: #c7d2fe;
-    }
-    .markdown .language-mermaid .node rect {
-        stroke: #94a3b8;
-        fill: #cbd5e1;
-    }
+  .markdown table {
+      background: #1e1e1e;
+      color: #e5e7eb;
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+  }
+  .markdown table th {
+      background: #252526;
+      color: #fff;
+      padding: 10px;
+      text-align: left;
+      border-bottom: 2px solid #4f46e5;
+  }
+  .markdown table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #3a3a3a;
+  }
+  
+  /* ===== DIAGRAMAS MERMAID (ER, etc.) ===== */
+  .markdown .language-mermaid svg rect {
+      fill: #1e1e1e !important;
+  }
+  .markdown .language-mermaid svg text {
+      fill: #e5e7eb !important;
+  }
+  .markdown .language-mermaid svg path,
+  .markdown .language-mermaid svg line {
+      stroke: #c7d2fe !important;
+  }
 </style>
 </head>
 
@@ -472,4 +399,5 @@ function highlightJava(code) {
 
 </body>
 </html>
+
 
