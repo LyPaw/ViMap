@@ -11,7 +11,23 @@
 <script>
   mermaid.initialize({
     startOnLoad: false,
-    theme: "dark"
+    theme: 'dark',
+    themeVariables: {
+      erBkg: '#1e1e1e',
+      erBoxBkg: '#252526',
+      erBoxTxt: '#e5e7eb',
+      erBoxBorder: '#4f46e5',
+      erEntityBkg: '#1e1e1e',
+      erEntityTxt: '#e5e7eb',
+      erEntityBorder: '#c7d2fe',
+      mainBkg: '#1e1e1e',
+      textColor: '#e5e7eb',
+      primaryColor: '#1e1e1e',
+      primaryTextColor: '#e5e7eb',
+      primaryBorderColor: '#4f46e5',
+      lineColor: '#c7d2fe',
+      edgeLabelBackground: '#111827'
+    }
   });
 </script>
 <style>
@@ -101,25 +117,31 @@
         border-radius: 10px;
     }
 
-  .markdown .language-mermaid {
-      display: flex;
-      justify-content: center;
-      margin: 20px 0;
-  }
+    .markdown .language-mermaid {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
 
-
-   .markdown .pre .code .svg .g .text{
-    color: black;
-  }
-
-  #entity-AUTOR-e9949443-e31f-5c7f-9a9b-86c3df20db93 > rect.er.entityBox{
-    background-color:black;
-  }
-
-  #text-entity-AUTOR-e9949443-e31f-5c7f-9a9b-86c3df20db93{
-    color:black !important;
-  }
-
+    /* ===== TABLAS HTML ===== */
+    .markdown table {
+        background: #1e1e1e;
+        color: #e5e7eb;
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+    .markdown table th {
+        background: #252526;
+        color: #fff;
+        padding: 10px;
+        text-align: left;
+        border-bottom: 2px solid #4f46e5;
+    }
+    .markdown table td {
+        padding: 8px 10px;
+        border-bottom: 1px solid #3a3a3a;
+    }
 </style>
 </head>
 
@@ -195,7 +217,6 @@ const fileTree = {
 const sidebar = document.getElementById("sidebar");
 const codeEl = document.getElementById("code");
 const titleEl = document.getElementById("title");
-
 
 const openFolders = new Set();
 
@@ -275,7 +296,6 @@ for (const lang in fileTree) {
 }
 
 function loadFile(file, el, parentFolder, parentSubfolder) {
-
     if (parentFolder && !parentFolder.classList.contains("open")) {
         parentFolder.classList.add("open");
     }
@@ -338,12 +358,10 @@ function escapeHTML(str) {
 }
 
 function highlightJava(code) {
-
     code = escapeHTML(code);
 
     const protectedParts = [];
     
-
     code = code.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, match => {
         protectedParts.push({type: 'string', content: match});
         return `__STRING_${protectedParts.length - 1}__`;
@@ -388,10 +406,3 @@ function highlightJava(code) {
 
 </body>
 </html>
-
-
-
-
-
-
-
