@@ -103,3 +103,9 @@ erDiagram
         string nombre
         float precio
     }
+```
+
+<div align="center">
+  <img src="https://github.com/LyPaw/ViMap/blob/15f8f85fc02d9293d559b72e39893a7d7b2345b8/DAM/Base_De_Datos/Teor%C3%ADa/TeoriaEr.png" alt="Diagrama ER de ejemplo" width="70%">
+</div>
+
