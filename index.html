@@ -6,28 +6,12 @@
 <meta name="author" content="LyPaw(Manuel Fuentes Cruz)">
 <title>ViMap</title>
 <link rel="icon" type="image/png" href="Logo/icon.png">
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js  "></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js  "></script>
 <script>
   mermaid.initialize({
     startOnLoad: false,
-    theme: 'dark',
-    themeVariables: {
-      erBkg: '#1e1e1e',
-      erBoxBkg: '#252526',
-      erBoxTxt: '#e5e7eb',
-      erBoxBorder: '#4f46e5',
-      erEntityBkg: '#1e1e1e',
-      erEntityTxt: '#e5e7eb',
-      erEntityBorder: '#c7d2fe',
-      mainBkg: '#1e1e1e',
-      textColor: '#e5e7eb',
-      primaryColor: '#1e1e1e',
-      primaryTextColor: '#e5e7eb',
-      primaryBorderColor: '#4f46e5',
-      lineColor: '#c7d2fe',
-      edgeLabelBackground: '#111827'
-    }
+    theme: "dark"
   });
 </script>
 <style>
@@ -117,31 +101,25 @@
         border-radius: 10px;
     }
 
-    .markdown .language-mermaid {
-        display: flex;
-        justify-content: center;
-        margin: 20px 0;
-    }
+  .markdown .language-mermaid {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+  }
 
-    /* ===== TABLAS HTML ===== */
-    .markdown table {
-        background: #1e1e1e;
-        color: #e5e7eb;
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-    }
-    .markdown table th {
-        background: #252526;
-        color: #fff;
-        padding: 10px;
-        text-align: left;
-        border-bottom: 2px solid #4f46e5;
-    }
-    .markdown table td {
-        padding: 8px 10px;
-        border-bottom: 1px solid #3a3a3a;
-    }
+
+   .markdown .pre .code .svg .g .text{
+    color: black;
+  }
+
+  #entity-AUTOR-e9949443-e31f-5c7f-9a9b-86c3df20db93 > rect.er.entityBox{
+    background-color:black;
+  }
+
+  #text-entity-AUTOR-e9949443-e31f-5c7f-9a9b-86c3df20db93{
+    color:black !important;
+  }
+
 </style>
 </head>
 
@@ -166,13 +144,13 @@ const fileTree = {
       "Teoría": [
         { 
           name: "Array_Teoría.md",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Array/Readme.md"
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Array/Readme.md  "
         }
       ],
       "Ejercicios": [
         { 
           name: "Ejercicios_Array.md",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Array/Ejercicios/Readme.md"
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Array/Ejercicios/Readme.md  "
         }
       ]
     },
@@ -180,15 +158,15 @@ const fileTree = {
       "Conceptos_Clave": [
         { 
           name: "Array_List.java",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/ArrayList/Clave/Array_List.java"
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/ArrayList/Clave/Array_List.java  "
         },
         { 
           name: "Conjuntos.java",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Conjuntos/Clave/Conjuntos.java"
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Conjuntos/Clave/Conjuntos.java  "
         },
         { 
           name: "Mapas.java",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/4d9ef105ec862a1093d807e6dba084fde57ca259/DAM/Java/Mapas/Clave/Mapas.java"
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/4d9ef105ec862a1093d807e6dba084fde57ca259/DAM/Java/Mapas/Clave/Mapas.java  "
         }
       ]
     }
@@ -198,13 +176,13 @@ const fileTree = {
       "Teoría": [
         { 
           name: "ER_Teoría.md",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/b41c3652d7a0338f98b19921ff61899b012b65cf/DAM/Base_De_Datos/Teor%C3%ADa/Readme.md"
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/b41c3652d7a0338f98b19921ff61899b012b65cf/DAM/Base_De_Datos/Teor%C3%ADa/Readme.md  "
         }
       ],
       "Ejercicios": [
         { 
           name: "Ejercicios_ER.md",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/b41c3652d7a0338f98b19921ff61899b012b65cf/DAM/Base_De_Datos/Ejercicios/Readme.md"
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/b41c3652d7a0338f98b19921ff61899b012b65cf/DAM/Base_De_Datos/Ejercicios/Readme.md  "
         }
       ]
     },
@@ -217,6 +195,7 @@ const fileTree = {
 const sidebar = document.getElementById("sidebar");
 const codeEl = document.getElementById("code");
 const titleEl = document.getElementById("title");
+
 
 const openFolders = new Set();
 
@@ -296,6 +275,7 @@ for (const lang in fileTree) {
 }
 
 function loadFile(file, el, parentFolder, parentSubfolder) {
+
     if (parentFolder && !parentFolder.classList.contains("open")) {
         parentFolder.classList.add("open");
     }
@@ -331,7 +311,7 @@ function loadFile(file, el, parentFolder, parentSubfolder) {
             });
     }
     else if (file.name.endsWith(".pdf")) {
-        const pdfViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(cleanUrl)}&embedded=true`;
+        const pdfViewerUrl = `https://docs.google.com/gview?url=  ${encodeURIComponent(cleanUrl)}&embedded=true`;
         codeEl.innerHTML = `<iframe class="pdf-viewer" src="${pdfViewerUrl}"></iframe>`;
     } 
     else {
@@ -358,10 +338,12 @@ function escapeHTML(str) {
 }
 
 function highlightJava(code) {
+
     code = escapeHTML(code);
 
     const protectedParts = [];
     
+
     code = code.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, match => {
         protectedParts.push({type: 'string', content: match});
         return `__STRING_${protectedParts.length - 1}__`;
