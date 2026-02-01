@@ -13,8 +13,8 @@ public class Array_List {
         nombres.add("Pedro");
         nombres.add("Maria");
         nombres.add("Jose");
-        nombres.add("Juanito");  // Duplicado intencional para demostrar comportamiento
-        nombres.add("Pedro");    // Duplicado intencional
+        nombres.add("Juanito");
+        nombres.add("Pedro");
         nombres.add("Manuel");
 
         System.out.println("Lista inicial de nombres: " + nombres);
