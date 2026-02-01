@@ -101,6 +101,56 @@
         border-radius: 10px;
     }
 
+    .markdown table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background: #1e1e1e;
+        color: #e5e7eb;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .markdown table thead {
+        background: #2d2d2d;
+    }
+
+    .markdown table th {
+        background: #252526;
+        color: #ffffff;
+        font-weight: bold;
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 2px solid #4f46e5;
+    }
+
+    .markdown table td {
+        padding: 10px 15px;
+        border-bottom: 1px solid #3a3a3a;
+        color: #e5e7eb;
+    }
+
+    .markdown table tr {
+        border-bottom: 1px solid #3a3a3a;
+    }
+
+    .markdown table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .markdown table tr:hover td {
+        background: #2a2a2a;
+    }
+
+    .markdown table tbody tr:nth-child(even) td {
+        background: #252525;
+    }
+
+    .markdown table tbody tr:nth-child(odd) td {
+        background: #1e1e1e;
+    }
+
     .markdown h1 { color: #e5e7eb; margin: 0; }
     .markdown h2 { color: #c7d2fe; margin: 0; }
     .markdown h3 { color: #a5b4fc; margin: 0; }
@@ -200,7 +250,7 @@ const fileTree = {
         },
         { 
           name: "Mapas.java",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Mapas/Clave/Mapas.java"
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/4d9ef105ec862a1093d807e6dba084fde57ca259/DAM/Java/Mapas/Clave/Mapas.java"
         }
       ]
     }
@@ -422,3 +472,4 @@ function highlightJava(code) {
 
 </body>
 </html>
+
