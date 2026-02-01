@@ -202,45 +202,54 @@ for (const lang in fileTree) {
     childrenContainer.className = "children";
 
     const topics = fileTree[lang];
-    for (const topic in topics) {
-        const subfolder = document.createElement("div");
-        subfolder.className = "subfolder";
-        subfolder.textContent = "📂 " + topic;
-        subfolder.dataset.subfolder = topic;
+for (const topic in topics) {
+    const subfolder = document.createElement("div");
+    subfolder.className = "subfolder";
+    subfolder.textContent = "📂 " + topic;
 
-        const subChildren = document.createElement("div");
-        subChildren.className = "children";
+    const subChildren = document.createElement("div");
+    subChildren.className = "children";
 
-        topics[topic].forEach(file => {
+    const subTopics = topics[topic]; // ← ahora es un objeto con más carpetas
+
+    for (const subtopic in subTopics) {
+        const subSubFolder = document.createElement("div");
+        subSubFolder.className = "subfolder";
+        subSubFolder.style.paddingLeft = "40px";
+        subSubFolder.textContent = "📂 " + subtopic;
+
+        const filesContainer = document.createElement("div");
+        filesContainer.className = "children";
+
+        subTopics[subtopic].forEach(file => {
             const fileEl = document.createElement("div");
             fileEl.className = "file";
             fileEl.textContent = "📄 " + file.name;
-            fileEl.dataset.file = file.name;
             fileEl.onclick = (e) => {
                 e.stopPropagation();
-                loadFile(file, fileEl, folder, subfolder);
+                loadFile(file, fileEl, folder, subSubFolder);
             };
-            subChildren.appendChild(fileEl);
+            filesContainer.appendChild(fileEl);
         });
 
-        subfolder.appendChild(subChildren);
+        subSubFolder.appendChild(filesContainer);
 
-        subfolder.addEventListener("click", e => {
+        subSubFolder.addEventListener("click", e => {
             e.stopPropagation();
-            subfolder.classList.toggle("open");
-            if (subfolder.classList.contains("open")) {
-                openFolders.add(`${lang}-${topic}`);
-            } else {
-                openFolders.delete(`${lang}-${topic}`);
-            }
+            subSubFolder.classList.toggle("open");
         });
 
-        // Restaurar estado si estaba abierto
-        if (openFolders.has(`${lang}-${topic}`)) {
-            subfolder.classList.add("open");
-        }
+        subChildren.appendChild(subSubFolder);
+    }
 
-        childrenContainer.appendChild(subfolder);
+    subfolder.appendChild(subChildren);
+
+    subfolder.addEventListener("click", e => {
+        e.stopPropagation();
+        subfolder.classList.toggle("open");
+    });
+
+    childrenContainer.appendChild(subfolder);
     }
 
     folder.appendChild(childrenContainer);
@@ -362,6 +371,7 @@ function highlightJava(code) {
 
 </body>
 </html>
+
 
 
 
