@@ -7,6 +7,13 @@
 <title>ViMap</title>
 <link rel="icon" type="image/png" href="Logo/icon.png">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: "dark"
+  });
+</script>
 <style>
     body {
         margin: 0;
@@ -339,8 +346,13 @@ function loadFile(file, el, parentFolder, parentSubfolder) {
             .then(r => r.text())
             .then(md => {
                 codeEl.innerHTML = `<div class="markdown">${marked.parse(md)}</div>`;
+    
+                // 🔥 Ejecutar Mermaid después de pintar el Markdown
+                mermaid.run({
+                  querySelector: ".markdown .language-mermaid"
+                });
             });
-    } 
+    }
     else if (file.name.endsWith(".pdf")) {
         const pdfViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(cleanUrl)}&embedded=true`;
         codeEl.innerHTML = `<iframe class="pdf-viewer" src="${pdfViewerUrl}"></iframe>`;
@@ -420,6 +432,7 @@ function highlightJava(code) {
 
 </body>
 </html>
+
 
 
 
