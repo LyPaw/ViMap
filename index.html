@@ -166,6 +166,37 @@
         background: #334155;
         border-radius: 4px;
     }
+
+  .markdown .language-mermaid {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+  }
+  
+  /* SVG de Mermaid */
+  .markdown .language-mermaid svg {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 10px;
+  }
+  
+
+  .markdown .language-mermaid .label, 
+  .markdown .language-mermaid .edgeLabel, 
+  .markdown .language-mermaid .nodeLabel {
+      fill: #e5e7eb;
+  }
+  
+
+  .markdown .language-mermaid .edgePath path,
+  .markdown .language-mermaid .cluster rect {
+      stroke: #c7d2fe;
+  }
+  .markdown .language-mermaid .node rect {
+      stroke: #94a3b8;
+      fill: #0f172a;
+  }
+    
 </style>
 </head>
 
@@ -432,6 +463,7 @@ function highlightJava(code) {
 
 </body>
 </html>
+
 
 
 
