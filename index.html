@@ -97,39 +97,60 @@
         border-radius: 10px;
     }
 
-    /* Estilos para Markdown (README.md) */
+    
     .markdown h1 { 
         color: #e5e7eb; 
         border-bottom: 2px solid #4f46e5;
         padding-bottom: 6px;
+        margin: 0 0 10px 0;
     }
     
     .markdown h2 { 
         color: #c7d2fe; 
-        margin-top: 20px;
+        margin: 18px 0 8px 0;
     }
     
     .markdown h3 { 
         color: #a5b4fc; 
+        margin: 14px 0 6px 0;
     }
     
     .markdown p { 
-        line-height: 1.7; 
+        margin: 6px 0;
+        line-height: 1.45;
+    }
+
+    .markdown ul, 
+    .markdown ol {
+        margin: 6px 0 6px 20px;
+    }
+
+    .markdown li {
+        margin: 4px 0;
+    }
+
+
+    .markdown pre code {
+        background: none;
+        padding: 0;
         color: #e5e7eb;
+        font-family: Consolas, monospace;
     }
     
     .markdown code { 
-        background: #111827; 
-        padding: 2px 6px; 
-        border-radius: 4px; 
+        background: #111827;
+        padding: 2px 5px;
+        border-radius: 4px;
         color: #fca5a5;
     }
     
     .markdown pre { 
-        background: #020617; 
-        padding: 14px; 
-        border-radius: 10px; 
+        background: #020617;
+        padding: 12px 14px;
+        border-radius: 10px;
         overflow-x: auto;
+        line-height: 1.45;
+        box-shadow: inset 0 0 0 1px #1e293b;
     }
 </style>
 </head>
@@ -371,6 +392,7 @@ function highlightJava(code) {
 
 </body>
 </html>
+
 
 
 
