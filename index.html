@@ -7,27 +7,6 @@
 <title>ViMap</title>
 <link rel="icon" type="image/png" href="Logo/icon.png">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-<script>
-  mermaid.initialize({
-    startOnLoad: false,
-    theme: "base",
-    themeVariables: {
-      erBackground: "#1e1e1e",
-      erEntityBackground: "#252526",
-      erEntityTextColor: "#ffffff",
-      erEntityBorderColor: "#4f46e5",
-      erRelationColor: "#ffffff",
-      erRelationTextColor: "#ffffff",
-      erRelationBackground: "#252526",
-      erCardinalityColor: "#c7d2fe"
-      mainBkg: "#1e1e1e",
-      textColor: "#ffffff",
-      primaryColor: "#4f46e5",
-      lineColor: "#c7d2fe"
-    }
-  });
-</script>
 <style>
     body {
         margin: 0;
@@ -179,13 +158,6 @@
         background: #334155;
         border-radius: 4px;
     }
-
-  .markdown .language-mermaid {
-      display: flex;
-      justify-content: center;
-      margin: 20px 0;
-  }
-    
 </style>
 </head>
 
@@ -366,11 +338,6 @@ function loadFile(file, el, parentFolder, parentSubfolder) {
             .then(r => r.text())
             .then(md => {
                 codeEl.innerHTML = `<div class="markdown">${marked.parse(md)}</div>`;
-    
-                // 🔥 Ejecutar Mermaid después de pintar el Markdown
-                mermaid.run({
-                  querySelector: ".markdown .language-mermaid"
-                });
             });
     }
     else if (file.name.endsWith(".pdf")) {
@@ -450,6 +417,7 @@ function highlightJava(code) {
 
 </body>
 </html>
+
 
 
 
