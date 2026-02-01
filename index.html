@@ -67,6 +67,7 @@
         display: block;
     }
 
+
     .viewer {
         flex: 1;
         padding: 20px;
@@ -88,12 +89,14 @@
         border-radius: 10px;
     }
 
+
     .keyword { color: #569cd6; font-weight: bold; }
     .class { color: #4ec9b0; font-weight: bold; }
     .string { color: #ce9178; }
     .comment { color: #6a9955; font-style: italic; }
     .number { color: #b5cea8; }
     
+    /* Estilo para el visor de PDF */
     .pdf-viewer {
         width: 100%;
         height: 85vh;
@@ -101,12 +104,99 @@
         border-radius: 10px;
     }
 
+    
+    .markdown h1 { 
+        color: #e5e7eb; 
+        margin: 0;
+    }
+    
+    .markdown h2 { 
+        color: #c7d2fe; 
+        margin: 0;
+    }
+    
+    .markdown h3 { 
+        color: #a5b4fc; 
+        margin: 0;
+    }
+    
+    .markdown p { 
+        margin: 0;
+        line-height: 1.45;
+    }
+
+    .markdown ul, 
+    .markdown ol {
+        margin: 0;
+    }
+
+    .markdown li {
+        margin: 0;
+    }
+
+
+ 
+    
+    .markdown code { 
+        background: #111827;
+        border-radius: 4px;
+        color: #fca5a5;
+    }
+    
+    .markdown pre { 
+        background: #111827;
+        padding: 12px 14px;
+        border-radius: 10px;
+        overflow-x: auto;
+        line-height: 1.45;
+        box-shadow: inset 0 0 0 1px #1e293b;
+    }
+
+       .markdown pre code {
+        background: none;
+        padding: 0;
+        color: #e5e7eb;
+        font-family: Consolas, monospace;
+    }
+
+    .markdown pre::-webkit-scrollbar {
+        height: 8px;
+    }
+    .markdown pre::-webkit-scrollbar-thumb {
+        background: #334155;
+        border-radius: 4px;
+    }
+
   .markdown .language-mermaid {
       display: flex;
       justify-content: center;
       margin: 20px 0;
   }
+  
+  /* SVG de Mermaid */
+  .markdown .language-mermaid svg {
+      background: #1e1e1e;
+      border-radius: 10px;
+      padding: 10px;
+  }
+  
 
+  .markdown .language-mermaid .label,
+  .markdown .language-mermaid .edgeLabel,
+  .markdown .language-mermaid .nodeLabel {
+      fill: #0f172a;
+  }
+  
+
+  .markdown .language-mermaid .edgePath path,
+  .markdown .language-mermaid .cluster rect {
+      stroke: #c7d2fe;
+  }
+  .markdown .language-mermaid .node rect {
+      stroke: #94a3b8;
+      fill: #cbd5e1;
+  }
+    
 </style>
 </head>
 
@@ -141,6 +231,7 @@ const fileTree = {
         }
       ]
     },
+
     "Colecciones": {
       "Conceptos_Clave": [
         { 
@@ -153,7 +244,7 @@ const fileTree = {
         },
         { 
           name: "Mapas.java",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/4d9ef105ec862a1093d807e6dba084fde57ca259/DAM/Java/Mapas/Clave/Mapas.java  "
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Mapas/Clave/Mapas.java  "
         }
       ]
     }
@@ -168,22 +259,24 @@ const fileTree = {
       ],
       "Ejercicios": [
         { 
-          name: "Ejercicios_ER.md",
+          name: "Ejercicios_Array.md",
           url: "https://raw.githubusercontent.com/LyPaw/ViMap/b41c3652d7a0338f98b19921ff61899b012b65cf/DAM/Base_De_Datos/Ejercicios/Readme.md  "
         }
       ]
     },
+
     "SQL": {
-      "Conceptos_Clave": []
+      "Conceptos_Clave": [
+      ]
     }
-  }
+  },
 };
 
 const sidebar = document.getElementById("sidebar");
 const codeEl = document.getElementById("code");
 const titleEl = document.getElementById("title");
 
-
+// Mantener track de las carpetas abiertas
 const openFolders = new Set();
 
 for (const lang in fileTree) {
@@ -196,54 +289,54 @@ for (const lang in fileTree) {
     childrenContainer.className = "children";
 
     const topics = fileTree[lang];
-    for (const topic in topics) {
-        const subfolder = document.createElement("div");
-        subfolder.className = "subfolder";
-        subfolder.textContent = "📂 " + topic;
+for (const topic in topics) {
+    const subfolder = document.createElement("div");
+    subfolder.className = "subfolder";
+    subfolder.textContent = "📂 " + topic;
 
-        const subChildren = document.createElement("div");
-        subChildren.className = "children";
+    const subChildren = document.createElement("div");
+    subChildren.className = "children";
 
-        const subTopics = topics[topic];
+    const subTopics = topics[topic]; // ← ahora es un objeto con más carpetas
 
-        for (const subtopic in subTopics) {
-            const subSubFolder = document.createElement("div");
-            subSubFolder.className = "subfolder";
-            subSubFolder.style.paddingLeft = "40px";
-            subSubFolder.textContent = "📂 " + subtopic;
+    for (const subtopic in subTopics) {
+        const subSubFolder = document.createElement("div");
+        subSubFolder.className = "subfolder";
+        subSubFolder.style.paddingLeft = "40px";
+        subSubFolder.textContent = "📂 " + subtopic;
 
-            const filesContainer = document.createElement("div");
-            filesContainer.className = "children";
+        const filesContainer = document.createElement("div");
+        filesContainer.className = "children";
 
-            subTopics[subtopic].forEach(file => {
-                const fileEl = document.createElement("div");
-                fileEl.className = "file";
-                fileEl.textContent = "📄 " + file.name;
-                fileEl.onclick = (e) => {
-                    e.stopPropagation();
-                    loadFile(file, fileEl, folder, subSubFolder);
-                };
-                filesContainer.appendChild(fileEl);
-            });
-
-            subSubFolder.appendChild(filesContainer);
-
-            subSubFolder.addEventListener("click", e => {
+        subTopics[subtopic].forEach(file => {
+            const fileEl = document.createElement("div");
+            fileEl.className = "file";
+            fileEl.textContent = "📄 " + file.name;
+            fileEl.onclick = (e) => {
                 e.stopPropagation();
-                subSubFolder.classList.toggle("open");
-            });
-
-            subChildren.appendChild(subSubFolder);
-        }
-
-        subfolder.appendChild(subChildren);
-
-        subfolder.addEventListener("click", e => {
-            e.stopPropagation();
-            subfolder.classList.toggle("open");
+                loadFile(file, fileEl, folder, subSubFolder);
+            };
+            filesContainer.appendChild(fileEl);
         });
 
-        childrenContainer.appendChild(subfolder);
+        subSubFolder.appendChild(filesContainer);
+
+        subSubFolder.addEventListener("click", e => {
+            e.stopPropagation();
+            subSubFolder.classList.toggle("open");
+        });
+
+        subChildren.appendChild(subSubFolder);
+    }
+
+    subfolder.appendChild(subChildren);
+
+    subfolder.addEventListener("click", e => {
+        e.stopPropagation();
+        subfolder.classList.toggle("open");
+    });
+
+    childrenContainer.appendChild(subfolder);
     }
 
     folder.appendChild(childrenContainer);
@@ -252,6 +345,7 @@ for (const lang in fileTree) {
         e.stopPropagation();
         folder.classList.toggle("open");
         
+        // Abrir/cerrar todos los subfolders
         const subfolders = folder.querySelectorAll(".subfolder");
         if (folder.classList.contains("open")) {
             subfolders.forEach(sf => sf.classList.add("open"));
@@ -262,7 +356,7 @@ for (const lang in fileTree) {
 }
 
 function loadFile(file, el, parentFolder, parentSubfolder) {
-
+    // Mantener las carpetas abiertas
     if (parentFolder && !parentFolder.classList.contains("open")) {
         parentFolder.classList.add("open");
     }
@@ -280,21 +374,14 @@ function loadFile(file, el, parentFolder, parentSubfolder) {
 
     if (file.name.endsWith(".md")) {
         fetch(cleanUrl)
-            .then(r => {
-                if (!r.ok) throw new Error('Archivo no encontrado');
-                return r.text();
-            })
+            .then(r => r.text())
             .then(md => {
                 codeEl.innerHTML = `<div class="markdown">${marked.parse(md)}</div>`;
-                
-                setTimeout(() => {
-                    mermaid.run({
-                        querySelector: ".markdown .language-mermaid"
-                    });
-                }, 100);
-            })
-            .catch(err => {
-                codeEl.innerHTML = `❌ Error: ${err.message}`;
+    
+                // 🔥 Ejecutar Mermaid después de pintar el Markdown
+                mermaid.run({
+                  querySelector: ".markdown .language-mermaid"
+                });
             });
     }
     else if (file.name.endsWith(".pdf")) {
@@ -303,16 +390,10 @@ function loadFile(file, el, parentFolder, parentSubfolder) {
     } 
     else {
         fetch(cleanUrl)
-            .then(r => {
-                if (!r.ok) throw new Error('Archivo no encontrado');
-                return r.text();
-            })
+            .then(r => r.text())
             .then(text => {
                 codeEl.innerHTML = highlightJava(text);
                 codeEl.scrollTop = 0;
-            })
-            .catch(err => {
-                codeEl.innerHTML = `❌ Error: ${err.message}`;
             });
     }
 }
@@ -325,17 +406,19 @@ function escapeHTML(str) {
 }
 
 function highlightJava(code) {
-
+    // Escapar HTML primero para seguridad
     code = escapeHTML(code);
-
+    
+    // Array para almacenar las partes que necesitan protección
     const protectedParts = [];
     
-
+    // 1. Proteger strings (cadenas de texto)
     code = code.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, match => {
         protectedParts.push({type: 'string', content: match});
         return `__STRING_${protectedParts.length - 1}__`;
     });
-
+    
+    // 2. Proteger comentarios de una línea
     code = code.replace(/\/\/.*/g, match => {
         protectedParts.push({type: 'comment', content: match});
         return `__COMMENT_${protectedParts.length - 1}__`;
@@ -349,18 +432,21 @@ function highlightJava(code) {
     const keywords = /\b(class|public|private|protected|static|void|new|return|if|else|for|while|do|switch|case|break|continue|int|double|float|boolean|char|String|Set|HashSet|Map|HashMap|List|ArrayList|import|package|extends|implements|interface|abstract|final|try|catch|finally|throw|throws|this|super|instanceof|true|false|null|var|System|out|println|print|length|size|add|remove|get|put|contains|equals|toString)\b/g;
     code = code.replace(keywords, '<span class="keyword">$&</span>');
     
+    // 5. Resaltar números
     code = code.replace(/\b(\d+\.?\d*([eE][+-]?\d+)?)\b/g, '<span class="number">$1</span>');
-
+    
+    // 6. Resaltar clases (nombres que empiezan con mayúscula)
     const classRegex = /\b([A-Z][a-zA-Z0-9_]*)\b/g;
     code = code.replace(classRegex, match => {
         const lower = match.toLowerCase();
         const keywordList = ['class', 'public', 'private', 'protected', 'static', 'void', 'new', 'return', 'if', 'else', 'for', 'while', 'int', 'double', 'float', 'boolean', 'char', 'string', 'set', 'hashset', 'map', 'hashmap', 'list', 'arraylist', 'import', 'package', 'extends', 'implements', 'interface', 'abstract', 'final', 'try', 'catch', 'finally', 'throw', 'throws', 'this', 'super', 'instanceof', 'true', 'false', 'null', 'var', 'system', 'out'];
         if (keywordList.includes(lower)) {
-            return match;
+            return match; // Ya está resaltado como keyword
         }
         return `<span class="class">${match}</span>`;
     });
     
+    // 7. Restaurar strings y comentarios protegidos
     code = code.replace(/__STRING_(\d+)__/g, (_, index) => {
         return `<span class="string">${protectedParts[index].content}</span>`;
     });
@@ -375,4 +461,3 @@ function highlightJava(code) {
 
 </body>
 </html>
-
