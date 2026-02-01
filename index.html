@@ -6,6 +6,7 @@
 <meta name="author" content="LyPaw(Manuel Fuentes Cruz)">
 <title>ViMap</title>
 <link rel="icon" type="image/png" href="Logo/icon.png">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
     body {
         margin: 0;
@@ -94,6 +95,41 @@
         height: 85vh;
         border: none;
         border-radius: 10px;
+    }
+
+    /* Estilos para Markdown (README.md) */
+    .markdown h1 { 
+        color: #e5e7eb; 
+        border-bottom: 2px solid #4f46e5;
+        padding-bottom: 6px;
+    }
+    
+    .markdown h2 { 
+        color: #c7d2fe; 
+        margin-top: 20px;
+    }
+    
+    .markdown h3 { 
+        color: #a5b4fc; 
+    }
+    
+    .markdown p { 
+        line-height: 1.7; 
+        color: #e5e7eb;
+    }
+    
+    .markdown code { 
+        background: #111827; 
+        padding: 2px 6px; 
+        border-radius: 4px; 
+        color: #fca5a5;
+    }
+    
+    .markdown pre { 
+        background: #020617; 
+        padding: 14px; 
+        border-radius: 10px; 
+        overflow-x: auto;
     }
 </style>
 </head>
@@ -229,24 +265,23 @@ function loadFile(file, el, parentFolder, parentSubfolder) {
 
     const cleanUrl = file.url.trim();
 
-    if (file.name.endsWith(".pdf")) {
-        // Usar Google Docs Viewer para visualizar PDFs
-        const pdfViewerUrl = `https://docs.google.com/gview?url=  ${encodeURIComponent(cleanUrl)}&embedded=true`;
-        codeEl.innerHTML = `<iframe class="pdf-viewer" src="${pdfViewerUrl}"></iframe>`;
-    } else {
+    if (file.name.endsWith(".md")) {
         fetch(cleanUrl)
-            .then(r => {
-                if (!r.ok) throw new Error('Archivo no encontrado');
-                return r.text();
-            })
+            .then(r => r.text())
+            .then(md => {
+                codeEl.innerHTML = `<div class="markdown">${marked.parse(md)}</div>`;
+            });
+    } 
+    else if (file.name.endsWith(".pdf")) {
+        const pdfViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(cleanUrl)}&embedded=true`;
+        codeEl.innerHTML = `<iframe class="pdf-viewer" src="${pdfViewerUrl}"></iframe>`;
+    } 
+    else {
+        fetch(cleanUrl)
+            .then(r => r.text())
             .then(text => {
                 codeEl.innerHTML = highlightJava(text);
-                // Scroll automático al principio
                 codeEl.scrollTop = 0;
-            })
-            .catch(err => {
-                console.error("Error:", err);
-                codeEl.innerHTML = `<span style="color: #f87171;">❌ Error al cargar archivo. Verifica la URL o el archivo puede no existir.</span>`;
             });
     }
 }
@@ -316,6 +351,7 @@ function highlightJava(code) {
 
 </body>
 </html>
+
 
 
 
