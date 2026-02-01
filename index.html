@@ -6,25 +6,23 @@
 <meta name="author" content="LyPaw(Manuel Fuentes Cruz)">
 <title>ViMap</title>
 <link rel="icon" type="image/png" href="Logo/icon.png">
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js  "></script>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js  "></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script>
   mermaid.initialize({
     startOnLoad: false,
-    theme: "base", // ¡DEBE SER "base" para sobrescribir colores!
+    theme: "base",
     themeVariables: {
-      // ===== COLORES PARA DIAGRAMAS ER =====
-      erBackground: "#1e1e1e",       // Fondo del diagrama
-      erEntityBackground: "#010112",  // Fondo de entidades
-      erEntityTextColor: "#e5e7eb",   // Texto de entidades
-      erEntityBorderColor: "#010112", // Borde de entidades
-      erRelationColor: "#080a0f",     // Relaciones
-      erRelationTextColor: "#e5e7eb", // Texto de relaciones
-      erRelationBackground: "#1e1e1e",// Fondo de relaciones
-      
-      // ===== COLORES PARA OTROS DIAGRAMAS (opcional) =====
+      erBackground: "#1e1e1e",
+      erEntityBackground: "#252526",
+      erEntityTextColor: "#ffffff",
+      erEntityBorderColor: "#4f46e5",
+      erRelationColor: "#ffffff",
+      erRelationTextColor: "#ffffff",
+      erRelationBackground: "#252526",
+      erCardinalityColor: "#c7d2fe"
       mainBkg: "#1e1e1e",
-      textColor: "#e5e7eb",
+      textColor: "#ffffff",
       primaryColor: "#4f46e5",
       lineColor: "#c7d2fe"
     }
@@ -212,13 +210,13 @@ const fileTree = {
       "Teoría": [
         { 
           name: "Array_Teoría.md",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Array/Readme.md  "
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Array/Readme.md"
         }
       ],
       "Ejercicios": [
         { 
           name: "Ejercicios_Array.md",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Array/Ejercicios/Readme.md  "
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Array/Ejercicios/Readme.md"
         }
       ]
     },
@@ -227,15 +225,15 @@ const fileTree = {
       "Conceptos_Clave": [
         { 
           name: "Array_List.java",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/ArrayList/Clave/Array_List.java  "
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/ArrayList/Clave/Array_List.java"
         },
         { 
           name: "Conjuntos.java",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Conjuntos/Clave/Conjuntos.java  "
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Conjuntos/Clave/Conjuntos.java"
         },
         { 
           name: "Mapas.java",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Mapas/Clave/Mapas.java  "
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Mapas/Clave/Mapas.java"
         }
       ]
     }
@@ -245,13 +243,13 @@ const fileTree = {
       "Teoría": [
         { 
           name: "ER_Teoría.md",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/b41c3652d7a0338f98b19921ff61899b012b65cf/DAM/Base_De_Datos/Teor%C3%ADa/Readme.md  "
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/b41c3652d7a0338f98b19921ff61899b012b65cf/DAM/Base_De_Datos/Teor%C3%ADa/Readme.md"
         }
       ],
       "Ejercicios": [
         { 
           name: "Ejercicios_Array.md",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/b41c3652d7a0338f98b19921ff61899b012b65cf/DAM/Base_De_Datos/Ejercicios/Readme.md  "
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/b41c3652d7a0338f98b19921ff61899b012b65cf/DAM/Base_De_Datos/Ejercicios/Readme.md"
         }
       ]
     },
@@ -452,6 +450,7 @@ function highlightJava(code) {
 
 </body>
 </html>
+
 
 
 
