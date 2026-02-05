@@ -393,61 +393,60 @@ function escapeHTML(str) {
 }
 
 function highlightJava(code) {
-    // Escapar HTML primero para seguridad
+    // Escapar HTML
     code = escapeHTML(code);
-    
-    // Array para almacenar las partes que necesitan protección
+
+    // Asegurarnos de mantener saltos de línea al inicio
+    code = code.replace(/^\s+/, match => match.replace(/ /g, '&nbsp;').replace(/\n/g, '<br>'));
+
+    // Proteger comentarios y strings primero
     const protectedParts = [];
-    
-    // 1. Proteger strings (cadenas de texto)
+
     code = code.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, match => {
         protectedParts.push({type: 'string', content: match});
         return `__STRING_${protectedParts.length - 1}__`;
     });
-    
-    // 2. Proteger comentarios de una línea
+
     code = code.replace(/\/\/.*/g, match => {
         protectedParts.push({type: 'comment', content: match});
         return `__COMMENT_${protectedParts.length - 1}__`;
     });
-    
+
     code = code.replace(/\/\*[\s\S]*?\*\//g, match => {
         protectedParts.push({type: 'comment', content: match});
         return `__COMMENT_${protectedParts.length - 1}__`;
     });
-    
+
+    // Resaltar keywords, números y clases como antes
     const keywords = /\b(class|public|private|protected|static|void|new|return|if|else|for|while|do|switch|case|break|continue|int|double|float|boolean|char|String|Set|HashSet|Map|HashMap|List|ArrayList|import|package|extends|implements|interface|abstract|final|try|catch|finally|throw|throws|this|super|instanceof|true|false|null|var|System|out|println|print|length|size|add|remove|get|put|contains|equals|toString)\b/g;
     code = code.replace(keywords, '<span class="keyword">$&</span>');
-    
-    // 5. Resaltar números
+
     code = code.replace(/\b(\d+\.?\d*([eE][+-]?\d+)?)\b/g, '<span class="number">$1</span>');
-    
-    // 6. Resaltar clases (nombres que empiezan con mayúscula)
+
     const classRegex = /\b([A-Z][a-zA-Z0-9_]*)\b/g;
     code = code.replace(classRegex, match => {
         const lower = match.toLowerCase();
         const keywordList = ['class', 'public', 'private', 'protected', 'static', 'void', 'new', 'return', 'if', 'else', 'for', 'while', 'int', 'double', 'float', 'boolean', 'char', 'string', 'set', 'hashset', 'map', 'hashmap', 'list', 'arraylist', 'import', 'package', 'extends', 'implements', 'interface', 'abstract', 'final', 'try', 'catch', 'finally', 'throw', 'throws', 'this', 'super', 'instanceof', 'true', 'false', 'null', 'var', 'system', 'out'];
-        if (keywordList.includes(lower)) {
-            return match; // Ya está resaltado como keyword
-        }
+        if (keywordList.includes(lower)) return match;
         return `<span class="class">${match}</span>`;
     });
-    
-    // 7. Restaurar strings y comentarios protegidos
+
+    // Restaurar strings y comentarios
     code = code.replace(/__STRING_(\d+)__/g, (_, index) => {
         return `<span class="string">${protectedParts[index].content}</span>`;
     });
-    
+
     code = code.replace(/__COMMENT_(\d+)__/g, (_, index) => {
         return `<span class="comment">${protectedParts[index].content}</span>`;
     });
-    
+
     return code;
 }
 </script>
 
 </body>
 </html>
+
 
 
 
