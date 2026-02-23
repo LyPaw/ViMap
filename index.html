@@ -260,9 +260,9 @@ const fileTree = {
     "JavaFX": {
       "Teoría": [
         { 
-          name: "Documentación1.pdf",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/027709bdb2a25a8cc2b24ba1d8bb0fba9b429792/DAM/Java/JavaFX/ViMap_JavaFX_Documentacion.pdf"
-        },
+          "name": "Documentación1.pdf",
+          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/JavaFX/ViMap_JavaFX_Documentacion.pdf"
+        }
       ]
     },
   },
@@ -422,7 +422,7 @@ function loadFile(file, el, parentFolder, parentSubfolder) {
             });
     }
     else if (file.name.endsWith(".pdf")) {
-        const pdfViewerUrl = `https://docs.google.com/gview?url=  ${encodeURIComponent(cleanUrl)}&embedded=true`;
+        const pdfViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(cleanUrl)}&embedded=true`;
         codeEl.innerHTML = `<iframe class="pdf-viewer" src="${pdfViewerUrl}"></iframe>`;
     } 
     else {
@@ -496,6 +496,7 @@ function highlightJava(code) {
 
 </body>
 </html>
+
 
 
 
