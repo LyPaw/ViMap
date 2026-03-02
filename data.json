@@ -70,6 +70,7 @@
         { "name": "Weapon.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/Weapon.java" },
         { "name": "WeaponType.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/WeaponType.java" },
         { "name": "Zombie.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/Zombie.java" },
+        { "name": "Javadoc.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/docs/index.html" }
 
       ]
     }
