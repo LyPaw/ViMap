@@ -53,6 +53,24 @@
     "UML": {
       "Diagramas": [
         { "name": "UML_ResidentEvil.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_resident_evil.html" }
+      ],
+      "Código": [
+        { "name": "Main.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/Main.java" },
+        { "name": "Attackable.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/Attackable.java" },
+        { "name": "Character.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/Character.java" },
+        { "name": "Entity.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/Entity.java" },
+        { "name": "HealingItem.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/HealingItem.java" },
+        { "name": "InfectionStatus.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/InfectionStatus.java" },
+        { "name": "Interactable.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/Interactable.java" },
+        { "name": "Item.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/Item.java" },
+        { "name": "Licker.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/Licker.java" },
+        { "name": "Room.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/Room.java" },
+        { "name": "Survivor.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/Survivor.java" },
+        { "name": "Tyrant.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/Tyrant.java" },
+        { "name": "Weapon.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/Weapon.java" },
+        { "name": "WeaponType.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/WeaponType.java" },
+        { "name": "Zombie.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/Zombie.java" },
+
       ]
     }
   },
