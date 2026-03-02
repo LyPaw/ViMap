@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Item — raccoon Javadoc</title>
+<style>
+:root {
+  --bg:#0a0f0a;--surface:#0d1a0d;--surface2:#111f11;
+  --border:#1a3a1a;--border2:#243a24;
+  --accent:#22c55e;--accent2:#16a34a;--accent3:#4ade80;
+  --red:#ef4444;--blue:#60a5fa;--purple:#c084fc;
+  --yellow:#fbbf24;--orange:#fb923c;
+  --text:#d4edda;--text2:#86a886;--text3:#4a6a4a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);
+  background-image:radial-gradient(ellipse at 10% 50%,rgba(0,80,0,.12) 0,transparent 60%),
+  radial-gradient(ellipse at 90% 10%,rgba(180,0,0,.08) 0,transparent 50%)}
+a{color:var(--accent3);text-decoration:none}a:hover{text-decoration:underline}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:230px;background:var(--surface);border-right:1px solid var(--border);
+  padding:0;position:sticky;top:0;height:100vh;overflow-y:auto;flex-shrink:0}
+.sidebar-logo{padding:18px 16px 14px;border-bottom:1px solid var(--border)}
+.sidebar-logo-title{font-size:1rem;font-weight:700;color:var(--accent3);letter-spacing:-0.5px}
+.sidebar-logo-sub{font-size:.6rem;letter-spacing:2px;color:var(--text3);margin-top:2px}
+.sidebar-nav{padding:8px 0}
+.sidebar-nav-label{padding:10px 16px 4px;font-size:.58rem;letter-spacing:3px;
+  color:var(--text3);font-weight:700;text-transform:uppercase}
+.sidebar a{display:block;padding:5px 16px 5px 20px;font-size:.72rem;color:var(--text2);
+  border-left:2px solid transparent;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar a:hover,.sidebar a.active{color:var(--accent3);background:rgba(34,197,94,.06);
+  border-left-color:var(--accent);text-decoration:none}
+.kb{font-size:.55rem;padding:1px 5px;border-radius:3px;margin-left:4px;vertical-align:middle;font-family:sans-serif}
+.ki{background:rgba(192,132,252,.15);color:#c084fc}
+.ka{background:rgba(96,165,250,.15);color:#60a5fa}
+.ke{background:rgba(251,191,36,.15);color:#fbbf24}
+.kc{background:rgba(34,197,94,.12);color:#4ade80}
+.main{flex:1;padding:40px 52px;min-width:0;max-width:960px}
+.nav-links{margin-bottom:28px;font-size:.72rem}
+.nav-links a{color:var(--text3);margin-right:16px}
+.nav-links a:hover{color:var(--text2)}
+/* class header */
+.c-badge{display:inline-block;font-size:.62rem;letter-spacing:1.5px;font-weight:700;
+  padding:3px 12px;border-radius:20px;margin-bottom:10px}
+.c-title{font-size:2rem;font-weight:800;color:var(--text);letter-spacing:-1px;line-height:1.1;margin-bottom:10px}
+.c-hierarchy{font-size:.75rem;color:var(--text2);margin-bottom:18px;line-height:2}
+.c-hierarchy .kw{color:var(--text3)}
+.c-doc{font-size:.87rem;color:var(--text2);line-height:1.8;padding:14px 20px;
+  background:var(--surface2);border-left:3px solid var(--accent2);border-radius:0 6px 6px 0;margin-bottom:36px}
+/* sections */
+.sec{margin-bottom:40px}
+.sec-title{font-size:.6rem;letter-spacing:3px;color:var(--text3);font-weight:700;
+  text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:14px}
+/* member */
+.mem{background:var(--surface);border:1px solid var(--border);border-radius:6px;
+  padding:14px 18px;margin-bottom:8px;transition:border-color .15s}
+.mem:hover{border-color:var(--border2)}
+.sig{font-family:'Cascadia Code','Fira Code',Consolas,monospace;font-size:.77rem;
+  line-height:1.6;word-break:break-all}
+.sig .mod{color:var(--blue)}
+.sig .ret{color:var(--accent3)}
+.sig .nm{color:var(--yellow);font-weight:600}
+.sig .pty{color:var(--orange)}
+.sig .pn{color:var(--text)}
+.sig .ov{font-size:.58rem;background:rgba(96,165,250,.15);color:#60a5fa;
+  padding:1px 6px;border-radius:3px;margin-left:6px;font-family:sans-serif}
+.mem-doc{font-size:.77rem;color:var(--text2);line-height:1.7;margin-top:8px}
+.ptable{width:100%;border-collapse:collapse;margin-top:10px;font-size:.73rem}
+.ptable td{padding:4px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+.ptable .pn2{color:var(--orange);font-family:monospace;white-space:nowrap;width:110px}
+.ptable .pd{color:var(--text2)}
+.ptable .ret2{color:var(--accent3)}
+/* enum */
+.enum-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.ec{background:var(--surface2);border:1px solid var(--border);border-radius:4px;
+  padding:7px 14px;font-family:monospace;font-size:.8rem;color:var(--yellow);letter-spacing:1px}
+/* index */
+.ix-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-top:20px}
+.ix-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:18px 20px;transition:border-color .2s,box-shadow .2s}
+.ix-card:hover{border-color:var(--accent2);box-shadow:0 0 18px rgba(34,197,94,.1)}
+.ix-kind{font-size:.58rem;letter-spacing:2px;font-weight:700;margin-bottom:5px}
+.ix-name{font-size:.95rem;font-weight:700;margin-bottom:7px}
+.ix-name a{color:var(--text)}
+.ix-doc{font-size:.73rem;color:var(--text2);line-height:1.55}
+/* tree */
+.tree{font-family:'Cascadia Code','Fira Code',Consolas,monospace;font-size:.8rem;line-height:2.1}
+.tree a{color:var(--text)}
+.tree a:hover{color:var(--accent3)}
+.tree-connector{color:var(--text3)}
+/* index header */
+.ix-header{margin-bottom:40px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.ix-title{font-size:2.2rem;font-weight:800;color:var(--text);margin-bottom:10px;letter-spacing:-1px}
+.ix-sub{font-size:.85rem;color:var(--text2);line-height:1.7}
+</style>
+</head><body>
+<div class="layout">
+<div class="sidebar"><div class="sidebar-logo"><div class="sidebar-logo-title">raccoon</div><div class="sidebar-logo-sub">javadoc</div></div><div class="sidebar-nav"><div class="sidebar-nav-label">Navigation</div><a href="index.html">📦 Package Index</a><a href="hierarchy.html">🌳 Hierarchy</a><div class="sidebar-nav-label">Interfaces</div><a href="Attackable.html">Attackable <span class="kb ki">interface</span></a><a href="Interactable.html">Interactable <span class="kb ki">interface</span></a><div class="sidebar-nav-label">Abstract</div><a href="Character.html">Character <span class="kb ka">abstract</span></a><a href="Entity.html">Entity <span class="kb ka">abstract</span></a><a href="Item.html" class="active">Item <span class="kb ka">abstract</span></a><div class="sidebar-nav-label">Enums</div><a href="InfectionStatus.html">InfectionStatus <span class="kb ke">enum</span></a><a href="WeaponType.html">WeaponType <span class="kb ke">enum</span></a><div class="sidebar-nav-label">Classes</div><a href="HealingItem.html">HealingItem <span class="kb kc">class</span></a><a href="Licker.html">Licker <span class="kb kc">class</span></a><a href="Room.html">Room <span class="kb kc">class</span></a><a href="Survivor.html">Survivor <span class="kb kc">class</span></a><a href="Tyrant.html">Tyrant <span class="kb kc">class</span></a><a href="Weapon.html">Weapon <span class="kb kc">class</span></a><a href="Zombie.html">Zombie <span class="kb kc">class</span></a></div></div>
+<div class="main">
+<div class="nav-links">
+  <a href="index.html">⌂ Package Index</a>
+  <a href="hierarchy.html">🌳 Hierarchy</a>
+</div>
+<div class="c-badge" style="background:rgba(96,165,250,.15);color:#60a5fa">ABSTRACT</div><h1 class="c-title">Item</h1><div class="c-hierarchy"><span class="kw">extends</span> <a href="Entity.html">Entity</a> &nbsp;·&nbsp; <span class="kw">implements</span> <a href="Interactable.html">Interactable</a></div><div class="c-doc">Ítem abstracto: cualquier objeto del mundo que se puede recoger e interactuar. Extiende Entity e implementa Interactable.</div><div class="sec"><div class="sec-title">Campos</div><div class="mem"><div class="sig"><span class="ret">String </span><span class="nm">itemId</span></div></div><div class="mem"><div class="sig"><span class="ret">String </span><span class="nm">displayName</span></div></div><div class="mem"><div class="sig"><span class="ret">boolean </span><span class="nm">available</span></div></div></div><div class="sec"><div class="sec-title">Métodos</div><div class="mem"><div class="sig"><span class="mod">public abstract </span><span class="ret">String </span><span class="nm">getEffect</span>()</div><div class="mem-doc">Ítem abstracto: cualquier objeto del mundo que se puede recoger e interactuar. Extiende Entity e implementa Interactable. / public abstract class Item extends Entity implements Interactable { protected String  itemId; protected String  displayName; protected boolean available; // ── Constructor ────────────────────────────────────────────── public Item(String displayName, float posX, float posY) { super(displayName, 1, posX, posY);  // los ítems tienen 1 HP simbólico this.displayName = displayName; this.available   = true; } // ── Getters ────────────────────────────────────────────────── public String  getDisplayName() { return displayName; } @Override public boolean isAvailable() { return available; } // ── update() heredado de Entity — los ítems no hacen nada por defecto @Override public void update() { /* sin comportamiento por defecto */ } // ── Método abstracto que las subclases deben implementar ────── /** Devuelve una descripción del efecto del ítem.</div></div></div>
+</div></div>
+</body></html>
