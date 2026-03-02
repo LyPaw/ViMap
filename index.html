@@ -2,540 +2,952 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="keywords" content="HTML, CSS, JavaScript">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="author" content="LyPaw(Manuel Fuentes Cruz)">
 <title>ViMap</title>
-<link rel="icon" type="image/png" href="Logo/icon.png">
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/LyPaw/ViMap/841576487e7cfcab6c0b5030f3e2b62e64a93995/Logo/icon.png">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-    body {
-        margin: 0;
-        font-family: Consolas, monospace;
-        background: #0f172a;
-        color: #d4d4d4;
-        display: flex;
-        height: 100vh;
-    }
+/* ── RESET & BASE ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .sidebar {
-        width: 300px;
-        background: #020617;
-        border-right: 1px solid #1e293b;
-        padding: 10px;
-        overflow-y: auto;
-    }
+:root {
+  --bg:        #060910;
+  --surface:   #0c1018;
+  --surface2:  #111827;
+  --border:    #1a2233;
+  --border2:   #243044;
+  --accent:    #3b82f6;
+  --accent2:   #6366f1;
+  --accent3:   #22d3ee;
+  --text:      #e2e8f0;
+  --text2:     #94a3b8;
+  --text3:     #475569;
+  --green:     #10b981;
+  --yellow:    #f59e0b;
+  --red:       #ef4444;
+  --sidebar-w: 280px;
+  --header-h:  52px;
+}
 
-    .folder, .subfolder {
-        font-weight: bold;
-        color: #cbd5e1;
-        margin-top: 10px;
-        cursor: pointer;
-        user-select: none;
-    }
+html, body { height: 100%; overflow: hidden; }
 
-    .subfolder { padding-left: 20px; font-size: 0.95em; }
+body {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+}
 
-    .file {
-        padding-left: 40px;
-        cursor: pointer;
-        color: #94a3b8;
-        margin: 5px 0;
-    }
+/* ── SCROLLBAR ────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-    .file:hover { color: white; }
+/* ── HEADER ───────────────────────────────────────────────── */
+header {
+  height: var(--header-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  gap: 14px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
 
-    .file.active {
-        color: #fff;
-        background: #4f46e5;
-        border-radius: 6px;
-        padding: 2px 6px;
-    }
+.logo-mark {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--accent3), var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
-    .children {
-        display: none;
-    }
+.header-sep { flex: 1; }
 
-    .folder.open > .children,
-    .subfolder.open > .children {
-        display: block;
-    }
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  color: var(--text3);
+}
+.breadcrumb span { color: var(--text2); }
+.breadcrumb .sep { color: var(--text3); }
 
+.header-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 6px var(--green);
+}
 
-    .viewer {
-        flex: 1;
-        padding: 20px;
-        overflow: auto;
-    }
+/* ── MAIN LAYOUT ──────────────────────────────────────────── */
+.app {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
 
-    pre {
-        background: #1e1e1e;
-        padding: 20px;
-        border-radius: 10px;
-        overflow-x: auto;
-        line-height: 1.6;
-    }
+/* ── SIDEBAR ──────────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow: hidden;
+}
 
-    iframe {
-        width: 100%;
-        height: 80vh;
-        border: none;
-        border-radius: 10px;
-    }
+.sidebar-header {
+  padding: 14px 14px 10px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
 
+.search-box {
+  position: relative;
+}
 
-    .keyword { color: #569cd6; font-weight: bold; }
-    .class { color: #4ec9b0; font-weight: bold; }
-    .string { color: #ce9178; }
-    .comment { color: #6a9955; font-style: italic; }
-    .number { color: #b5cea8; }
-    
-    .pdf-viewer {
-        width: 100%;
-        height: 85vh;
-        border: none;
-        border-radius: 10px;
-    }
+.search-box input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 6px 10px 6px 30px;
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.search-box input::placeholder { color: var(--text3); }
+.search-box input:focus { border-color: var(--accent); }
 
-    
-    .markdown h1 { 
-        color: #e5e7eb; 
-        margin: 0;
-    }
-    
-    .markdown h2 { 
-        color: #c7d2fe; 
-        margin: 0;
-    }
-    
-    .markdown h3 { 
-        color: #a5b4fc; 
-        margin: 0;
-    }
-    
-    .markdown p { 
-        margin: 0;
-        line-height: 1.45;
-    }
+.search-icon {
+  position: absolute;
+  left: 9px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--text3);
+  font-size: 0.75rem;
+  pointer-events: none;
+}
 
-    .markdown ul, 
-    .markdown ol {
-        margin: 0;
-    }
+.sidebar-tree {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 6px 16px;
+}
 
-    .markdown li {
-        margin: 0;
-    }
+/* ── TREE NODES ───────────────────────────────────────────── */
+.tree-item {
+  position: relative;
+}
 
+.tree-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.72rem;
+  color: var(--text2);
+  transition: background 0.15s, color 0.15s;
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tree-row:hover { background: var(--surface2); color: var(--text); }
+.tree-row.active { background: rgba(59,130,246,0.15); color: var(--accent3); }
 
- 
-    
-    .markdown code { 
-        background: #111827;
-        border-radius: 4px;
-        color: #fca5a5;
-    }
-    
-    .markdown pre { 
-        background: #111827;
-        padding: 12px 14px;
-        border-radius: 10px;
-        overflow-x: auto;
-        line-height: 1.45;
-        box-shadow: inset 0 0 0 1px #1e293b;
-    }
+.tree-arrow {
+  font-size: 0.55rem;
+  color: var(--text3);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+  width: 10px;
+}
+.tree-item.open > .tree-row .tree-arrow { transform: rotate(90deg); }
 
-       .markdown pre code {
-        background: none;
-        padding: 0;
-        color: #e5e7eb;
-        font-family: Consolas, monospace;
-    }
+.tree-icon { flex-shrink: 0; font-size: 0.8rem; }
+.tree-label { overflow: hidden; text-overflow: ellipsis; }
 
-    .markdown pre::-webkit-scrollbar {
-        height: 8px;
-    }
-    .markdown pre::-webkit-scrollbar-thumb {
-        background: #334155;
-        border-radius: 4px;
-    }
+.tree-children {
+  display: none;
+  padding-left: 16px;
+  position: relative;
+}
+.tree-children::before {
+  content: '';
+  position: absolute;
+  left: 14px; top: 0; bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+.tree-item.open > .tree-children { display: block; }
+
+/* File badges */
+.file-ext {
+  margin-left: auto;
+  font-size: 0.58rem;
+  padding: 1px 5px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+.ext-java  { background: rgba(239,68,68,0.15);   color: #f87171; }
+.ext-md    { background: rgba(99,102,241,0.15);   color: #a5b4fc; }
+.ext-pdf   { background: rgba(245,158,11,0.15);   color: #fbbf24; }
+.ext-html  { background: rgba(34,211,238,0.15);   color: #67e8f9; }
+
+/* ── VIEWER ───────────────────────────────────────────────── */
+.viewer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* Tab bar */
+.tab-bar {
+  height: 38px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-end;
+  padding: 0 0 0 16px;
+  flex-shrink: 0;
+  gap: 2px;
+  overflow-x: auto;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px 7px;
+  font-size: 0.68rem;
+  color: var(--text3);
+  cursor: pointer;
+  border-radius: 6px 6px 0 0;
+  border: 1px solid transparent;
+  border-bottom: none;
+  white-space: nowrap;
+  transition: all 0.15s;
+  position: relative;
+  bottom: 0;
+}
+.tab:hover { color: var(--text2); background: var(--surface2); }
+.tab.active {
+  color: var(--text);
+  background: var(--bg);
+  border-color: var(--border);
+  border-bottom-color: var(--bg);
+}
+.tab-close {
+  color: var(--text3);
+  font-size: 0.7rem;
+  line-height: 1;
+  padding: 1px 2px;
+  border-radius: 3px;
+  transition: background 0.1s, color 0.1s;
+}
+.tab-close:hover { background: rgba(239,68,68,0.2); color: var(--red); }
+
+/* Welcome / empty state */
+.welcome {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--text3);
+}
+.welcome-glyph {
+  font-size: 3rem;
+  opacity: 0.3;
+}
+.welcome h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  color: var(--text3);
+  font-weight: 600;
+}
+.welcome p { font-size: 0.72rem; color: var(--text3); }
+
+/* Content pane */
+.content-pane {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Code view */
+.code-wrap {
+  flex: 1;
+  overflow: auto;
+  padding: 0;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+
+.code-filename {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.code-meta { font-size: 0.65rem; color: var(--text3); display: flex; gap: 12px; }
+.code-meta span { display: flex; align-items: center; gap: 4px; }
+
+pre.code-block {
+  background: transparent;
+  padding: 20px 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  overflow-x: auto;
+  white-space: pre;
+  counter-reset: line;
+}
+
+/* Line numbers */
+.line {
+  display: flex;
+  gap: 16px;
+}
+.ln {
+  color: var(--text3);
+  font-size: 0.68rem;
+  min-width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+  user-select: none;
+  padding-top: 1px;
+}
+.lc { flex: 1; }
+
+/* Syntax colors */
+.kw  { color: #60a5fa; font-weight: 500; }
+.cls { color: #34d399; }
+.str { color: #fb923c; }
+.cmt { color: #4b5563; font-style: italic; }
+.num { color: #a78bfa; }
+.ann { color: #f472b6; }
+
+/* Markdown */
+.md-wrap {
+  flex: 1;
+  overflow: auto;
+  padding: 32px 40px;
+  max-width: 860px;
+}
+
+.md-wrap h1 { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--text); margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.md-wrap h2 { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 600; color: var(--accent3); margin: 28px 0 12px; }
+.md-wrap h3 { font-family: 'Syne', sans-serif; font-size: 1rem; color: var(--accent); margin: 20px 0 8px; }
+.md-wrap p  { color: var(--text2); line-height: 1.75; margin-bottom: 14px; font-size: 0.85rem; }
+.md-wrap ul, .md-wrap ol { color: var(--text2); padding-left: 20px; margin-bottom: 14px; font-size: 0.83rem; }
+.md-wrap li { line-height: 1.7; margin-bottom: 4px; }
+.md-wrap code { background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; color: var(--accent3); font-size: 0.8rem; }
+.md-wrap pre { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin-bottom: 18px; }
+.md-wrap pre code { background: none; border: none; padding: 0; color: var(--text); font-size: 0.78rem; }
+.md-wrap blockquote { border-left: 3px solid var(--accent2); padding-left: 16px; color: var(--text3); margin: 16px 0; font-style: italic; }
+.md-wrap table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 0.8rem; }
+.md-wrap th { background: var(--surface2); color: var(--text); padding: 8px 12px; border: 1px solid var(--border2); text-align: left; }
+.md-wrap td { padding: 7px 12px; border: 1px solid var(--border); color: var(--text2); }
+.md-wrap tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* PDF / HTML iframes */
+.frame-wrap {
+  flex: 1;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+.frame-wrap iframe {
+  flex: 1;
+  border: none;
+  width: 100%;
+  height: 100%;
+}
+
+/* Loading spinner */
+.loading {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--text3);
+  font-size: 0.75rem;
+}
+.spinner {
+  width: 18px; height: 18px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Status bar */
+.statusbar {
+  height: 24px;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 20px;
+  font-size: 0.62rem;
+  color: rgba(255,255,255,0.85);
+  flex-shrink: 0;
+}
+.statusbar .s-item { display: flex; align-items: center; gap: 5px; }
+.statusbar .s-sep  { color: rgba(255,255,255,0.3); }
+.statusbar .s-right { margin-left: auto; }
+
+/* Sidebar resize handle */
+.resize-handle {
+  width: 4px;
+  background: transparent;
+  cursor: col-resize;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.resize-handle:hover { background: var(--accent); }
+
 </style>
 </head>
-
 <body>
 
-<div class="sidebar">
-    <div class="logo">
-        <img src="Logo/logo.png" alt="Logo" style="max-width: 100%; height: auto;" />
+<!-- HEADER -->
+<header>
+  <img src="https://raw.githubusercontent.com/LyPaw/ViMap/841576487e7cfcab6c0b5030f3e2b62e64a93995/Logo/logo.png" alt="ViMap" style="height:30px; width:auto; object-fit:contain;">
+  <div class="header-sep"></div>
+  <div class="breadcrumb" id="breadcrumb">
+    <span>workspace</span>
+  </div>
+  <div class="header-dot"></div>
+</header>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar-panel">
+    <div class="sidebar-header">
+      <div class="search-box">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="buscar archivo..." id="search-input" autocomplete="off" spellcheck="false">
+      </div>
     </div>
-    <div id="sidebar"></div>
+    <div class="sidebar-tree" id="tree-root"></div>
+  </div>
+
+  <div class="resize-handle" id="resize-handle"></div>
+
+  <!-- VIEWER -->
+  <div class="viewer">
+    <!-- Tab bar -->
+    <div class="tab-bar" id="tab-bar"></div>
+
+    <!-- Content -->
+    <div class="content-pane" id="content-pane">
+      <div class="welcome" id="welcome-screen">
+        <div class="welcome-glyph">⌥</div>
+        <h2>ViMap</h2>
+        <p>Selecciona un archivo de la barra lateral</p>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<div class="viewer">
-    <h2 id="title">Selecciona un archivo</h2>
-    <pre id="code">📂 Elige un archivo de la izquierda…</pre>
+<!-- STATUS BAR -->
+<div class="statusbar">
+  <div class="s-item">◉ <span id="status-lang">listo</span></div>
+  <div class="s-sep">│</div>
+  <div class="s-item" id="status-lines">—</div>
+  <div class="s-item s-right" id="status-file">ViMap v2.0</div>
 </div>
 
 <script>
+/* ═══════════════════════════════════════════════════════════
+   FILE TREE  — añade tu HTML aquí en la sección "UML"
+═══════════════════════════════════════════════════════════ */
 const fileTree = {
   Java: {
     "Array": {
       "Teoría": [
-        { 
-          name: "Array_Teoría.md",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Array/Readme.md"
-        }
+        { name: "Array_Teoría.md", url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Array/Readme.md" }
       ],
       "Ejercicios": [
-        { 
-          name: "Ejercicios_Array.md",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Array/Ejercicios/Readme.md"
-        }
+        { name: "Ejercicios_Array.md", url: "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Array/Ejercicios/Readme.md" }
       ]
     },
-
     "Colecciones": {
       "ArrayList": [
-        { 
-          name: "ArrayList_Clave.java",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/7f67474a23fea6deee0bccdf04ee6ea246e1d883/DAM/Java/ArrayList/Clave/Array_List.java"
-        }
+        { name: "ArrayList_Clave.java", url: "https://raw.githubusercontent.com/LyPaw/ViMap/7f67474a23fea6deee0bccdf04ee6ea246e1d883/DAM/Java/ArrayList/Clave/Array_List.java" }
       ],
       "Conjuntos": [
-        { 
-          name: "Conjuntos_Clave.java",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/7f67474a23fea6deee0bccdf04ee6ea246e1d883/DAM/Java/Conjuntos/Clave/Conjuntos.java"
-        }
+        { name: "Conjuntos_Clave.java", url: "https://raw.githubusercontent.com/LyPaw/ViMap/7f67474a23fea6deee0bccdf04ee6ea246e1d883/DAM/Java/Conjuntos/Clave/Conjuntos.java" }
       ],
       "Mapas": [
-        { 
-          name: "Mapas_Clave.java",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/7f67474a23fea6deee0bccdf04ee6ea246e1d883/DAM/Java/Mapas/Clave/Mapas.java"
-        }
+        { name: "Mapas_Clave.java", url: "https://raw.githubusercontent.com/LyPaw/ViMap/7f67474a23fea6deee0bccdf04ee6ea246e1d883/DAM/Java/Mapas/Clave/Mapas.java" }
       ]
     },
-
     "Agenda": {
       "Enunciado": [
-        { 
-          name: "Enunciado.md",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/2dde1fb9af5b65000ff7e72579ff0f81434fa6ba/DAM/Java/Agenda/Readme.md"
-        }
+        { name: "Enunciado.md", url: "https://raw.githubusercontent.com/LyPaw/ViMap/2dde1fb9af5b65000ff7e72579ff0f81434fa6ba/DAM/Java/Agenda/Readme.md" }
       ],
       "Ejercicio": [
-        { 
-          name: "main.java",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/b4d682bd9945c85f12a1ddaf88f8e646ecb4fbbd/DAM/Java/Agenda/main.java"
-        },
-        { 
-          name: "Agenda.java",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/b4d682bd9945c85f12a1ddaf88f8e646ecb4fbbd/DAM/Java/Agenda/Agenda.java"
-        },
-        { 
-          name: "Contacto.java",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/b4d682bd9945c85f12a1ddaf88f8e646ecb4fbbd/DAM/Java/Agenda/Contacto.java"
-        }
+        { name: "main.java",     url: "https://raw.githubusercontent.com/LyPaw/ViMap/b4d682bd9945c85f12a1ddaf88f8e646ecb4fbbd/DAM/Java/Agenda/main.java" },
+        { name: "Agenda.java",   url: "https://raw.githubusercontent.com/LyPaw/ViMap/b4d682bd9945c85f12a1ddaf88f8e646ecb4fbbd/DAM/Java/Agenda/Agenda.java" },
+        { name: "Contacto.java", url: "https://raw.githubusercontent.com/LyPaw/ViMap/b4d682bd9945c85f12a1ddaf88f8e646ecb4fbbd/DAM/Java/Agenda/Contacto.java" }
       ]
     },
-
-        "Biblioteca": {
+    "Biblioteca": {
       "Ejercicio": [
-        { 
-          name: "main.java",
-          url: "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/ca9d287875ef3e6cbac201e04f79d65b41a3dd46/src/Main.java"
-        },
-        { 
-          name: "Libro.java",
-          url: "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/ca9d287875ef3e6cbac201e04f79d65b41a3dd46/src/Libros.java"
-        },
-        { 
-          name: "Cliente.java",
-          url: "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/13c852aed15a8beb7d38d1c598a4ab83c5e18d9c/src/Cliente.java"
-        },
-        { 
-          name: "Biblioteca.java",
-          url: "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/ca9d287875ef3e6cbac201e04f79d65b41a3dd46/src/Biblioteca.java"
-        },
+        { name: "main.java",       url: "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/ca9d287875ef3e6cbac201e04f79d65b41a3dd46/src/Main.java" },
+        { name: "Libro.java",      url: "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/ca9d287875ef3e6cbac201e04f79d65b41a3dd46/src/Libros.java" },
+        { name: "Cliente.java",    url: "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/13c852aed15a8beb7d38d1c598a4ab83c5e18d9c/src/Cliente.java" },
+        { name: "Biblioteca.java", url: "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/ca9d287875ef3e6cbac201e04f79d65b41a3dd46/src/Biblioteca.java" }
       ]
     },
     "Deportes": {
       "Ejercicio": [
-        { 
-          name: "main.java",
-          url: "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/Main.java"
-        },
-        { 
-          name: "evento.java",
-           url: "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/Evento.java"
-        },
-        { 
-          name: "eventoAnual.java",
-          url: "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/EventosAnuales.java"
-        },
-        { 
-          name: "tipoEvento.java",
-          url: "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/TipoEvento.java"
-        },
+        { name: "main.java",         url: "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/Main.java" },
+        { name: "evento.java",       url: "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/Evento.java" },
+        { name: "eventoAnual.java",  url: "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/EventosAnuales.java" },
+        { name: "tipoEvento.java",   url: "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/TipoEvento.java" }
       ]
     },
     "JavaFX": {
       "Teoría": [
-        { 
-          "name": "Documentación1.pdf",
-          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/JavaFX/ViMap_JavaFX_Documentacion.pdf"
-        }
+        { name: "Documentación1.pdf", url: "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/JavaFX/ViMap_JavaFX_Documentacion.pdf" }
       ]
     },
+    /* ─── NUEVO: carpeta UML con tu HTML ─── */
+    "UML": {
+      "Diagramas": [
+        {
+          name: "UML_ResidentEvil.html",
+          /* Pon aquí la URL raw de tu HTML en GitHub (o cualquier URL directa).
+             Si el archivo está local, usa: url: "./uml_resident_evil.html" */
+          url: "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_resident_evil.html"
+        }
+      ]
+    }
   },
 
   BaseDeDatos: {
     "ER": {
       "Teoría": [
-        { 
-          name: "ER_Teoría.md",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/b41c3652d7a0338f98b19921ff61899b012b65cf/DAM/Base_De_Datos/Teor%C3%ADa/Readme.md"
-        }
+        { name: "ER_Teoría.md", url: "https://raw.githubusercontent.com/LyPaw/ViMap/b41c3652d7a0338f98b19921ff61899b012b65cf/DAM/Base_De_Datos/Teor%C3%ADa/Readme.md" }
       ],
       "Ejercicios": [
-        { 
-          name: "Ejercicios_Array.md",
-          url: "https://raw.githubusercontent.com/LyPaw/ViMap/b41c3652d7a0338f98b19921ff61899b012b65cf/DAM/Base_De_Datos/Ejercicios/Readme.md"
-        }
+        { name: "Ejercicios_BD.md", url: "https://raw.githubusercontent.com/LyPaw/ViMap/b41c3652d7a0338f98b19921ff61899b012b65cf/DAM/Base_De_Datos/Ejercicios/Readme.md" }
       ]
     },
-
     "SQL": {
-      "Conceptos_Clave": [
-        
-      ]
-    },
+      "Conceptos_Clave": []
+    }
   },
 
-    HTML_CSS: {
-        "Tablas":{
-            "Teoria":[
-                {
-                    name: "Teoria.md",
-          url: "https://raw.githubusercontent.com/LyPaw/XML-HTML-CSS/b6649bdaf2e86559e4aeca253bb49096f5f21b41/Tablas/Teor%C3%ADa.md"
-                },
-            ],
-            "Ejercicios":[
-                {
-                    name: "Ejercicios_Medio_Dificil.md",
-          url: "https://raw.githubusercontent.com/LyPaw/XML-HTML-CSS/b6649bdaf2e86559e4aeca253bb49096f5f21b41/Tablas/Ejercicios_Cols_Rows.md"
-                },
-                   {
-                    name: "Ejercicio_Dificil.md",
-          url: "https://raw.githubusercontent.com/LyPaw/XML-HTML-CSS/b6649bdaf2e86559e4aeca253bb49096f5f21b41/Tablas/EjercicioFinal.md"
-                },
-            ],
-        },
-    },
+  HTML_CSS: {
+    "Tablas": {
+      "Teoria": [
+        { name: "Teoria.md", url: "https://raw.githubusercontent.com/LyPaw/XML-HTML-CSS/b6649bdaf2e86559e4aeca253bb49096f5f21b41/Tablas/Teor%C3%ADa.md" }
+      ],
+      "Ejercicios": [
+        { name: "Ejercicios_Medio_Dificil.md", url: "https://raw.githubusercontent.com/LyPaw/XML-HTML-CSS/b6649bdaf2e86559e4aeca253bb49096f5f21b41/Tablas/Ejercicios_Cols_Rows.md" },
+        { name: "Ejercicio_Dificil.md",        url: "https://raw.githubusercontent.com/LyPaw/XML-HTML-CSS/b6649bdaf2e86559e4aeca253bb49096f5f21b41/Tablas/EjercicioFinal.md" }
+      ]
+    }
+  }
 };
 
-
-
-const sidebar = document.getElementById("sidebar");
-const codeEl = document.getElementById("code");
-const titleEl = document.getElementById("title");
-
-// Mantener track de las carpetas abiertas
-const openFolders = new Set();
-
-for (const lang in fileTree) {
-    const folder = document.createElement("div");
-    folder.className = "folder";
-    folder.textContent = "📁 " + lang;
-    folder.dataset.folder = lang;
-
-    const childrenContainer = document.createElement("div");
-    childrenContainer.className = "children";
-
-    const topics = fileTree[lang];
-for (const topic in topics) {
-    const subfolder = document.createElement("div");
-    subfolder.className = "subfolder";
-    subfolder.textContent = "📂 " + topic;
-
-    const subChildren = document.createElement("div");
-    subChildren.className = "children";
-
-    const subTopics = topics[topic]; // ← ahora es un objeto con más carpetas
-
-    for (const subtopic in subTopics) {
-        const subSubFolder = document.createElement("div");
-        subSubFolder.className = "subfolder";
-        subSubFolder.style.paddingLeft = "40px";
-        subSubFolder.textContent = "📂 " + subtopic;
-
-        const filesContainer = document.createElement("div");
-        filesContainer.className = "children";
-
-        subTopics[subtopic].forEach(file => {
-            const fileEl = document.createElement("div");
-            fileEl.className = "file";
-            fileEl.textContent = "📄 " + file.name;
-            fileEl.onclick = (e) => {
-                e.stopPropagation();
-                loadFile(file, fileEl, folder, subSubFolder);
-            };
-            filesContainer.appendChild(fileEl);
-        });
-
-        subSubFolder.appendChild(filesContainer);
-
-        subSubFolder.addEventListener("click", e => {
-            e.stopPropagation();
-            subSubFolder.classList.toggle("open");
-        });
-
-        subChildren.appendChild(subSubFolder);
-    }
-
-    subfolder.appendChild(subChildren);
-
-    subfolder.addEventListener("click", e => {
-        e.stopPropagation();
-        subfolder.classList.toggle("open");
-    });
-
-    childrenContainer.appendChild(subfolder);
-    }
-
-    folder.appendChild(childrenContainer);
-
-    folder.addEventListener("click", (e) => {
-        e.stopPropagation();
-        folder.classList.toggle("open");
-        
-        // Abrir/cerrar todos los subfolders
-        const subfolders = folder.querySelectorAll(".subfolder");
-        if (folder.classList.contains("open")) {
-            subfolders.forEach(sf => sf.classList.add("open"));
-        }
-    });
-
-    sidebar.appendChild(folder);
+/* ═══════════════════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════════════════ */
+function extOf(name) {
+  return name.split('.').pop().toLowerCase();
 }
 
-function loadFile(file, el, parentFolder, parentSubfolder) {
-    // Mantener las carpetas abiertas
-    if (parentFolder && !parentFolder.classList.contains("open")) {
-        parentFolder.classList.add("open");
-    }
-    if (parentSubfolder && !parentSubfolder.classList.contains("open")) {
-        parentSubfolder.classList.add("open");
-    }
-
-    document.querySelectorAll(".file").forEach(f => f.classList.remove("active"));
-    el.classList.add("active");
-
-    titleEl.textContent = file.name;
-    codeEl.innerHTML = "⏳ Cargando…";
-
-    const cleanUrl = file.url.trim();
-
-    if (file.name.endsWith(".md")) {
-        fetch(cleanUrl)
-            .then(r => r.text())
-            .then(md => {
-                codeEl.innerHTML = `<div class="markdown">${marked.parse(md)}</div>`;
-            });
-    }
-    else if (file.name.endsWith(".pdf")) {
-        const pdfViewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(cleanUrl)}&embedded=true`;
-        codeEl.innerHTML = `<iframe class="pdf-viewer" src="${pdfViewerUrl}"></iframe>`;
-    } 
-    else {
-        fetch(cleanUrl)
-            .then(r => r.text())
-            .then(text => {
-                codeEl.innerHTML = highlightJava(text);
-                codeEl.scrollTop = 0;
-            });
-    }
+function extBadge(name) {
+  const e = extOf(name);
+  const map = { java:'ext-java', md:'ext-md', pdf:'ext-pdf', html:'ext-html' };
+  const cls = map[e] || '';
+  return cls ? `<span class="file-ext ${cls}">.${e}</span>` : '';
 }
 
-function escapeHTML(str) {
-    return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+function langIcon(name) {
+  const e = extOf(name);
+  const icons = { java:'☕', md:'📝', pdf:'📄', html:'🌐' };
+  return icons[e] || '📄';
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BUILD SIDEBAR TREE
+═══════════════════════════════════════════════════════════ */
+const treeRoot = document.getElementById('tree-root');
+
+function buildTree(data, container, depth = 0) {
+  for (const key in data) {
+    const val = data[key];
+    const isFiles = Array.isArray(val);
+
+    const item = document.createElement('div');
+    item.className = 'tree-item';
+
+    const row = document.createElement('div');
+    row.className = 'tree-row';
+    row.style.paddingLeft = (8 + depth * 12) + 'px';
+
+    if (isFiles) {
+      // Folder with files
+      row.innerHTML = `
+        <span class="tree-arrow">▶</span>
+        <span class="tree-icon">📂</span>
+        <span class="tree-label">${key}</span>
+      `;
+      const children = document.createElement('div');
+      children.className = 'tree-children';
+
+      val.forEach(file => {
+        const fItem = document.createElement('div');
+        fItem.className = 'tree-item';
+
+        const fRow = document.createElement('div');
+        fRow.className = 'tree-row';
+        fRow.style.paddingLeft = (8 + (depth + 1) * 12) + 'px';
+        fRow.innerHTML = `
+          <span class="tree-arrow" style="visibility:hidden">▶</span>
+          <span class="tree-icon">${langIcon(file.name)}</span>
+          <span class="tree-label">${file.name}</span>
+          ${extBadge(file.name)}
+        `;
+        fRow.addEventListener('click', e => {
+          e.stopPropagation();
+          openFile(file);
+          document.querySelectorAll('.tree-row').forEach(r => r.classList.remove('active'));
+          fRow.classList.add('active');
+          // breadcrumb
+          document.getElementById('breadcrumb').innerHTML =
+            `<span>${key}</span><span class="sep">›</span><span>${file.name}</span>`;
+        });
+
+        fItem.appendChild(fRow);
+        children.appendChild(fItem);
+      });
+
+      row.addEventListener('click', e => { e.stopPropagation(); item.classList.toggle('open'); });
+      item.appendChild(row);
+      item.appendChild(children);
+
+    } else {
+      // Nested folder
+      row.innerHTML = `
+        <span class="tree-arrow">▶</span>
+        <span class="tree-icon">📁</span>
+        <span class="tree-label">${key}</span>
+      `;
+      const children = document.createElement('div');
+      children.className = 'tree-children';
+      buildTree(val, children, depth + 1);
+
+      row.addEventListener('click', e => { e.stopPropagation(); item.classList.toggle('open'); });
+      item.appendChild(row);
+      item.appendChild(children);
+    }
+
+    container.appendChild(item);
+  }
+}
+
+buildTree(fileTree, treeRoot);
+
+/* ═══════════════════════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════════════════════ */
+const tabBar     = document.getElementById('tab-bar');
+const contentPane = document.getElementById('content-pane');
+const welcome    = document.getElementById('welcome-screen');
+
+let tabs = [];       // { file, tabEl, contentEl }
+let activeTab = null;
+
+function openFile(file) {
+  // Check if already open
+  const existing = tabs.find(t => t.file.url === file.url);
+  if (existing) {
+    activateTab(existing);
+    return;
+  }
+
+  // Hide welcome
+  welcome.style.display = 'none';
+
+  // Create tab
+  const tabEl = document.createElement('div');
+  tabEl.className = 'tab';
+  tabEl.innerHTML = `
+    <span>${langIcon(file.name)}</span>
+    <span>${file.name}</span>
+    <span class="tab-close" title="cerrar">✕</span>
+  `;
+
+  // Create content
+  const contentEl = document.createElement('div');
+  contentEl.className = 'content-pane';
+  contentEl.style.display = 'none';
+
+  const entry = { file, tabEl, contentEl };
+  tabs.push(entry);
+
+  tabEl.addEventListener('click', e => {
+    if (e.target.classList.contains('tab-close')) {
+      closeTab(entry);
+    } else {
+      activateTab(entry);
+    }
+  });
+
+  tabBar.appendChild(tabEl);
+  contentPane.parentNode.insertBefore(contentEl, contentPane.nextSibling);
+
+  // Load content
+  loadContent(file, contentEl);
+
+  activateTab(entry);
+}
+
+function activateTab(entry) {
+  if (activeTab) {
+    activeTab.tabEl.classList.remove('active');
+    activeTab.contentEl.style.display = 'none';
+  }
+  activeTab = entry;
+  entry.tabEl.classList.add('active');
+  entry.contentEl.style.display = 'flex';
+  entry.contentEl.style.flexDirection = 'column';
+  entry.contentEl.style.flex = '1';
+  entry.contentEl.style.overflow = 'hidden';
+
+  // Status
+  document.getElementById('status-file').textContent = entry.file.name;
+  document.getElementById('status-lang').textContent = extOf(entry.file.name).toUpperCase();
+}
+
+function closeTab(entry) {
+  const idx = tabs.indexOf(entry);
+  tabs.splice(idx, 1);
+  entry.tabEl.remove();
+  entry.contentEl.remove();
+
+  if (activeTab === entry) {
+    activeTab = null;
+    if (tabs.length > 0) {
+      activateTab(tabs[Math.max(0, idx - 1)]);
+    } else {
+      welcome.style.display = 'flex';
+      document.getElementById('status-file').textContent = 'ViMap v2.0';
+      document.getElementById('status-lang').textContent = 'listo';
+      document.getElementById('status-lines').textContent = '—';
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LOAD CONTENT
+═══════════════════════════════════════════════════════════ */
+function showLoading(container) {
+  container.innerHTML = `<div class="loading"><div class="spinner"></div>cargando...</div>`;
+}
+
+function loadContent(file, container) {
+  const ext = extOf(file.name);
+  showLoading(container);
+
+  if (ext === 'md') {
+    fetch(file.url)
+      .then(r => r.text())
+      .then(md => {
+        const lines = md.split('\n').length;
+        container.innerHTML = `<div class="md-wrap">${marked.parse(md)}</div>`;
+        document.getElementById('status-lines').textContent = lines + ' líneas';
+      })
+      .catch(() => { container.innerHTML = `<div class="loading">⚠ No se pudo cargar el archivo</div>`; });
+  }
+  else if (ext === 'pdf') {
+    const pdfUrl = `https://docs.google.com/gview?url=${encodeURIComponent(file.url.trim())}&embedded=true`;
+    container.innerHTML = `
+      <div class="code-header">
+        <span class="code-filename">${file.name}</span>
+        <span class="code-meta"><span>PDF document</span></span>
+      </div>
+      <div class="frame-wrap"><iframe src="${pdfUrl}" allowfullscreen></iframe></div>
+    `;
+  }
+  else if (ext === 'html') {
+    /* ── HTML files: fetch → srcdoc iframe (funciona aunque no esté en GitHub pages) ── */
+    fetch(file.url.trim())
+      .then(r => r.text())
+      .then(html => {
+        container.innerHTML = `
+          <div class="code-header">
+            <span class="code-filename">${file.name}</span>
+            <div class="code-meta">
+              <span>🌐 HTML preview</span>
+              <span style="cursor:pointer;color:var(--accent3)" onclick="window.open('${file.url}','_blank')">↗ abrir raw</span>
+            </div>
+          </div>
+          <div class="frame-wrap" id="frame-wrap-${btoa(file.name).replace(/=/g,'')}"></div>
+        `;
+        const wrap = container.querySelector('.frame-wrap');
+        const iframe = document.createElement('iframe');
+        iframe.style.flex = '1';
+        iframe.style.width = '100%';
+        iframe.style.border = 'none';
+        iframe.srcdoc = html;     // ← clave: renderiza el HTML directamente
+        iframe.sandbox = 'allow-scripts allow-same-origin allow-forms';
+        wrap.appendChild(iframe);
+        document.getElementById('status-lines').textContent = html.split('\n').length + ' líneas';
+      })
+      .catch(() => { container.innerHTML = `<div class="loading">⚠ No se pudo cargar el HTML (CORS). Usa una URL raw de GitHub.</div>`; });
+  }
+  else {
+    // Java / any text → highlighted
+    fetch(file.url.trim())
+      .then(r => r.text())
+      .then(text => {
+        const lines = text.split('\n');
+        document.getElementById('status-lines').textContent = lines.length + ' líneas';
+        const highlighted = highlightJava(text);
+        const linesHtml = highlighted.split('\n').map((l, i) =>
+          `<div class="line"><span class="ln">${i + 1}</span><span class="lc">${l || ' '}</span></div>`
+        ).join('');
+        container.innerHTML = `
+          <div class="code-header">
+            <span class="code-filename">${file.name}</span>
+            <div class="code-meta">
+              <span>☕ Java</span>
+              <span>${lines.length} líneas</span>
+            </div>
+          </div>
+          <div class="code-wrap"><pre class="code-block">${linesHtml}</pre></div>
+        `;
+      })
+      .catch(() => { container.innerHTML = `<div class="loading">⚠ No se pudo cargar el archivo</div>`; });
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SYNTAX HIGHLIGHT (Java)
+═══════════════════════════════════════════════════════════ */
+function escapeHTML(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 function highlightJava(code) {
-    // Escapar HTML
-    code = escapeHTML(code);
+  code = escapeHTML(code);
+  const parts = [];
 
-    // Asegurarnos de mantener saltos de línea al inicio
-    code = code.replace(/^\s+/, match => match.replace(/ /g, '&nbsp;').replace(/\n/g, '<br>'));
+  code = code.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, m => {
+    parts.push({ t:'str', v:m }); return `@@S${parts.length-1}@@`;
+  });
+  code = code.replace(/(\/\/[^\n]*)/g, m => {
+    parts.push({ t:'cmt', v:m }); return `@@C${parts.length-1}@@`;
+  });
+  code = code.replace(/(\/\*[\s\S]*?\*\/)/g, m => {
+    parts.push({ t:'cmt', v:m }); return `@@C${parts.length-1}@@`;
+  });
+  code = code.replace(/(@[A-Za-z]+)/g, '<span class="ann">$1</span>');
+  code = code.replace(/\b(class|public|private|protected|static|void|new|return|if|else|for|while|do|switch|case|break|continue|int|double|float|boolean|char|String|Set|HashSet|Map|HashMap|List|ArrayList|import|package|extends|implements|interface|abstract|final|try|catch|finally|throw|throws|this|super|instanceof|true|false|null|var|enum)\b/g,
+    '<span class="kw">$1</span>');
+  code = code.replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>');
+  code = code.replace(/\b([A-Z][A-Za-z0-9_]*)\b/g, '<span class="cls">$1</span>');
 
-    // Proteger comentarios y strings primero
-    const protectedParts = [];
-
-    code = code.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, match => {
-        protectedParts.push({type: 'string', content: match});
-        return `__STRING_${protectedParts.length - 1}__`;
-    });
-
-    code = code.replace(/\/\/.*/g, match => {
-        protectedParts.push({type: 'comment', content: match});
-        return `__COMMENT_${protectedParts.length - 1}__`;
-    });
-
-    code = code.replace(/\/\*[\s\S]*?\*\//g, match => {
-        protectedParts.push({type: 'comment', content: match});
-        return `__COMMENT_${protectedParts.length - 1}__`;
-    });
-
-    // Resaltar keywords, números y clases como antes
-    const keywords = /\b(class|public|private|protected|static|void|new|return|if|else|for|while|do|switch|case|break|continue|int|double|float|boolean|char|String|Set|HashSet|Map|HashMap|List|ArrayList|import|package|extends|implements|interface|abstract|final|try|catch|finally|throw|throws|this|super|instanceof|true|false|null|var|System|out|println|print|length|size|add|remove|get|put|contains|equals|toString)\b/g;
-    code = code.replace(keywords, '<span class="keyword">$&</span>');
-
-    code = code.replace(/\b(\d+\.?\d*([eE][+-]?\d+)?)\b/g, '<span class="number">$1</span>');
-
-    const classRegex = /\b([A-Z][a-zA-Z0-9_]*)\b/g;
-    code = code.replace(classRegex, match => {
-        const lower = match.toLowerCase();
-        const keywordList = ['class', 'public', 'private', 'protected', 'static', 'void', 'new', 'return', 'if', 'else', 'for', 'while', 'int', 'double', 'float', 'boolean', 'char', 'string', 'set', 'hashset', 'map', 'hashmap', 'list', 'arraylist', 'import', 'package', 'extends', 'implements', 'interface', 'abstract', 'final', 'try', 'catch', 'finally', 'throw', 'throws', 'this', 'super', 'instanceof', 'true', 'false', 'null', 'var', 'system', 'out'];
-        if (keywordList.includes(lower)) return match;
-        return `<span class="class">${match}</span>`;
-    });
-
-    // Restaurar strings y comentarios
-    code = code.replace(/__STRING_(\d+)__/g, (_, index) => {
-        return `<span class="string">${protectedParts[index].content}</span>`;
-    });
-
-    code = code.replace(/__COMMENT_(\d+)__/g, (_, index) => {
-        return `<span class="comment">${protectedParts[index].content}</span>`;
-    });
-
-    return code;
+  code = code.replace(/@@S(\d+)@@/g, (_,i) => `<span class="str">${parts[i].v}</span>`);
+  code = code.replace(/@@C(\d+)@@/g, (_,i) => `<span class="cmt">${parts[i].v}</span>`);
+  return code;
 }
-</script>
 
+/* ═══════════════════════════════════════════════════════════
+   SEARCH
+═══════════════════════════════════════════════════════════ */
+document.getElementById('search-input').addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  document.querySelectorAll('.tree-item').forEach(item => {
+    const label = item.querySelector('.tree-label');
+    if (!label) return;
+    const text = label.textContent.toLowerCase();
+    if (!q) {
+      item.style.display = '';
+    } else {
+      item.style.display = text.includes(q) ? '' : 'none';
+      if (text.includes(q)) {
+        // expand parents
+        let p = item.parentElement;
+        while (p && !p.id) {
+          if (p.classList.contains('tree-children')) {
+            p.parentElement.classList.add('open');
+          }
+          p = p.parentElement;
+        }
+      }
+    }
+  });
+});
+
+/* ═══════════════════════════════════════════════════════════
+   SIDEBAR RESIZE
+═══════════════════════════════════════════════════════════ */
+const handle  = document.getElementById('resize-handle');
+const sidebar = document.getElementById('sidebar-panel');
+let resizing = false, startX = 0, startW = 0;
+
+handle.addEventListener('mousedown', e => {
+  resizing = true; startX = e.clientX; startW = sidebar.offsetWidth;
+  document.body.style.cursor = 'col-resize';
+  document.body.style.userSelect = 'none';
+});
+document.addEventListener('mousemove', e => {
+  if (!resizing) return;
+  const w = Math.max(160, Math.min(520, startW + e.clientX - startX));
+  sidebar.style.width = w + 'px';
+});
+document.addEventListener('mouseup', () => {
+  resizing = false;
+  document.body.style.cursor = '';
+  document.body.style.userSelect = '';
+});
+</script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
