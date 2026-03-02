@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>UML - Resident Evil OOP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0a0a;
+    color: #c8f0c8;
+    font-family: 'Share Tech Mono', monospace;
+    min-height: 100vh;
+    overflow-x: auto;
+    background-image:
+      radial-gradient(ellipse at 20% 50%, rgba(0,80,0,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(180,0,0,0.1) 0%, transparent 50%);
+  }
+
+  h1 {
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+    padding: 24px 0 8px;
+    font-size: 1.6rem;
+    letter-spacing: 4px;
+    color: #ff3030;
+    text-shadow: 0 0 20px rgba(255,0,0,0.5);
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #5a9a5a;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    margin-bottom: 32px;
+  }
+
+  .canvas {
+    position: relative;
+    width: 1300px;
+    margin: 0 auto;
+    height: 1100px;
+  }
+
+  svg.arrows {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* UML CARD */
+  .cls {
+    position: absolute;
+    background: #0d160d;
+    border: 1px solid #2a5a2a;
+    border-radius: 2px;
+    z-index: 1;
+    min-width: 200px;
+    box-shadow: 0 0 16px rgba(0,200,0,0.08), inset 0 0 20px rgba(0,0,0,0.5);
+    transition: box-shadow 0.3s;
+  }
+  .cls:hover {
+    box-shadow: 0 0 24px rgba(0,220,0,0.2), inset 0 0 20px rgba(0,0,0,0.5);
+    border-color: #44aa44;
+  }
+
+  .cls.abstract { border-color: #3a5a8a; box-shadow: 0 0 16px rgba(0,80,200,0.1); }
+  .cls.abstract:hover { border-color: #5588cc; box-shadow: 0 0 24px rgba(0,100,255,0.2); }
+  .cls.interface_ { border-color: #7a3a7a; box-shadow: 0 0 16px rgba(180,0,180,0.1); }
+  .cls.interface_:hover { border-color: #cc55cc; }
+  .cls.enum_ { border-color: #7a6a20; box-shadow: 0 0 12px rgba(180,150,0,0.1); }
+
+  .cls-header {
+    padding: 8px 12px 6px;
+    border-bottom: 1px solid #2a5a2a;
+    text-align: center;
+  }
+  .cls.abstract .cls-header { border-color: #3a5a8a; }
+  .cls.interface_ .cls-header { border-color: #7a3a7a; }
+  .cls.enum_ .cls-header { border-color: #7a6a20; }
+
+  .cls-stereotype {
+    font-size: 0.6rem;
+    color: #7a7a7a;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .cls.abstract .cls-stereotype { color: #5588aa; }
+  .cls.interface_ .cls-stereotype { color: #aa55aa; }
+  .cls.enum_ .cls-stereotype { color: #aa8833; }
+
+  .cls-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    color: #aaffaa;
+  }
+  .cls.abstract .cls-name { color: #88bbff; font-style: italic; }
+  .cls.interface_ .cls-name { color: #dd88ff; }
+  .cls.enum_ .cls-name { color: #ffcc44; }
+
+  .cls-section {
+    padding: 6px 12px;
+    border-bottom: 1px solid #1a2e1a;
+    min-height: 10px;
+  }
+  .cls.abstract .cls-section { border-color: #1a2a3e; }
+  .cls.interface_ .cls-section { border-color: #2e1a2e; }
+  .cls.enum_ .cls-section { border-color: #2e2a10; }
+  .cls-section:last-child { border-bottom: none; }
+
+  .attr {
+    font-size: 0.65rem;
+    line-height: 1.7;
+    color: #88aa88;
+    white-space: nowrap;
+  }
+  .attr .vis { color: #4a7a4a; margin-right: 4px; }
+  .attr .type { color: #6699bb; }
+  .attr .name2 { color: #ccffcc; }
+  .attr.method .name2 { color: #ffdd88; }
+  .attr.abstract-m .name2 { font-style: italic; color: #aaccff; }
+  .attr.static-m .name2 { text-decoration: underline; }
+
+  /* LEGEND */
+  .legend {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0,10,0,0.8);
+    border: 1px solid #2a5a2a;
+    padding: 12px 16px;
+    font-size: 0.62rem;
+    z-index: 10;
+  }
+  .legend h3 { color: #66aa66; margin-bottom: 8px; font-size: 0.65rem; letter-spacing: 2px; }
+  .legend-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; color: #88a888; }
+  .leg-line { width: 30px; height: 2px; }
+
+  /* DRAG */
+  .cls { cursor: grab; user-select: none; }
+  .cls.dragging {
+    cursor: grabbing;
+    z-index: 100;
+    opacity: 0.92;
+    box-shadow: 0 0 32px rgba(0,255,0,0.3), inset 0 0 20px rgba(0,0,0,0.5) !important;
+  }
+  .drag-hint {
+    position: fixed;
+    bottom: 16px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,20,0,0.85);
+    border: 1px solid #2a5a2a;
+    color: #5a9a5a;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    padding: 6px 16px;
+    letter-spacing: 1px;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 1.5s;
+    z-index: 999;
+  }
+</style>
+</head>
+<body>
+
+<h1>🧟 RACCOON CITY — UML DIAGRAM</h1>
+<p class="subtitle">«JAVA OOP» · HERENCIA · POLIMORFISMO · INTERFACES · ENUMS</p>
+
+<div class="canvas">
+
+<!-- SVG ARROWS -->
+<svg class="arrows" id="svg-arrows"></svg>
+
+<!-- ═══════════════════════════════════════════════
+     INTERFACES
+═══════════════════════════════════════════════ -->
+
+<!-- <<interface>> Attackable -->
+<div class="cls interface_" id="iAttackable" style="left:530px;top:10px;width:200px;">
+  <div class="cls-header">
+    <span class="cls-stereotype">«interface»</span>
+    <div class="cls-name">Attackable</div>
+  </div>
+  <div class="cls-section">
+    <div class="attr method abstract-m"><span class="vis">+</span><span class="name2">attack(target: Entity)</span><span class="type"> : void</span></div>
+    <div class="attr method abstract-m"><span class="vis">+</span><span class="name2">getAttackDamage()</span><span class="type"> : int</span></div>
+  </div>
+</div>
+
+<!-- <<interface>> Interactable -->
+<div class="cls interface_" id="iInteractable" style="left:760px;top:10px;width:210px;">
+  <div class="cls-header">
+    <span class="cls-stereotype">«interface»</span>
+    <div class="cls-name">Interactable</div>
+  </div>
+  <div class="cls-section">
+    <div class="attr method abstract-m"><span class="vis">+</span><span class="name2">interact(actor: Character)</span><span class="type"> : void</span></div>
+    <div class="attr method abstract-m"><span class="vis">+</span><span class="name2">isAvailable()</span><span class="type"> : boolean</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     ENUMS
+═══════════════════════════════════════════════ -->
+
+<!-- Enum InfectionStatus -->
+<div class="cls enum_" id="eInfection" style="left:20px;top:10px;width:180px;">
+  <div class="cls-header">
+    <span class="cls-stereotype">«enum»</span>
+    <div class="cls-name">InfectionStatus</div>
+  </div>
+  <div class="cls-section">
+    <div class="attr"><span class="name2">CLEAN</span></div>
+    <div class="attr"><span class="name2">EXPOSED</span></div>
+    <div class="attr"><span class="name2">INFECTED</span></div>
+    <div class="attr"><span class="name2">MUTATED</span></div>
+  </div>
+</div>
+
+<!-- Enum WeaponType -->
+<div class="cls enum_" id="eWeapon" style="left:240px;top:10px;width:170px;">
+  <div class="cls-header">
+    <span class="cls-stereotype">«enum»</span>
+    <div class="cls-name">WeaponType</div>
+  </div>
+  <div class="cls-section">
+    <div class="attr"><span class="name2">PISTOL</span></div>
+    <div class="attr"><span class="name2">SHOTGUN</span></div>
+    <div class="attr"><span class="name2">KNIFE</span></div>
+    <div class="attr"><span class="name2">GRENADE</span></div>
+    <div class="attr"><span class="name2">ROCKET_LAUNCHER</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     ABSTRACT: Entity
+═══════════════════════════════════════════════ -->
+<div class="cls abstract" id="cEntity" style="left:480px;top:170px;width:250px;">
+  <div class="cls-header">
+    <span class="cls-stereotype">«abstract»</span>
+    <div class="cls-name">Entity</div>
+  </div>
+  <div class="cls-section">
+    <div class="attr"><span class="vis">-</span><span class="name2">id</span><span class="type"> : String</span></div>
+    <div class="attr"><span class="vis">#</span><span class="name2">name</span><span class="type"> : String</span></div>
+    <div class="attr"><span class="vis">#</span><span class="name2">health</span><span class="type"> : int</span></div>
+    <div class="attr"><span class="vis">#</span><span class="name2">maxHealth</span><span class="type"> : int</span></div>
+    <div class="attr"><span class="vis">#</span><span class="name2">posX, posY</span><span class="type"> : float</span></div>
+  </div>
+  <div class="cls-section">
+    <div class="attr method"><span class="vis">+</span><span class="name2">getId()</span><span class="type"> : String</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">takeDamage(dmg: int)</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">isAlive()</span><span class="type"> : boolean</span></div>
+    <div class="attr method abstract-m"><span class="vis">+</span><span class="name2">update()</span><span class="type"> : void</span></div>
+    <div class="attr method abstract-m"><span class="vis">+</span><span class="name2">getDescription()</span><span class="type"> : String</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     ABSTRACT: Character  (extends Entity)
+═══════════════════════════════════════════════ -->
+<div class="cls abstract" id="cCharacter" style="left:340px;top:380px;width:270px;">
+  <div class="cls-header">
+    <span class="cls-stereotype">«abstract»</span>
+    <div class="cls-name">Character</div>
+  </div>
+  <div class="cls-section">
+    <div class="attr"><span class="vis">#</span><span class="name2">speed</span><span class="type"> : float</span></div>
+    <div class="attr"><span class="vis">#</span><span class="name2">infectionStatus</span><span class="type"> : InfectionStatus</span></div>
+    <div class="attr"><span class="vis">#</span><span class="name2">inventory</span><span class="type"> : List&lt;Item&gt;</span></div>
+  </div>
+  <div class="cls-section">
+    <div class="attr method"><span class="vis">+</span><span class="name2">move(dx, dy: float)</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">pickUp(item: Item)</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">useItem(item: Item)</span><span class="type"> : void</span></div>
+    <div class="attr method abstract-m"><span class="vis">+</span><span class="name2">onDeath()</span><span class="type"> : void</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Survivor  (extends Character, implements Attackable)
+═══════════════════════════════════════════════ -->
+<div class="cls" id="cSurvivor" style="left:60px;top:590px;width:250px;">
+  <div class="cls-header">
+    <div class="cls-name">Survivor</div>
+  </div>
+  <div class="cls-section">
+    <div class="attr"><span class="vis">-</span><span class="name2">equippedWeapon</span><span class="type"> : Weapon</span></div>
+    <div class="attr"><span class="vis">-</span><span class="name2">adrenalineBoost</span><span class="type"> : boolean</span></div>
+    <div class="attr"><span class="vis">-</span><span class="name2">staminaPoints</span><span class="type"> : int</span></div>
+  </div>
+  <div class="cls-section">
+    <div class="attr method"><span class="vis">+</span><span class="name2">attack(target: Entity)</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">getAttackDamage()</span><span class="type"> : int</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">equip(w: Weapon)</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">activateAdrenaline()</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">onDeath()</span><span class="type"> : void</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Zombie  (extends Character, implements Attackable)
+═══════════════════════════════════════════════ -->
+<div class="cls" id="cZombie" style="left:360px;top:620px;width:250px;">
+  <div class="cls-header">
+    <div class="cls-name">Zombie</div>
+  </div>
+  <div class="cls-section">
+    <div class="attr"><span class="vis">-</span><span class="name2">biteStrength</span><span class="type"> : int</span></div>
+    <div class="attr"><span class="vis">-</span><span class="name2">mutationLevel</span><span class="type"> : int</span></div>
+    <div class="attr"><span class="vis">#</span><span class="name2">detectionRange</span><span class="type"> : float</span></div>
+  </div>
+  <div class="cls-section">
+    <div class="attr method"><span class="vis">+</span><span class="name2">attack(target: Entity)</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">getAttackDamage()</span><span class="type"> : int</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">infect(target: Character)</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">onDeath()</span><span class="type"> : void</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Licker  (extends Zombie)
+═══════════════════════════════════════════════ -->
+<div class="cls" id="cLicker" style="left:240px;top:830px;width:230px;">
+  <div class="cls-header">
+    <div class="cls-name">Licker</div>
+  </div>
+  <div class="cls-section">
+    <div class="attr"><span class="vis">-</span><span class="name2">tongueDamage</span><span class="type"> : int</span></div>
+    <div class="attr"><span class="vis">-</span><span class="name2">climbable</span><span class="type"> : boolean</span></div>
+  </div>
+  <div class="cls-section">
+    <div class="attr method"><span class="vis">+</span><span class="name2">tongueStrike(t: Entity)</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">update()</span><span class="type"> : void</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Tyrant  (extends Zombie)
+═══════════════════════════════════════════════ -->
+<div class="cls" id="cTyrant" style="left:500px;top:830px;width:240px;">
+  <div class="cls-header">
+    <div class="cls-name">Tyrant</div>
+  </div>
+  <div class="cls-section">
+    <div class="attr"><span class="vis">-</span><span class="name2">armorPoints</span><span class="type"> : int</span></div>
+    <div class="attr"><span class="vis">-</span><span class="name2">isEnraged</span><span class="type"> : boolean</span></div>
+  </div>
+  <div class="cls-section">
+    <div class="attr method"><span class="vis">+</span><span class="name2">rage()</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">takeDamage(dmg: int)</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">update()</span><span class="type"> : void</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Item  (abstract, implements Interactable)
+═══════════════════════════════════════════════ -->
+<div class="cls abstract" id="cItem" style="left:760px;top:210px;width:230px;">
+  <div class="cls-header">
+    <span class="cls-stereotype">«abstract»</span>
+    <div class="cls-name">Item</div>
+  </div>
+  <div class="cls-section">
+    <div class="attr"><span class="vis">#</span><span class="name2">itemId</span><span class="type"> : String</span></div>
+    <div class="attr"><span class="vis">#</span><span class="name2">displayName</span><span class="type"> : String</span></div>
+    <div class="attr"><span class="vis">#</span><span class="name2">available</span><span class="type"> : boolean</span></div>
+  </div>
+  <div class="cls-section">
+    <div class="attr method"><span class="vis">+</span><span class="name2">isAvailable()</span><span class="type"> : boolean</span></div>
+    <div class="attr method abstract-m"><span class="vis">+</span><span class="name2">interact(a: Character)</span><span class="type"> : void</span></div>
+    <div class="attr method abstract-m"><span class="vis">+</span><span class="name2">getEffect()</span><span class="type"> : String</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Weapon  (extends Item)
+═══════════════════════════════════════════════ -->
+<div class="cls" id="cWeapon" style="left:660px;top:430px;width:240px;">
+  <div class="cls-header">
+    <div class="cls-name">Weapon</div>
+  </div>
+  <div class="cls-section">
+    <div class="attr"><span class="vis">-</span><span class="name2">type</span><span class="type"> : WeaponType</span></div>
+    <div class="attr"><span class="vis">-</span><span class="name2">damage</span><span class="type"> : int</span></div>
+    <div class="attr"><span class="vis">-</span><span class="name2">ammo</span><span class="type"> : int</span></div>
+    <div class="attr"><span class="vis">-</span><span class="name2">maxAmmo</span><span class="type"> : int</span></div>
+  </div>
+  <div class="cls-section">
+    <div class="attr method"><span class="vis">+</span><span class="name2">fire()</span><span class="type"> : int</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">reload()</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">interact(a: Character)</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">getEffect()</span><span class="type"> : String</span></div>
+  </div>
+</div>
+
+<!-- HealingItem  (extends Item) -->
+<div class="cls" id="cHeal" style="left:920px;top:430px;width:230px;">
+  <div class="cls-header">
+    <div class="cls-name">HealingItem</div>
+  </div>
+  <div class="cls-section">
+    <div class="attr"><span class="vis">-</span><span class="name2">healAmount</span><span class="type"> : int</span></div>
+    <div class="attr"><span class="vis">-</span><span class="name2">cureInfection</span><span class="type"> : boolean</span></div>
+  </div>
+  <div class="cls-section">
+    <div class="attr method"><span class="vis">+</span><span class="name2">interact(a: Character)</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">getEffect()</span><span class="type"> : String</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     Room (implements Interactable, tiene Items)
+═══════════════════════════════════════════════ -->
+<div class="cls" id="cRoom" style="left:960px;top:210px;width:230px;">
+  <div class="cls-header">
+    <div class="cls-name">Room</div>
+  </div>
+  <div class="cls-section">
+    <div class="attr"><span class="vis">-</span><span class="name2">roomId</span><span class="type"> : String</span></div>
+    <div class="attr"><span class="vis">-</span><span class="name2">description</span><span class="type"> : String</span></div>
+    <div class="attr"><span class="vis">-</span><span class="name2">entities</span><span class="type"> : List&lt;Entity&gt;</span></div>
+    <div class="attr"><span class="vis">-</span><span class="name2">items</span><span class="type"> : List&lt;Item&gt;</span></div>
+    <div class="attr"><span class="vis">-</span><span class="name2">exits</span><span class="type"> : Map&lt;String,Room&gt;</span></div>
+    <div class="attr"><span class="vis">-</span><span class="name2">locked</span><span class="type"> : boolean</span></div>
+  </div>
+  <div class="cls-section">
+    <div class="attr method"><span class="vis">+</span><span class="name2">addEntity(e: Entity)</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">removeEntity(e: Entity)</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">interact(a: Character)</span><span class="type"> : void</span></div>
+    <div class="attr method"><span class="vis">+</span><span class="name2">isAvailable()</span><span class="type"> : boolean</span></div>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <h3>LEYENDA</h3>
+  <div class="legend-row">
+    <svg width="30" height="10"><line x1="0" y1="5" x2="30" y2="5" stroke="#4a9a4a" stroke-width="2"/><polygon points="25,2 30,5 25,8" fill="#4a9a4a"/></svg>
+    <span>extends (herencia)</span>
+  </div>
+  <div class="legend-row">
+    <svg width="30" height="10"><line x1="0" y1="5" x2="30" y2="5" stroke="#aa55cc" stroke-width="1.5" stroke-dasharray="4,2"/><polygon points="25,2 30,5 25,8" fill="none" stroke="#aa55cc"/></svg>
+    <span>implements (interfaz)</span>
+  </div>
+  <div class="legend-row">
+    <svg width="30" height="10"><line x1="0" y1="5" x2="30" y2="5" stroke="#aa8833" stroke-width="1.5" stroke-dasharray="2,2"/></svg>
+    <span>usa / dependencia</span>
+  </div>
+  <div class="legend-row">
+    <svg width="30" height="10"><line x1="0" y1="5" x2="30" y2="5" stroke="#5588aa" stroke-width="2"/><polygon points="25,0 30,5 25,10" fill="none" stroke="#5588aa" stroke-width="1.5"/></svg>
+    <span>agregación (tiene)</span>
+  </div>
+  <div style="margin-top:8px; color:#4a7a4a; font-size:0.6rem;">
+    - : private &nbsp; # : protected &nbsp; + : public<br>
+    <em>cursiva</em> = abstracto &nbsp; <u>subrayado</u> = static
+  </div>
+</div>
+
+</div><!-- /canvas -->
+
+<script>
+// ─── HELPERS ────────────────────────────────────────────────────────────────
+function g(id) { return document.getElementById(id); }
+
+// Returns a connection point on an element relative to .canvas
+function mid(elem, side) {
+  const canvas = document.querySelector('.canvas');
+  const cx = canvas.offsetLeft, cy = canvas.offsetTop;
+  // Use offsetLeft/offsetTop (relative to canvas which is position:relative parent)
+  const x = elem.offsetLeft;
+  const y = elem.offsetTop;
+  const w = elem.offsetWidth;
+  const h = elem.offsetHeight;
+  if (side === 'top')    return [x + w/2,      y];
+  if (side === 'bottom') return [x + w/2,      y + h];
+  if (side === 'left')   return [x,            y + h/2];
+  if (side === 'right')  return [x + w,        y + h/2];
+  if (side === 'bl')     return [x + w*0.25,   y + h];
+  if (side === 'br')     return [x + w*0.75,   y + h];
+  if (side === 'tl')     return [x + w*0.25,   y];
+  if (side === 'tr')     return [x + w*0.75,   y];
+}
+
+// ─── ARROW DRAWING ──────────────────────────────────────────────────────────
+const COLORS = { extends:'#4a9a4a', implements:'#aa55cc', uses:'#aa8833', aggregation:'#5588aa' };
+const DASHES = { extends:'', implements:'5,3', uses:'2,3', aggregation:'' };
+
+function drawArrow(svg, x1,y1,x2,y2, style) {
+  const c = COLORS[style] || '#666';
+  const d = DASHES[style] || '';
+  const ns = 'http://www.w3.org/2000/svg';
+
+  const line = document.createElementNS(ns,'line');
+  line.setAttribute('x1',x1); line.setAttribute('y1',y1);
+  line.setAttribute('x2',x2); line.setAttribute('y2',y2);
+  line.setAttribute('stroke',c);
+  line.setAttribute('stroke-width','1.5');
+  if (d) line.setAttribute('stroke-dasharray',d);
+  svg.appendChild(line);
+
+  const dx = x2-x1, dy = y2-y1;
+  const len = Math.sqrt(dx*dx+dy*dy) || 1;
+  const ux = dx/len, uy = dy/len;
+  const size = 9, px = -uy, py = ux;
+  const poly = document.createElementNS(ns,'polygon');
+  const p1 = `${x2},${y2}`;
+  const p2 = `${x2-ux*size+px*size*0.45},${y2-uy*size+py*size*0.45}`;
+  const p3 = `${x2-ux*size-px*size*0.45},${y2-uy*size-py*size*0.45}`;
+  poly.setAttribute('points',`${p1} ${p2} ${p3}`);
+  poly.setAttribute('fill', style==='implements' ? 'none' : c);
+  poly.setAttribute('stroke',c);
+  poly.setAttribute('stroke-width','1.2');
+  svg.appendChild(poly);
+}
+
+// Arrow definitions: [fromId, fromSide, toId, toSide, style]
+const ARROWS = [
+  ['cEntity',    'bottom', 'cCharacter',  'top',    'extends'],
+  ['cCharacter', 'bl',     'cSurvivor',   'top',    'extends'],
+  ['cCharacter', 'bottom', 'cZombie',     'top',    'extends'],
+  ['cZombie',    'bl',     'cLicker',     'top',    'extends'],
+  ['cZombie',    'br',     'cTyrant',     'top',    'extends'],
+  ['cSurvivor',  'top',    'iAttackable', 'bottom', 'implements'],
+  ['cZombie',    'top',    'iAttackable', 'bottom', 'implements'],
+  ['cItem',      'left',   'cEntity',     'right',  'extends'],
+  ['cItem',      'top',    'iInteractable','bottom','implements'],
+  ['cWeapon',    'top',    'cItem',       'bottom', 'extends'],
+  ['cHeal',      'top',    'cItem',       'br',     'extends'],
+  ['cRoom',      'left',   'iInteractable','right', 'implements'],
+  ['cSurvivor',  'right',  'cWeapon',     'left',   'aggregation'],
+  ['cCharacter', 'left',   'eInfection',  'right',  'uses'],
+  ['cWeapon',    'top',    'eWeapon',     'bottom', 'uses'],
+  ['cRoom',      'bottom', 'cEntity',     'right',  'aggregation'],
+];
+
+function redrawArrows() {
+  const svg = g('svg-arrows');
+  // Clear
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  // Redraw all
+  ARROWS.forEach(([fromId, fromSide, toId, toSide, style]) => {
+    const a = mid(g(fromId), fromSide);
+    const b = mid(g(toId), toSide);
+    if (a && b) drawArrow(svg, a[0],a[1], b[0],b[1], style);
+  });
+}
+
+// ─── DRAG & DROP ────────────────────────────────────────────────────────────
+function makeDraggable(elem) {
+  let startX, startY, startLeft, startTop;
+  const canvas = document.querySelector('.canvas');
+
+  elem.addEventListener('mousedown', (e) => {
+    // Don't drag if clicking text selection
+    e.preventDefault();
+    elem.classList.add('dragging');
+
+    startX = e.clientX;
+    startY = e.clientY;
+    startLeft = elem.offsetLeft;
+    startTop  = elem.offsetTop;
+
+    function onMove(e) {
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      let newLeft = startLeft + dx;
+      let newTop  = startTop  + dy;
+
+      // Clamp to canvas bounds
+      newLeft = Math.max(0, Math.min(canvas.offsetWidth  - elem.offsetWidth,  newLeft));
+      newTop  = Math.max(0, Math.min(canvas.offsetHeight - elem.offsetHeight, newTop));
+
+      elem.style.left = newLeft + 'px';
+      elem.style.top  = newTop  + 'px';
+      redrawArrows();
+    }
+
+    function onUp() {
+      elem.classList.remove('dragging');
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    }
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  // Make all class cards draggable
+  document.querySelectorAll('.cls').forEach(makeDraggable);
+
+  // Initial draw
+  redrawArrows();
+
+  // Hint message
+  const hint = document.createElement('div');
+  hint.className = 'drag-hint';
+  hint.textContent = '⬆ ARRASTRA LOS ELEMENTOS PARA REORGANIZAR EL DIAGRAMA';
+  document.body.appendChild(hint);
+  setTimeout(() => { hint.style.opacity = '0'; }, 3500);
+  setTimeout(() => { hint.remove(); }, 5200);
+});
+</script>
+</body>
+</html>
