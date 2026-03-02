@@ -493,7 +493,7 @@ pre.code-block {
     <div class="sidebar-header">
       <div class="search-box">
         <span class="search-icon">⌕</span>
-        <input type="text" placeholder="buscar archivo..." id="search-input" autocomplete="off" spellcheck="false">
+        <input type="text" placeholder="Buscar archivo..." id="search-input" autocomplete="off" spellcheck="false">
       </div>
     </div>
     <div class="sidebar-tree" id="tree-root"></div>
@@ -814,38 +814,46 @@ function highlightJava(code) {
   code = escapeHTML(code);
   const parts = [];
 
-  // Protect strings, comments, and annotations FIRST — order matters
-  // 1. Multi-line comments
-  code = code.replace(/(\/\*[\s\S]*?\*\/)/g, m => {
-    parts.push({ t:'cmt', v:m }); return '\x00C' + (parts.length-1) + '\x00';
+  // Delimiters: Unicode PUA chars that never appear in Java code
+  const S = '\uE000', E = '\uE001';
+  const ph = (t, i) => S + t + i + E;
+
+  // 1. Block comments  /* ... */
+  code = code.replace(/(\/\*[\s\S]*?\*\/)/g, function(m) {
+    parts.push({t:'cmt',v:m}); return ph('C', parts.length-1);
   });
-  // 2. Single-line comments
-  code = code.replace(/(\/\/[^\n]*)/g, m => {
-    parts.push({ t:'cmt', v:m }); return '\x00C' + (parts.length-1) + '\x00';
+  // 2. Line comments  // ...
+  code = code.replace(/(\/\/[^\n]*)/g, function(m) {
+    parts.push({t:'cmt',v:m}); return ph('C', parts.length-1);
   });
-  // 3. Strings and chars
-  code = code.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, m => {
-    parts.push({ t:'str', v:m }); return '\x00S' + (parts.length-1) + '\x00';
+  // 3. String & char literals
+  code = code.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, function(m) {
+    parts.push({t:'str',v:m}); return ph('S', parts.length-1);
   });
-  // 4. Annotations (now safe — no placeholders to accidentally match)
-  code = code.replace(/(@[A-Za-z][A-Za-z0-9_]*)/g, m => {
-    parts.push({ t:'ann', v:m }); return '\x00A' + (parts.length-1) + '\x00';
+  // 4. Annotations
+  code = code.replace(/(@[A-Za-z][A-Za-z0-9_]*)/g, function(m) {
+    parts.push({t:'ann',v:m}); return ph('A', parts.length-1);
   });
 
-  // Keywords
+  // Keywords (with word boundaries)
   code = code.replace(/\b(class|public|private|protected|static|void|new|return|if|else|for|while|do|switch|case|default|break|continue|int|long|double|float|boolean|char|byte|short|String|Set|HashSet|Map|HashMap|List|ArrayList|LinkedList|import|package|extends|implements|interface|abstract|final|try|catch|finally|throw|throws|this|super|instanceof|true|false|null|var|enum|record|sealed|permits)\b/g,
     '<span class="kw">$1</span>');
 
   // Numbers
   code = code.replace(/\b(\d+\.?\d*[fFdDlL]?)\b/g, '<span class="num">$1</span>');
 
-  // Class names (UpperCamelCase) — but not inside already-replaced spans
+  // UpperCamelCase class names
   code = code.replace(/\b([A-Z][A-Za-z0-9_]*)\b/g, '<span class="cls">$1</span>');
 
-  // Restore protected parts
-  code = code.replace(/\x00C(\d+)\x00/g, (_, i) => '<span class="cmt">' + parts[i].v + '</span>');
-  code = code.replace(/\x00S(\d+)\x00/g, (_, i) => '<span class="str">' + parts[i].v + '</span>');
-  code = code.replace(/\x00A(\d+)\x00/g, (_, i) => '<span class="ann">' + parts[i].v + '</span>');
+  // Restore protected tokens
+  var PH_RE = new RegExp(S + '([CSA])(\\d+)' + E, 'g');
+  code = code.replace(PH_RE, function(_, t, i) {
+    var p = parts[+i];
+    if (p.t === 'cmt') return '<span class="cmt">' + p.v + '</span>';
+    if (p.t === 'str') return '<span class="str">' + p.v + '</span>';
+    if (p.t === 'ann') return '<span class="ann">' + p.v + '</span>';
+    return p.v;
+  });
   return code;
 }
 
@@ -901,3 +909,4 @@ document.addEventListener('mouseup', () => {
 </script>
 </body>
 </html>
+bu
