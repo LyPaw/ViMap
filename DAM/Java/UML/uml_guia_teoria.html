@@ -1225,7 +1225,6 @@ function handleKey(e) {
   }
 }
 
-/* ── SEND TO ANTHROPIC API ─────────────────────────────── */
 let chatHistory = [];
 
 async function sendMessage() {
@@ -1244,8 +1243,7 @@ async function sendMessage() {
   const thinkEl = addMessage('bot', '...', true);
 
   try {
-    const WORKER_URL = 'https://uml-asistente.githubmfcruzzz.workers.dev';
-    const response = await fetch(WORKER_URL, {
+    const response = await fetch('https://uml-asistente.githubmfcruzzz.workers.dev', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages: chatHistory })
@@ -1258,6 +1256,7 @@ async function sendMessage() {
       btn.disabled = false;
       return;
     }
+
     const reply = data.reply || '(sin respuesta)';
     thinkEl.remove();
     addMessage('bot', formatBotReply(reply));
