@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>UML – Zoológico</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d1f0e;--panel:#122914;--border:#2a5c2e;--accent:#5dba62;--accent2:#a8e063;--text:#d4f0d6;--muted:#6a9e6d;--enum-bg:#1a3d1c;--enum-border:#3d8c42;--header-bg:#1e4a21;--arrow:#5dba62;--shadow:rgba(93,186,98,0.22);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);font-family:'Courier Prime',monospace;color:var(--text);min-height:100vh;overflow:auto;background-image:radial-gradient(ellipse at 10% 20%,rgba(93,186,98,0.07) 0%,transparent 50%),radial-gradient(ellipse at 90% 80%,rgba(168,224,99,0.05) 0%,transparent 40%);}
+h1{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--accent2);text-align:center;letter-spacing:2px;padding:28px 0 4px;text-shadow:0 0 30px rgba(168,224,99,0.4);}
+.subtitle{text-align:center;color:var(--muted);font-size:0.8rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;}
+.note{background:rgba(168,224,99,0.07);border-left:3px solid var(--accent2);padding:8px 18px;font-size:0.76rem;color:var(--muted);max-width:640px;margin:0 auto 6px;text-align:center;}
+.hint{text-align:center;font-size:0.71rem;color:var(--muted);padding-bottom:10px;letter-spacing:1px;}
+#canvas{position:relative;width:100%;min-height:820px;}
+svg#arrows{position:absolute;top:0;left:0;pointer-events:none;overflow:visible;}
+.node{position:absolute;border:2px solid var(--border);border-radius:3px;background:var(--panel);min-width:210px;box-shadow:0 4px 20px var(--shadow);cursor:grab;user-select:none;transition:box-shadow .15s;}
+.node:hover{box-shadow:0 6px 32px var(--shadow);}
+.node.dragging{cursor:grabbing;box-shadow:0 12px 44px var(--shadow);z-index:9999;}
+.node.abstract{border-style:dashed;border-color:var(--accent);}
+.node.enum-cls{border-color:var(--enum-border);background:var(--enum-bg);}
+.cls-header{background:var(--header-bg);padding:8px 13px;border-bottom:1px solid var(--border);text-align:center;}
+.node.enum-cls .cls-header{background:#1e3d20;border-bottom-color:var(--enum-border);}
+.stereotype{font-size:0.65rem;color:var(--muted);display:block;letter-spacing:1px;}
+.cls-name{font-weight:700;font-size:.95rem;color:var(--accent2);}
+.node.abstract .cls-name{font-style:italic;}
+.node.enum-cls .cls-name{color:#a8e063;}
+.cls-section{padding:5px 13px;border-bottom:1px solid rgba(42,92,46,.4);font-size:.73rem;line-height:1.8;}
+.cls-section:last-child{border-bottom:none;}
+.vis{color:var(--muted);}
+.type{color:#7fd4ff;}
+.ret{color:#ffb86c;}
+.ev{color:var(--accent2);font-weight:700;letter-spacing:1px;}
+.badge{display:inline-block;background:rgba(93,186,98,.15);border:1px solid var(--accent);border-radius:2px;padding:0 4px;font-size:.6rem;color:var(--accent);margin-left:3px;}
+.legend{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;padding:12px 0 18px;font-size:.71rem;color:var(--muted);}
+.legend-item{display:flex;align-items:center;gap:5px;}
+</style>
+</head>
+<body>
+<h1>🦁 Sistema Zoológico</h1>
+<p class="subtitle">Diagrama UML · Java OOP · Herencia &amp; Enums</p>
+<div class="note">📋 <strong>Ejercicio:</strong> Implementa en Java respetando herencia, métodos abstractos y el enum <code>Habitat</code>.</div>
+<p class="hint">✦ Arrastra las cajas para reorganizar el diagrama</p>
+<div id="canvas"><svg id="arrows"></svg></div>
+<div class="legend">
+  <div class="legend-item"><svg width="34" height="13"><line x1="0" y1="6" x2="22" y2="6" stroke="#5dba62" stroke-width="2"/><polygon points="16,1 28,6 16,11" fill="#0d1f0e" stroke="#5dba62" stroke-width="1.5"/></svg>Herencia</div>
+  <div class="legend-item"><span style="color:#7fd4ff">azul</span>=tipo</div>
+  <div class="legend-item"><span style="color:#ffb86c">naranja</span>=retorno</div>
+  <div class="legend-item"><span style="font-style:italic;color:#a8e063">italic</span>=abstracto</div>
+</div>
+<script>
+const NODES=[
+  {id:'animal',x:340,y:20,cls:'abstract',st:'«abstract»',name:'Animal',secs:[
+    ['f:- nombre:String','f:- edad:int','f:- peso:double','f:- habitat:Habitat'],
+    ['m:+ Animal(String,int,double,Habitat)','m:+ getNombre():String','m:+ getEdad():int','m:+ getHabitat():Habitat','m:+ <i>hacerSonido()</i>:void:abstract','m:+ <i>moverse()</i>:String:abstract','m:+ toString():String']
+  ]},
+  {id:'mamifero',x:30,y:320,cls:'',name:'Mamifero',secs:[
+    ['f:- pelaje:String','f:- esNocturno:boolean'],
+    ['m:+ Mamifero(String,int,double,Habitat,String,boolean)','m:+ hacerSonido():void','m:+ moverse():String','m:+ amamantar():void']
+  ]},
+  {id:'ave',x:330,y:320,cls:'',name:'Ave',secs:[
+    ['f:- envergadura:double','f:- puedeVolar:boolean'],
+    ['m:+ Ave(String,int,double,Habitat,double,boolean)','m:+ hacerSonido():void','m:+ moverse():String','m:+ volar():String']
+  ]},
+  {id:'reptil',x:620,y:320,cls:'',name:'Reptil',secs:[
+    ['f:- longitudCola:double','f:- esVenenoso:boolean'],
+    ['m:+ Reptil(String,int,double,Habitat,double,boolean)','m:+ hacerSonido():void','m:+ moverse():String','m:+ mudar():void']
+  ]},
+  {id:'leon',x:20,y:610,cls:'',name:'Leon',secs:[
+    ['f:- tamanoMelena:double'],
+    ['m:+ Leon(String,int,double,double)','m:+ hacerSonido():void','m:+ cazar():String']
+  ]},
+  {id:'delfin',x:220,y:610,cls:'',name:'Delfin',secs:[
+    ['f:- velocidadNado:double'],
+    ['m:+ Delfin(String,int,double,double)','m:+ hacerSonido():void','m:+ saltar():String']
+  ]},
+  {id:'aguila',x:330,y:610,cls:'',name:'Aguila',secs:[
+    ['f:- alturaVuelo:double'],
+    ['m:+ Aguila(String,int,double,double)','m:+ hacerSonido():void','m:+ cazar():String']
+  ]},
+  {id:'pinguino',x:520,y:610,cls:'',name:'Pinguino',secs:[
+    ['f:- velocidadNado:double'],
+    ['m:+ Pinguino(String,int,double,double)','m:+ hacerSonido():void','m:+ nadar():String']
+  ]},
+  {id:'cocodrilo',x:620,y:610,cls:'',name:'Cocodrilo',secs:[
+    ['f:- fuerzaMandibula:int'],
+    ['m:+ Cocodrilo(String,int,double,int)','m:+ hacerSonido():void','m:+ acechar():String']
+  ]},
+  {id:'serpiente',x:820,y:610,cls:'',name:'Serpiente',secs:[
+    ['f:- tipoVeneno:String'],
+    ['m:+ Serpiente(String,int,double,String)','m:+ hacerSonido():void','m:+ enrollarse():String']
+  ]},
+  {id:'habitat',x:920,y:20,cls:'enum-cls',st:'«enum»',name:'Habitat',secs:[
+    ['e:SELVA','e:SABANA','e:OCEANO','e:DESIERTO','e:POLAR','e:BOSQUE','e:PANTANO'],
+    ['f:- descripcion:String'],
+    ['m:+ getDescripcion():String']
+  ]}
+];
+const EDGES=[
+  ['animal','mamifero'],['animal','ave'],['animal','reptil'],
+  ['mamifero','leon'],['mamifero','delfin'],
+  ['ave','aguila'],['ave','pinguino'],
+  ['reptil','cocodrilo'],['reptil','serpiente']
+];
+
+const canvas=document.getElementById('canvas');
+const svgEl=document.getElementById('arrows');
+const pos={};
+
+function renderItem(s){
+  const type=s[0];
+  const rest=s.slice(2);
+  if(type==='e') return `<div class="ev">${rest}</div>`;
+  if(type==='f'){
+    const [vis,...name]=rest.split(':')[0].split(' ');
+    const t=rest.split(':')[1]||'';
+    return `<div><span class="vis">${vis} </span>${name.join(' ')}${t?`<span class="vis"> : </span><span class="type">${t}</span>`:''}</div>`;
+  }
+  // method: m:+ text():ret:badge
+  const parts=rest.split(':');
+  const sig=parts[0];
+  const ret=parts[1]||'';
+  const badge=parts[2]||'';
+  return `<div>${sig}${ret?`<span class="vis"> : </span><span class="ret">${ret}</span>`:''}${badge?`<span class="badge">${badge}</span>`:''}</div>`;
+}
+
+NODES.forEach(n=>{
+  const el=document.createElement('div');
+  el.className='node'+(n.cls?' '+n.cls:'');
+  el.id='n-'+n.id;
+  el.style.left=n.x+'px';
+  el.style.top=n.y+'px';
+  pos[n.id]={x:n.x,y:n.y};
+  let h=`<div class="cls-header">${n.st?`<span class="stereotype">${n.st}</span>`:''}<span class="cls-name">${n.name}</span></div>`;
+  n.secs.forEach(sec=>{
+    h+=`<div class="cls-section">${sec.map(renderItem).join('')}</div>`;
+  });
+  el.innerHTML=h;
+  canvas.appendChild(el);
+});
+
+// Drag
+let drag=null,ox=0,oy=0;
+function startDrag(e,id,cx,cy){
+  drag=id;
+  const el=document.getElementById('n-'+id);
+  const r=el.getBoundingClientRect();
+  const cr=canvas.getBoundingClientRect();
+  ox=cx-r.left; oy=cy-r.top;
+  el.classList.add('dragging');
+  e.preventDefault();
+}
+function moveDrag(cx,cy){
+  if(!drag)return;
+  const cr=canvas.getBoundingClientRect();
+  const x=cx-cr.left-ox;
+  const y=cy-cr.top-oy;
+  pos[drag]={x,y};
+  const el=document.getElementById('n-'+drag);
+  el.style.left=x+'px'; el.style.top=y+'px';
+  resize(); drawArrows();
+}
+function endDrag(){
+  if(drag){document.getElementById('n-'+drag).classList.remove('dragging');drag=null;}
+}
+
+Object.keys(pos).forEach(id=>{
+  const el=document.getElementById('n-'+id);
+  el.addEventListener('mousedown',e=>{if(e.button===0)startDrag(e,id,e.clientX,e.clientY);});
+  el.addEventListener('touchstart',e=>{const t=e.touches[0];startDrag(e,id,t.clientX,t.clientY);},{passive:false});
+});
+document.addEventListener('mousemove',e=>moveDrag(e.clientX,e.clientY));
+document.addEventListener('mouseup',endDrag);
+document.addEventListener('touchmove',e=>{const t=e.touches[0];moveDrag(t.clientX,t.clientY);},{passive:false});
+document.addEventListener('touchend',endDrag);
+
+function resize(){
+  let mx=800,my=600;
+  Object.keys(pos).forEach(id=>{
+    const el=document.getElementById('n-'+id);
+    mx=Math.max(mx,pos[id].x+el.offsetWidth+60);
+    my=Math.max(my,pos[id].y+el.offsetHeight+60);
+  });
+  canvas.style.minWidth=mx+'px'; canvas.style.minHeight=my+'px';
+  svgEl.setAttribute('width',mx); svgEl.setAttribute('height',my);
+}
+
+function drawArrows(){
+  svgEl.innerHTML='';
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  const mk=document.createElementNS('http://www.w3.org/2000/svg','marker');
+  mk.setAttribute('id','arr'); mk.setAttribute('markerWidth','10');
+  mk.setAttribute('markerHeight','10'); mk.setAttribute('refX','8');
+  mk.setAttribute('refY','5'); mk.setAttribute('orient','auto');
+  const pg=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  pg.setAttribute('points','0,1 9,5 0,9'); pg.setAttribute('fill','#0d1f0e');
+  pg.setAttribute('stroke','#5dba62'); pg.setAttribute('stroke-width','1.5');
+  mk.appendChild(pg); defs.appendChild(mk); svgEl.appendChild(defs);
+
+  EDGES.forEach(([fid,tid])=>{
+    const fe=document.getElementById('n-'+fid);
+    const te=document.getElementById('n-'+tid);
+    const fp=pos[fid],tp=pos[tid];
+    const fcx=fp.x+fe.offsetWidth/2, fbot=fp.y+fe.offsetHeight;
+    const tcx=tp.x+te.offsetWidth/2, ttop=tp.y;
+    const my=(fbot+ttop)/2;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${fcx},${fbot} C${fcx},${my} ${tcx},${my} ${tcx},${ttop}`);
+    path.setAttribute('stroke','#5dba62'); path.setAttribute('stroke-width','2');
+    path.setAttribute('fill','none'); path.setAttribute('marker-end','url(#arr)');
+    svgEl.appendChild(path);
+  });
+}
+
+setTimeout(()=>{resize();drawArrows();},120);
+window.addEventListener('resize',()=>{resize();drawArrows();});
+</script>
+</body>
+</html>

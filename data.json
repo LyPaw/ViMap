@@ -52,7 +52,12 @@
     },
     "UML": {
       "Diagramas": [
-        { "name": "UML_ResidentEvil.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_resident_evil.html" }
+        { "name": "UML_ResidentEvil.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_resident_evil.html" },
+        { "name": "UML_vehiculos.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_vehiculos.html" },
+        { "name": "UML_Hospital.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_hospital.html" },
+        { "name": "UML_rpg.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_rpg.html" },
+        { "name": "UML_SistemaSolar.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_sistemaSolar.html" },
+        { "name": "UML_Zoo.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_zoologico.html" }
       ],
       "Código": [
         { "name": "Main.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Main.java" },
