@@ -1451,11 +1451,19 @@ habitat = <span class="cls-c">Habitat</span>.SELVA;
     <div class="ai-toggle">▼</div>
   </div>
 
-  <div class="ai-messages" id="ai-messages">
-    <div class="ai-msg bot">¡Hola! Soy tu asistente especializado en UML y Java. Puedo explicarte cualquier concepto de esta guía, ayudarte a traducir un diagrama a código, o resolver dudas específicas. ¿En qué puedo ayudarte?</div>
+  <div id="ai-key-row" style="padding:8px 14px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-shrink:0;">
+    <input id="ai-key-input" type="password"
+      placeholder="API key de Anthropic (sk-ant-...)"
+      style="flex:1;background:var(--s2);border:1px solid var(--border2);border-radius:6px;padding:6px 10px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.66rem;outline:none;"
+      onkeydown="if(event.key==='Enter') saveKey()"/>
+    <button onclick="saveKey()" style="background:rgba(124,58,237,.2);border:1px solid rgba(124,58,237,.4);color:#c084fc;font-family:'JetBrains Mono',monospace;font-size:.65rem;padding:5px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;">Guardar</button>
   </div>
 
-  <div class="ai-suggestions" id="ai-suggestions">
+  <div class="ai-messages" id="ai-messages">
+    <div class="ai-msg bot" id="ai-welcome-msg">Para usar el asistente, introduce tu <strong style="color:var(--accent);">API key de Anthropic</strong> arriba y pulsa Guardar. La key se guarda solo en tu navegador. Puedes obtenerla en console.anthropic.com</div>
+  </div>
+
+  <div class="ai-suggestions" id="ai-suggestions" style="display:none;">
     <button class="ai-chip" onclick="askSuggestion(this)">¿Cuándo uso abstract y cuándo interface?</button>
     <button class="ai-chip" onclick="askSuggestion(this)">¿Cómo implemento una relación de composición?</button>
     <button class="ai-chip" onclick="askSuggestion(this)">Explícame super() con un ejemplo</button>
@@ -1553,11 +1561,46 @@ Si te preguntan algo fuera de UML/Java, redirige amablemente la conversación al
 
 let chatHistory = [];
 
+/* ── API KEY ──────────────────────────────────────────── */
+function getApiKey() {
+  return localStorage.getItem('uml_api_key') || '';
+}
+
+function saveKey() {
+  const val = document.getElementById('ai-key-input').value.trim();
+  if (!val) return;
+  localStorage.setItem('uml_api_key', val);
+  document.getElementById('ai-key-input').value = '';
+  document.getElementById('ai-key-input').placeholder = '✓ API key guardada';
+  document.getElementById('ai-key-input').style.borderColor = 'var(--accent3)';
+  // Replace welcome message
+  const msgs = document.getElementById('ai-messages');
+  const welcome = document.getElementById('ai-welcome-msg');
+  if (welcome) welcome.remove();
+  addMessage('bot', '¡API key guardada! Soy tu asistente especializado en UML y Java. ¿En qué puedo ayudarte?');
+  document.getElementById('ai-suggestions').style.display = 'flex';
+}
+
+// On load: restore key indicator if already saved
+window.addEventListener('DOMContentLoaded', () => {
+  if (getApiKey()) {
+    document.getElementById('ai-key-input').placeholder = '✓ API key ya guardada';
+    document.getElementById('ai-key-input').style.borderColor = 'var(--accent3)';
+    const welcome = document.getElementById('ai-welcome-msg');
+    if (welcome) welcome.innerHTML = '¡Hola! Soy tu asistente especializado en UML y Java. Puedo explicarte cualquier concepto, ayudarte a traducir diagramas a código, o resolver dudas. ¿En qué puedo ayudarte?';
+    document.getElementById('ai-suggestions').style.display = 'flex';
+  }
+});
+
 async function sendMessage() {
   const input = document.getElementById('ai-input');
   const btn   = document.getElementById('ai-send-btn');
   const text  = input.value.trim();
   if (!text) return;
+  if (!getApiKey()) {
+    addMessage('bot', '⚠ Introduce tu API key de Anthropic primero y pulsa Guardar.');
+    return;
+  }
 
   // Add user message
   addMessage('user', text);
@@ -1573,7 +1616,8 @@ async function sendMessage() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'anthropic-dangerous-direct-browser-access': 'true',
+        'x-api-key': getApiKey()
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
