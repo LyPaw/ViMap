@@ -1056,349 +1056,40 @@ habitat = <span class="cls-c">Habitat</span>.SELVA;
       </div>
     </div>
 
-    <!-- HERENCIA -->
-    <div class="card" style="margin-bottom:16px;">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <svg width="80" height="24" style="flex-shrink:0;"><line x1="0" y1="12" x2="58" y2="12" stroke="#a78bfa" stroke-width="2"/><polygon points="55,5 76,12 55,19" fill="#0c0f1a" stroke="#a78bfa" stroke-width="2"/></svg>
-        <span class="section-tag tag-purple" style="margin:0;">HERENCIA</span>
-        <span style="font-size:.72rem;color:var(--text2);">Línea sólida + triángulo hueco → apunta al padre</span>
+    <div class="card-grid" style="gap:10px;">
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+          <svg width="80" height="24" style="flex-shrink:0;"><line x1="0" y1="12" x2="60" y2="12" stroke="#a78bfa" stroke-width="2"/><polygon points="55,6 75,12 55,18" fill="#0c0f1a" stroke="#a78bfa" stroke-width="2"/></svg>
+          <span class="section-tag tag-purple" style="margin:0;">HERENCIA</span>
+        </div>
+        <h3>Línea sólida + triángulo hueco</h3>
+        <p>La subclase hereda de la superclase. Se implementa con <code style="color:#a78bfa;">extends</code>. La punta apunta al padre.</p>
       </div>
-      <p style="font-size:.75rem;color:var(--text2);margin-bottom:12px;">La subclase hereda atributos y métodos de la superclase. Se implementa con <code style="color:#a78bfa;">extends</code>. En Java solo se puede heredar de <strong>una</strong> clase.</p>
-      <div class="compare">
-        <div class="compare-panel uml">
-          <h4>UML</h4>
-          <div class="uml-mini" style="font-size:.75rem;">
-            <div class="uml-mini-header" style="font-style:italic;color:#c084fc;">«abstract» Vehiculo</div>
-            <div class="uml-mini-section">
-              <div class="field"><span class="vis">- </span>marca<span class="vis"> : </span><span class="tp">String</span></div>
-              <div class="field"><span class="vis">- </span>velocidad<span class="vis"> : </span><span class="tp">int</span></div>
-            </div>
-            <div class="uml-mini-section">
-              <div class="method" style="font-style:italic;"><span class="vis">+ </span>mover()<span class="vis"> : </span><span class="ret">void</span></div>
-            </div>
-          </div>
-          <div style="text-align:center;padding:6px 0;color:#a78bfa;font-size:1.2rem;">▲</div>
-          <div class="uml-mini" style="font-size:.75rem;">
-            <div class="uml-mini-header" style="color:var(--text);">Coche</div>
-            <div class="uml-mini-section">
-              <div class="field"><span class="vis">- </span>puertas<span class="vis"> : </span><span class="tp">int</span></div>
-            </div>
-            <div class="uml-mini-section">
-              <div class="method"><span class="vis">+ </span>mover()<span class="vis"> : </span><span class="ret">void</span></div>
-            </div>
-          </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+          <svg width="80" height="24" style="flex-shrink:0;"><line x1="0" y1="12" x2="60" y2="12" stroke="#67e8f9" stroke-width="2" stroke-dasharray="5,3"/><polygon points="55,6 75,12 55,18" fill="#0c0f1a" stroke="#67e8f9" stroke-width="2"/></svg>
+          <span class="section-tag tag-blue" style="margin:0;">REALIZACIÓN</span>
         </div>
-        <div class="compare-arrow">→</div>
-        <div class="compare-panel java">
-          <h4>JAVA</h4>
-          <pre style="padding:8px;font-size:.7rem;"><span class="kw">public abstract class</span> <span class="cls-c">Vehiculo</span> {
-  <span class="kw">private</span> <span class="type">String</span> marca;
-  <span class="kw">private</span> <span class="kw">int</span> velocidad;
-
-  <span class="kw">public</span> <span class="cls-c">Vehiculo</span>(<span class="type">String</span> marca, <span class="kw">int</span> vel){
-    <span class="kw">this</span>.marca = marca;
-    <span class="kw">this</span>.velocidad = vel;
-  }
-  <span class="kw">public abstract void</span> mover();
-}
-
-<span class="kw">public class</span> <span class="cls-c">Coche</span> <span class="kw">extends</span> <span class="cls-c">Vehiculo</span> {
-  <span class="kw">private</span> <span class="kw">int</span> puertas;
-
-  <span class="kw">public</span> <span class="cls-c">Coche</span>(<span class="type">String</span> marca, <span class="kw">int</span> vel, <span class="kw">int</span> p){
-    <span class="kw">super</span>(marca, vel); <span class="cmt">// llama al padre</span>
-    <span class="kw">this</span>.puertas = p;
-  }
-
-  <span class="ann">@Override</span>
-  <span class="kw">public void</span> mover(){
-    <span class="cls-c">System</span>.out.println(<span class="str">"El coche avanza"</span>);
-  }
-}</pre>
+        <h3>Línea discontinua + triángulo hueco</h3>
+        <p>La clase implementa una interfaz. Se implementa con <code style="color:#67e8f9;">implements</code>. La punta apunta a la interfaz.</p>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+          <svg width="80" height="24" style="flex-shrink:0;"><line x1="0" y1="12" x2="68" y2="12" stroke="#6ee7b7" stroke-width="2"/><polygon points="60,7 75,12 60,17" fill="#6ee7b7"/></svg>
+          <span class="section-tag tag-green" style="margin:0;">ASOCIACIÓN</span>
         </div>
+        <h3>Línea sólida + flecha sólida</h3>
+        <p>Una clase "conoce" a otra. Se implementa como un <strong>atributo</strong> del tipo de la otra clase.</p>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+          <svg width="80" height="24" style="flex-shrink:0;"><line x1="10" y1="12" x2="68" y2="12" stroke="#fcd34d" stroke-width="2"/><polygon points="0,7 14,12 0,17" fill="#0c0f1a" stroke="#fcd34d" stroke-width="2"/><polygon points="60,7 75,12 60,17" fill="#0c0f1a" stroke="#fcd34d" stroke-width="2"/></svg>
+          <span class="section-tag tag-warn" style="margin:0;">COMPOSICIÓN</span>
+        </div>
+        <h3>Línea + rombo relleno</h3>
+        <p>La parte no puede existir sin el todo. Si el padre se destruye, el hijo también. Se implementa creando la instancia hija <strong>dentro del constructor</strong> del padre.</p>
       </div>
     </div>
-
-    <!-- REALIZACIÓN -->
-    <div class="card" style="margin-bottom:16px;">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <svg width="80" height="24" style="flex-shrink:0;"><line x1="0" y1="12" x2="58" y2="12" stroke="#67e8f9" stroke-width="2" stroke-dasharray="5,3"/><polygon points="55,5 76,12 55,19" fill="#0c0f1a" stroke="#67e8f9" stroke-width="2"/></svg>
-        <span class="section-tag tag-blue" style="margin:0;">REALIZACIÓN</span>
-        <span style="font-size:.72rem;color:var(--text2);">Línea discontinua + triángulo hueco → apunta a la interfaz</span>
-      </div>
-      <p style="font-size:.75rem;color:var(--text2);margin-bottom:12px;">La clase firma un <strong>contrato</strong>: promete implementar todos los métodos de la interfaz. Se usa <code style="color:#67e8f9;">implements</code>. Una clase puede implementar múltiples interfaces.</p>
-      <div class="compare">
-        <div class="compare-panel uml">
-          <h4>UML</h4>
-          <div class="uml-mini" style="font-size:.75rem;border-color:var(--accent);">
-            <div class="uml-mini-header" style="color:var(--accent);">«interface» Volable</div>
-            <div class="uml-mini-section">
-              <div class="method"><span class="vis">+ </span>despegar()<span class="vis"> : </span><span class="ret">void</span></div>
-              <div class="method"><span class="vis">+ </span>aterrizar()<span class="vis"> : </span><span class="ret">void</span></div>
-            </div>
-          </div>
-          <div style="text-align:center;padding:6px 0;color:#67e8f9;font-size:.85rem;letter-spacing:2px;">- - -▲</div>
-          <div class="uml-mini" style="font-size:.75rem;">
-            <div class="uml-mini-header">Avion</div>
-            <div class="uml-mini-section">
-              <div class="method"><span class="vis">+ </span>despegar()<span class="vis"> : </span><span class="ret">void</span></div>
-              <div class="method"><span class="vis">+ </span>aterrizar()<span class="vis"> : </span><span class="ret">void</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="compare-arrow">→</div>
-        <div class="compare-panel java">
-          <h4>JAVA</h4>
-          <pre style="padding:8px;font-size:.7rem;"><span class="kw">public interface</span> <span class="cls-c">Volable</span> {
-  <span class="kw">void</span> despegar();
-  <span class="kw">void</span> aterrizar();
-}
-
-<span class="kw">public class</span> <span class="cls-c">Avion</span> <span class="kw">implements</span> <span class="cls-c">Volable</span> {
-
-  <span class="ann">@Override</span>
-  <span class="kw">public void</span> despegar(){
-    <span class="cls-c">System</span>.out.println(<span class="str">"Despegando..."</span>);
-  }
-
-  <span class="ann">@Override</span>
-  <span class="kw">public void</span> aterrizar(){
-    <span class="cls-c">System</span>.out.println(<span class="str">"Aterrizando..."</span>);
-  }
-}</pre>
-        </div>
-      </div>
-    </div>
-
-    <!-- ASOCIACIÓN -->
-    <div class="card" style="margin-bottom:16px;">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <svg width="80" height="24" style="flex-shrink:0;"><line x1="0" y1="12" x2="65" y2="12" stroke="#6ee7b7" stroke-width="2"/><polygon points="58,6 76,12 58,18" fill="#6ee7b7"/></svg>
-        <span class="section-tag tag-green" style="margin:0;">ASOCIACIÓN</span>
-        <span style="font-size:.72rem;color:var(--text2);">Línea sólida + flecha sólida rellena</span>
-      </div>
-      <p style="font-size:.75rem;color:var(--text2);margin-bottom:12px;">Una clase <strong>"conoce"</strong> a otra pero son independientes: ambas pueden existir por separado. Se traduce como un <strong>atributo</strong> del tipo de la clase relacionada. Si hay multiplicidad <code>*</code>, se usa <code style="color:var(--accent3);">List&lt;Tipo&gt;</code>.</p>
-      <div class="compare">
-        <div class="compare-panel uml">
-          <h4>UML</h4>
-          <div class="uml-mini" style="font-size:.75rem;">
-            <div class="uml-mini-header">Estudiante</div>
-            <div class="uml-mini-section">
-              <div class="field"><span class="vis">- </span>nombre<span class="vis"> : </span><span class="tp">String</span></div>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;padding:4px 0;gap:6px;">
-            <span style="font-size:.65rem;color:var(--text3);">1</span>
-            <svg width="60" height="16"><line x1="0" y1="8" x2="48" y2="8" stroke="#6ee7b7" stroke-width="1.5"/><polygon points="42,3 56,8 42,13" fill="#6ee7b7"/></svg>
-            <span style="font-size:.65rem;color:var(--text3);">*</span>
-          </div>
-          <div class="uml-mini" style="font-size:.75rem;">
-            <div class="uml-mini-header">Asignatura</div>
-            <div class="uml-mini-section">
-              <div class="field"><span class="vis">- </span>codigo<span class="vis"> : </span><span class="tp">String</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="compare-arrow">→</div>
-        <div class="compare-panel java">
-          <h4>JAVA</h4>
-          <pre style="padding:8px;font-size:.7rem;"><span class="kw">import</span> java.util.List;
-<span class="kw">import</span> java.util.ArrayList;
-
-<span class="kw">public class</span> <span class="cls-c">Estudiante</span> {
-  <span class="kw">private</span> <span class="type">String</span> nombre;
-  <span class="cmt">// multiplicidad * → List</span>
-  <span class="kw">private</span> List&lt;<span class="cls-c">Asignatura</span>&gt; asignaturas;
-
-  <span class="kw">public</span> <span class="cls-c">Estudiante</span>(<span class="type">String</span> nombre){
-    <span class="kw">this</span>.nombre = nombre;
-    <span class="kw">this</span>.asignaturas = <span class="kw">new</span> <span class="cls-c">ArrayList</span>&lt;&gt;();
-  }
-
-  <span class="kw">public void</span> matricular(<span class="cls-c">Asignatura</span> a){
-    asignaturas.add(a); <span class="cmt">// la asignatura</span>
-  }                     <span class="cmt">// existe fuera</span>
-}</pre>
-        </div>
-      </div>
-      <div class="callout info" style="margin-top:12px;">
-        <span class="callout-icon">ℹ</span>
-        <div><strong>Clave:</strong> En la asociación, el objeto relacionado se <strong>recibe desde fuera</strong> (por parámetro). Si la multiplicidad es <code>1</code> el atributo es del tipo directamente; si es <code>*</code> o <code>0..*</code>, usa <code>List&lt;Tipo&gt;</code>.</div>
-      </div>
-    </div>
-
-    <!-- COMPOSICIÓN -->
-    <div class="card" style="margin-bottom:16px;">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <svg width="88" height="24" style="flex-shrink:0;">
-          <polygon points="8,12 20,5 32,12 20,19" fill="#fcd34d"/>
-          <line x1="32" y1="12" x2="76" y2="12" stroke="#fcd34d" stroke-width="2"/>
-          <polygon points="68,6 84,12 68,18" fill="#fcd34d"/>
-        </svg>
-        <span class="section-tag tag-warn" style="margin:0;">COMPOSICIÓN</span>
-        <span style="font-size:.72rem;color:var(--text2);">Rombo relleno en el TODO + línea</span>
-      </div>
-      <p style="font-size:.75rem;color:var(--text2);margin-bottom:12px;">Relación <strong>"todo–parte"</strong> fuerte: la parte <em>no puede existir</em> sin el todo. Si el objeto padre se destruye, las partes también. La instancia hija se crea <strong>dentro del constructor</strong> del padre.</p>
-      <div class="compare">
-        <div class="compare-panel uml">
-          <h4>UML</h4>
-          <div class="uml-mini" style="font-size:.75rem;">
-            <div class="uml-mini-header">Casa</div>
-            <div class="uml-mini-section">
-              <div class="field"><span class="vis">- </span>direccion<span class="vis"> : </span><span class="tp">String</span></div>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;padding:4px 0;gap:4px;">
-            <svg width="22" height="16"><polygon points="2,8 11,2 20,8 11,14" fill="#fcd34d"/></svg>
-            <svg width="46" height="16"><line x1="0" y1="8" x2="40" y2="8" stroke="#fcd34d" stroke-width="1.5"/><polygon points="33,3 46,8 33,13" fill="#fcd34d"/></svg>
-          </div>
-          <div class="uml-mini" style="font-size:.75rem;border-color:#fcd34d;">
-            <div class="uml-mini-header" style="color:#fcd34d;">Habitacion</div>
-            <div class="uml-mini-section">
-              <div class="field"><span class="vis">- </span>numero<span class="vis"> : </span><span class="tp">int</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="compare-arrow">→</div>
-        <div class="compare-panel java">
-          <h4>JAVA</h4>
-          <pre style="padding:8px;font-size:.7rem;"><span class="kw">public class</span> <span class="cls-c">Habitacion</span> {
-  <span class="kw">private</span> <span class="kw">int</span> numero;
-
-  <span class="kw">public</span> <span class="cls-c">Habitacion</span>(<span class="kw">int</span> num){
-    <span class="kw">this</span>.numero = num;
-  }
-}
-
-<span class="kw">public class</span> <span class="cls-c">Casa</span> {
-  <span class="kw">private</span> <span class="type">String</span> direccion;
-  <span class="cmt">// Casa CREA sus habitaciones</span>
-  <span class="kw">private</span> List&lt;<span class="cls-c">Habitacion</span>&gt; habitaciones;
-
-  <span class="kw">public</span> <span class="cls-c">Casa</span>(<span class="type">String</span> dir, <span class="kw">int</span> numHab){
-    <span class="kw">this</span>.direccion = dir;
-    <span class="kw">this</span>.habitaciones = <span class="kw">new</span> <span class="cls-c">ArrayList</span>&lt;&gt;();
-    <span class="kw">for</span>(<span class="kw">int</span> i=1; i&lt;=numHab; i++){
-      habitaciones.add(<span class="kw">new</span> <span class="cls-c">Habitacion</span>(i));
-    }
-  }
-}</pre>
-        </div>
-      </div>
-      <div class="callout warn" style="margin-top:12px;">
-        <span class="callout-icon">⚠</span>
-        <div><strong>Diferencia con asociación:</strong> En la composición, el padre <code>new</code> las partes internamente. En la asociación, las partes se pasan desde fuera. Si la <code>Casa</code> desaparece, sus <code>Habitacion</code>es también.</div>
-      </div>
-    </div>
-
-    <!-- AGREGACIÓN -->
-    <div class="card" style="margin-bottom:16px;">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <svg width="88" height="24" style="flex-shrink:0;">
-          <polygon points="8,12 20,5 32,12 20,19" fill="#0c0f1a" stroke="#94a3b8" stroke-width="1.5"/>
-          <line x1="32" y1="12" x2="76" y2="12" stroke="#94a3b8" stroke-width="2"/>
-          <polygon points="68,6 84,12 68,18" fill="#94a3b8"/>
-        </svg>
-        <span class="section-tag" style="margin:0;background:rgba(148,163,184,.12);color:#94a3b8;">AGREGACIÓN</span>
-        <span style="font-size:.72rem;color:var(--text2);">Rombo vacío en el TODO + línea</span>
-      </div>
-      <p style="font-size:.75rem;color:var(--text2);margin-bottom:12px;">Relación <strong>"todo–parte"</strong> débil: la parte <em>puede existir</em> sin el todo. El objeto parte se crea fuera y se añade al contenedor. Es como una asociación con sentido de "contiene".</p>
-      <div class="compare">
-        <div class="compare-panel uml">
-          <h4>UML</h4>
-          <div class="uml-mini" style="font-size:.75rem;">
-            <div class="uml-mini-header">Equipo</div>
-            <div class="uml-mini-section">
-              <div class="field"><span class="vis">- </span>nombre<span class="vis"> : </span><span class="tp">String</span></div>
-            </div>
-          </div>
-          <div style="display:flex;align-items:center;padding:4px 0;gap:4px;">
-            <svg width="22" height="16"><polygon points="2,8 11,2 20,8 11,14" fill="#0c0f1a" stroke="#94a3b8" stroke-width="1.5"/></svg>
-            <svg width="46" height="16"><line x1="0" y1="8" x2="40" y2="8" stroke="#94a3b8" stroke-width="1.5"/><polygon points="33,3 46,8 33,13" fill="#94a3b8"/></svg>
-          </div>
-          <div class="uml-mini" style="font-size:.75rem;border-color:#94a3b8;">
-            <div class="uml-mini-header" style="color:#94a3b8;">Jugador</div>
-            <div class="uml-mini-section">
-              <div class="field"><span class="vis">- </span>nombre<span class="vis"> : </span><span class="tp">String</span></div>
-            </div>
-          </div>
-        </div>
-        <div class="compare-arrow">→</div>
-        <div class="compare-panel java">
-          <h4>JAVA</h4>
-          <pre style="padding:8px;font-size:.7rem;"><span class="kw">public class</span> <span class="cls-c">Jugador</span> {
-  <span class="kw">private</span> <span class="type">String</span> nombre;
-
-  <span class="kw">public</span> <span class="cls-c">Jugador</span>(<span class="type">String</span> n){
-    <span class="kw">this</span>.nombre = n;
-  }
-}
-
-<span class="kw">public class</span> <span class="cls-c">Equipo</span> {
-  <span class="kw">private</span> <span class="type">String</span> nombre;
-  <span class="cmt">// Equipo contiene jugadores</span>
-  <span class="kw">private</span> List&lt;<span class="cls-c">Jugador</span>&gt; jugadores;
-
-  <span class="kw">public</span> <span class="cls-c">Equipo</span>(<span class="type">String</span> nombre){
-    <span class="kw">this</span>.nombre = nombre;
-    <span class="kw">this</span>.jugadores = <span class="kw">new</span> <span class="cls-c">ArrayList</span>&lt;&gt;();
-  }
-
-  <span class="kw">public void</span> agregar(<span class="cls-c">Jugador</span> j){
-    jugadores.add(j); <span class="cmt">// creado fuera</span>
-  }
-}</pre>
-        </div>
-      </div>
-      <div class="callout tip" style="margin-top:12px;">
-        <span class="callout-icon">✦</span>
-        <div><strong>Agregación vs Composición:</strong> En agregación el jugador existe antes del equipo (se pasa por parámetro). En composición las partes nacen y mueren con el todo (se crean con <code>new</code> dentro).</div>
-      </div>
-    </div>
-
-    <!-- RESUMEN TABLA -->
-    <table class="symbol-table" style="margin-top:8px;">
-      <thead>
-        <tr>
-          <th>Relación</th>
-          <th>Símbolo UML</th>
-          <th>Java</th>
-          <th>¿Parte existe sin el todo?</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="color:#a78bfa;font-weight:600;">Herencia</td>
-          <td>Línea sólida + △ hueco</td>
-          <td><code style="color:#a78bfa;">extends</code></td>
-          <td>—</td>
-        </tr>
-        <tr>
-          <td style="color:#67e8f9;font-weight:600;">Realización</td>
-          <td>Línea discontinua + △ hueco</td>
-          <td><code style="color:#67e8f9;">implements</code></td>
-          <td>—</td>
-        </tr>
-        <tr>
-          <td style="color:#6ee7b7;font-weight:600;">Asociación</td>
-          <td>Línea sólida + flecha rellena</td>
-          <td>Atributo (recibido por param)</td>
-          <td><span style="color:var(--accent3);">✓ Sí</span></td>
-        </tr>
-        <tr>
-          <td style="color:#94a3b8;font-weight:600;">Agregación</td>
-          <td>Rombo vacío + línea</td>
-          <td>Atributo List (recibido por param)</td>
-          <td><span style="color:var(--accent3);">✓ Sí</span></td>
-        </tr>
-        <tr>
-          <td style="color:#fcd34d;font-weight:600;">Composición</td>
-          <td>Rombo relleno + línea</td>
-          <td>Atributo creado con <code>new</code> interno</td>
-          <td><span style="color:var(--red);">✗ No</span></td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 
   <!-- ── SECTION 8: CHECKLIST ────────────────────────── -->
@@ -1452,7 +1143,7 @@ habitat = <span class="cls-c">Habitat</span>.SELVA;
   </div>
 
   <div class="ai-messages" id="ai-messages">
-    <div class="ai-msg bot" id="ai-welcome-msg">Para usar el asistente, introduce tu <strong style="color:var(--accent);">API key de Google Gemini</strong> arriba y pulsa Guardar. Es <strong style="color:var(--accent3);">gratuita</strong> — consíguela en <code>aistudio.google.com</code> → "Get API key".</div>
+    <div class="ai-msg bot">¡Hola! Soy tu asistente especializado en UML y Java. Puedo explicarte cualquier concepto de esta guía, ayudarte a traducir un diagrama a código, o resolver dudas específicas. ¿En qué puedo ayudarte?</div>
   </div>
 
   <div class="ai-suggestions" id="ai-suggestions">
@@ -1534,8 +1225,8 @@ function handleKey(e) {
   }
 }
 
+/* ── SEND TO ANTHROPIC API ─────────────────────────────── */
 let chatHistory = [];
-
 
 async function sendMessage() {
   const input = document.getElementById('ai-input');
@@ -1553,10 +1244,7 @@ async function sendMessage() {
   const thinkEl = addMessage('bot', '...', true);
 
   try {
-    // ── Llama al Cloudflare Worker (proxy de Gemini) ──────
-    // ⚠ Reemplaza esta URL con la de tu Worker tras desplegarlo
     const WORKER_URL = 'https://uml-asistente.githubmfcruzzz.workers.dev';
-
     const response = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1570,7 +1258,6 @@ async function sendMessage() {
       btn.disabled = false;
       return;
     }
-
     const reply = data.reply || '(sin respuesta)';
     thinkEl.remove();
     addMessage('bot', formatBotReply(reply));
