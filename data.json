@@ -1,82 +1,92 @@
 {
   "Java": {
-    "Array": {
-      "Teoría": [
-        { "name": "Array_Teoría.md", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Array/Readme.md" }
-      ],
-      "Ejercicios": [
-        { "name": "Ejercicios_Array.md", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/09455fa92f2e6cfa5f4e39002f9d5a7d4116e492/DAM/Java/Array/Ejercicios/Readme.md" }
-      ]
+    "Fundamentos": {
+      "Array": {
+        "Teoría": [
+          { "name": "Array_Teoría.md", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Array/Readme.md" }
+        ],
+        "Ejercicios": [
+          { "name": "Ejercicios_Array.md", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Array/Ejercicios/Readme.md" }
+        ]
+      },
+      "Colecciones": {
+        "ArrayList": [
+          { "name": "ArrayList_Clave.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/ArrayList/Clave/Array_List.java" }
+        ],
+        "Conjuntos": [
+          { "name": "Conjuntos_Clave.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Conjuntos/Clave/Conjuntos.java" }
+        ],
+        "Mapas": [
+          { "name": "Mapas_Clave.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Mapas/Clave/Mapas.java" }
+        ]
+      }
     },
-    "Colecciones": {
-      "ArrayList": [
-        { "name": "ArrayList_Clave.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/7f67474a23fea6deee0bccdf04ee6ea246e1d883/DAM/Java/ArrayList/Clave/Array_List.java" }
-      ],
-      "Conjuntos": [
-        { "name": "Conjuntos_Clave.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/7f67474a23fea6deee0bccdf04ee6ea246e1d883/DAM/Java/Conjuntos/Clave/Conjuntos.java" }
-      ],
-      "Mapas": [
-        { "name": "Mapas_Clave.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/7f67474a23fea6deee0bccdf04ee6ea246e1d883/DAM/Java/Mapas/Clave/Mapas.java" }
-      ]
-    },
-    "Agenda": {
-      "Enunciado": [
-        { "name": "Enunciado.md", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/2dde1fb9af5b65000ff7e72579ff0f81434fa6ba/DAM/Java/Agenda/Readme.md" }
-      ],
-      "Ejercicio": [
-        { "name": "main.java",     "url": "https://raw.githubusercontent.com/LyPaw/ViMap/b4d682bd9945c85f12a1ddaf88f8e646ecb4fbbd/DAM/Java/Agenda/main.java" },
-        { "name": "Agenda.java",   "url": "https://raw.githubusercontent.com/LyPaw/ViMap/b4d682bd9945c85f12a1ddaf88f8e646ecb4fbbd/DAM/Java/Agenda/Agenda.java" },
-        { "name": "Contacto.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/b4d682bd9945c85f12a1ddaf88f8e646ecb4fbbd/DAM/Java/Agenda/Contacto.java" }
-      ]
-    },
-    "Biblioteca": {
-      "Ejercicio": [
-        { "name": "main.java",       "url": "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/ca9d287875ef3e6cbac201e04f79d65b41a3dd46/src/Main.java" },
-        { "name": "Libro.java",      "url": "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/ca9d287875ef3e6cbac201e04f79d65b41a3dd46/src/Libros.java" },
-        { "name": "Cliente.java",    "url": "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/13c852aed15a8beb7d38d1c598a4ab83c5e18d9c/src/Cliente.java" },
-        { "name": "Biblioteca.java", "url": "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/ca9d287875ef3e6cbac201e04f79d65b41a3dd46/src/Biblioteca.java" }
-      ]
-    },
-    "Deportes": {
-      "Ejercicio": [
-        { "name": "main.java",        "url": "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/Main.java" },
-        { "name": "evento.java",      "url": "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/Evento.java" },
-        { "name": "eventoAnual.java", "url": "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/EventosAnuales.java" },
-        { "name": "tipoEvento.java",  "url": "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/TipoEvento.java" }
-      ]
-    },
-    "JavaFX": {
-      "Teoría": [
-        { "name": "Documentación1.pdf", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/JavaFX/ViMap_JavaFX_Documentacion.pdf" }
-      ]
+    "POO": {
+      "Agenda": {
+        "Enunciado": [
+          { "name": "Enunciado.md", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Agenda/Readme.md" }
+        ],
+        "Código": [
+          { "name": "main.java",     "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Agenda/main.java" },
+          { "name": "Agenda.java",   "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Agenda/Agenda.java" },
+          { "name": "Contacto.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Agenda/Contacto.java" }
+        ]
+      },
+      "Biblioteca": {
+        "Código": [
+          { "name": "main.java",       "url": "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/main/src/Main.java" },
+          { "name": "Libro.java",      "url": "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/main/src/Libros.java" },
+          { "name": "Cliente.java",    "url": "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/main/src/Cliente.java" },
+          { "name": "Biblioteca.java", "url": "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/main/src/Biblioteca.java" }
+        ]
+      },
+      "Deportes": {
+        "Código": [
+          { "name": "main.java",        "url": "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/Main.java" },
+          { "name": "Evento.java",      "url": "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/Evento.java" },
+          { "name": "EventoAnual.java", "url": "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/EventosAnuales.java" },
+          { "name": "TipoEvento.java",  "url": "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/TipoEvento.java" }
+        ]
+      }
     },
     "UML": {
       "Diagramas": [
         { "name": "UML_ResidentEvil.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_resident_evil.html" },
-        { "name": "UML_vehiculos.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_vehiculos.html" },
-        { "name": "UML_Hospital.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_hospital.html" },
-        { "name": "UML_rpg.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_rpg.html" },
+        { "name": "UML_Zoológico.html",    "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_zoologico.html" },
+        { "name": "UML_RPG.html",          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_rpg.html" },
+        { "name": "UML_Hospital.html",     "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_hospital.html" },
         { "name": "UML_SistemaSolar.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_sistemaSolar.html" },
-        { "name": "UML_Zoo.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_zoologico.html" }
+        { "name": "UML_Vehículos.html",    "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_vehiculos.html" }
       ],
-      "Código": [
-        { "name": "Main.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Main.java" },
-        { "name": "Attackable.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Attackable.java" },
-        { "name": "Character.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Character.java" },
-        { "name": "Entity.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Entity.java" },
-        { "name": "HealingItem.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/HealingItem.java" },
-        { "name": "InfectionStatus.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/InfectionStatus.java" },
-        { "name": "Interactable.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Interactable.java" },
-        { "name": "Item.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Item.java" },
-        { "name": "Licker.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Licker.java" },
-        { "name": "Room.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Room.java" },
-        { "name": "Survivor.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Survivor.java" },
-        { "name": "Tyrant.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Tyrant.java" },
-        { "name": "Weapon.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Weapon.java" },
-        { "name": "WeaponType.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/WeaponType.java" },
-        { "name": "Zombie.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Zombie.java" },
-        { "name": "Javadoc.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/docs/index.html" }
-
+      "ResidentEvil": {
+        "Diagramas": [
+          { "name": "UML_ResidentEvil.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_resident_evil.html" }
+        ],
+        "Código": [
+          { "name": "Main.java",            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Main.java" },
+          { "name": "Entity.java",          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Entity.java" },
+          { "name": "Character.java",       "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Character.java" },
+          { "name": "Survivor.java",        "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Survivor.java" },
+          { "name": "Zombie.java",          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Zombie.java" },
+          { "name": "Licker.java",          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Licker.java" },
+          { "name": "Tyrant.java",          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Tyrant.java" },
+          { "name": "Item.java",            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Item.java" },
+          { "name": "Weapon.java",          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Weapon.java" },
+          { "name": "HealingItem.java",     "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/HealingItem.java" },
+          { "name": "WeaponType.java",      "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/WeaponType.java" },
+          { "name": "InfectionStatus.java", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/InfectionStatus.java" },
+          { "name": "Room.java",            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Room.java" },
+          { "name": "Attackable.java",      "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Attackable.java" },
+          { "name": "Interactable.java",    "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Interactable.java" }
+        ],
+        "Javadoc": [
+          { "name": "Javadoc.html", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/docs/index.html" }
+        ]
+      }
+    },
+    "JavaFX": {
+      "Teoría": [
+        { "name": "Documentación_JavaFX.pdf", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/JavaFX/ViMap_JavaFX_Documentacion.pdf" }
       ]
     }
   },
@@ -84,10 +94,10 @@
   "BaseDeDatos": {
     "ER": {
       "Teoría": [
-        { "name": "ER_Teoría.md", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/b41c3652d7a0338f98b19921ff61899b012b65cf/DAM/Base_De_Datos/Teor%C3%ADa/Readme.md" }
+        { "name": "ER_Teoría.md", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Base_De_Datos/Teor%C3%ADa/Readme.md" }
       ],
       "Ejercicios": [
-        { "name": "Ejercicios_BD.md", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/b41c3652d7a0338f98b19921ff61899b012b65cf/DAM/Base_De_Datos/Ejercicios/Readme.md" }
+        { "name": "Ejercicios_BD.md", "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Base_De_Datos/Ejercicios/Readme.md" }
       ]
     },
     "SQL": {
@@ -97,12 +107,12 @@
 
   "HTML_CSS": {
     "Tablas": {
-      "Teoria": [
-        { "name": "Teoria.md", "url": "https://raw.githubusercontent.com/LyPaw/XML-HTML-CSS/b6649bdaf2e86559e4aeca253bb49096f5f21b41/Tablas/Teor%C3%ADa.md" }
+      "Teoría": [
+        { "name": "Teoria.md", "url": "https://raw.githubusercontent.com/LyPaw/XML-HTML-CSS/main/Tablas/Teor%C3%ADa.md" }
       ],
       "Ejercicios": [
-        { "name": "Ejercicios_Medio_Dificil.md", "url": "https://raw.githubusercontent.com/LyPaw/XML-HTML-CSS/b6649bdaf2e86559e4aeca253bb49096f5f21b41/Tablas/Ejercicios_Cols_Rows.md" },
-        { "name": "Ejercicio_Dificil.md",        "url": "https://raw.githubusercontent.com/LyPaw/XML-HTML-CSS/b6649bdaf2e86559e4aeca253bb49096f5f21b41/Tablas/EjercicioFinal.md" }
+        { "name": "Ejercicios_Medio_Dificil.md", "url": "https://raw.githubusercontent.com/LyPaw/XML-HTML-CSS/main/Tablas/Ejercicios_Cols_Rows.md" },
+        { "name": "Ejercicio_Dificil.md",        "url": "https://raw.githubusercontent.com/LyPaw/XML-HTML-CSS/main/Tablas/EjercicioFinal.md" }
       ]
     }
   }

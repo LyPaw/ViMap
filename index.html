@@ -575,27 +575,42 @@ fetch('data.json')
       '<br><br>Asegúrate de que <strong>data.json</strong> está en la misma carpeta que index.html y de que usas un servidor local (no file://).</div>';
   });
 
-function buildTree(data, container, depth = 0) {
+function buildTree(data, container, depth = 0, pathParts = []) {
   for (const key in data) {
     const val = data[key];
     const isFiles = Array.isArray(val);
+    const currentPath = [...pathParts, key];
 
     const item = document.createElement('div');
     item.className = 'tree-item';
 
     const row = document.createElement('div');
     row.className = 'tree-row';
-    row.style.paddingLeft = (8 + depth * 12) + 'px';
+    row.style.paddingLeft = (8 + depth * 14) + 'px';
 
     if (isFiles) {
-      // Folder with files
+      // ── Leaf folder: contains file entries ──────────────
       row.innerHTML = `
         <span class="tree-arrow">▶</span>
         <span class="tree-icon">📂</span>
         <span class="tree-label">${key}</span>
+        ${val.length ? `<span style="margin-left:auto;font-size:0.58rem;color:var(--text3)">${val.length}</span>` : ''}
       `;
+
       const children = document.createElement('div');
       children.className = 'tree-children';
+
+      if (val.length === 0) {
+        // Empty folder placeholder
+        const empty = document.createElement('div');
+        empty.className = 'tree-row';
+        empty.style.paddingLeft = (8 + (depth + 1) * 14) + 'px';
+        empty.style.color = 'var(--text3)';
+        empty.style.fontStyle = 'italic';
+        empty.style.fontSize = '0.68rem';
+        empty.innerHTML = `<span class="tree-arrow" style="visibility:hidden">▶</span><span>vacío</span>`;
+        children.appendChild(empty);
+      }
 
       val.forEach(file => {
         const fItem = document.createElement('div');
@@ -603,7 +618,7 @@ function buildTree(data, container, depth = 0) {
 
         const fRow = document.createElement('div');
         fRow.className = 'tree-row';
-        fRow.style.paddingLeft = (8 + (depth + 1) * 12) + 'px';
+        fRow.style.paddingLeft = (8 + (depth + 1) * 14) + 'px';
         fRow.innerHTML = `
           <span class="tree-arrow" style="visibility:hidden">▶</span>
           <span class="tree-icon">${langIcon(file.name)}</span>
@@ -615,9 +630,13 @@ function buildTree(data, container, depth = 0) {
           openFile(file);
           document.querySelectorAll('.tree-row').forEach(r => r.classList.remove('active'));
           fRow.classList.add('active');
-          // breadcrumb
-          document.getElementById('breadcrumb').innerHTML =
-            `<span>${key}</span><span class="sep">›</span><span>${file.name}</span>`;
+          // Full breadcrumb path
+          const crumbHtml = currentPath
+            .map((p, i) => i < currentPath.length - 1
+              ? `<span>${p}</span><span class="sep">›</span>`
+              : `<span>${p}</span>`)
+            .join('') + `<span class="sep">›</span><span>${file.name}</span>`;
+          document.getElementById('breadcrumb').innerHTML = crumbHtml;
         });
 
         fItem.appendChild(fRow);
@@ -629,15 +648,18 @@ function buildTree(data, container, depth = 0) {
       item.appendChild(children);
 
     } else {
-      // Nested folder
+      // ── Branch folder: contains more folders ────────────
+      // Detect depth-0 (root subject) vs deeper folders
+      const isRoot = depth === 0;
       row.innerHTML = `
         <span class="tree-arrow">▶</span>
-        <span class="tree-icon">📁</span>
+        <span class="tree-icon">${isRoot ? '🗂️' : '📁'}</span>
         <span class="tree-label">${key}</span>
       `;
+
       const children = document.createElement('div');
       children.className = 'tree-children';
-      buildTree(val, children, depth + 1);
+      buildTree(val, children, depth + 1, currentPath);
 
       row.addEventListener('click', e => { e.stopPropagation(); item.classList.toggle('open'); });
       item.appendChild(row);
