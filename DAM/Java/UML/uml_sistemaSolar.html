@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>UML – Sistema Solar</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#03060f;--panel:#060d1a;--border:#1a2a4a;--accent:#00cfff;--accent2:#80e8ff;--text:#c8e8ff;--muted:#3a6080;--enum-bg:#06101e;--enum-border:#1a4a6a;--header-bg:#0a1628;--shadow:rgba(0,207,255,0.18);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);font-family:'JetBrains Mono',monospace;color:var(--text);min-height:100vh;overflow:auto;position:relative;background-image:radial-gradient(1.5px 1.5px at 10% 15%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1px 1px at 25% 40%,rgba(255,255,255,.4) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 40% 10%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1px 1px at 55% 70%,rgba(255,255,255,.3) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 70% 25%,rgba(255,255,255,.6) 0%,transparent 100%),radial-gradient(1px 1px at 85% 55%,rgba(255,255,255,.4) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 15% 85%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(2px 2px at 60% 45%,rgba(200,232,255,.5) 0%,transparent 100%),radial-gradient(ellipse at 50% 0%,rgba(0,100,180,.2) 0%,transparent 60%);}
+h1{font-family:'Orbitron',sans-serif;font-size:2rem;color:var(--accent2);text-align:center;letter-spacing:6px;padding:28px 0 4px;text-shadow:0 0 20px rgba(0,207,255,.8);}
+.subtitle{text-align:center;color:var(--muted);font-size:.76rem;letter-spacing:4px;text-transform:uppercase;margin-bottom:6px;}
+.note{background:rgba(0,207,255,.05);border:1px solid var(--border);border-left:3px solid var(--accent);padding:8px 18px;font-size:.76rem;color:var(--muted);max-width:640px;margin:0 auto 6px;text-align:center;}
+.hint{text-align:center;font-size:.71rem;color:var(--muted);padding-bottom:10px;letter-spacing:1px;}
+#canvas{position:relative;width:100%;min-height:820px;}
+svg#arrows{position:absolute;top:0;left:0;pointer-events:none;overflow:visible;}
+.node{position:absolute;border:1px solid var(--border);background:var(--panel);min-width:210px;box-shadow:0 0 18px var(--shadow);cursor:grab;user-select:none;transition:box-shadow .15s;clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);}
+.node:hover{box-shadow:0 0 32px rgba(0,207,255,.3);}
+.node.dragging{cursor:grabbing;z-index:9999;box-shadow:0 0 50px rgba(0,207,255,.4);}
+.node.abstract{border-color:var(--accent);border-style:dashed;}
+.node.enum-cls{border-color:var(--enum-border);background:var(--enum-bg);}
+.cls-header{background:var(--header-bg);padding:8px 13px;border-bottom:1px solid var(--border);text-align:center;position:relative;}
+.cls-header::after{content:'';position:absolute;bottom:-1px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);}
+.stereotype{font-size:.65rem;color:var(--muted);display:block;letter-spacing:1px;}
+.cls-name{font-family:'Orbitron',sans-serif;font-weight:700;font-size:.82rem;color:var(--accent2);letter-spacing:2px;}
+.node.abstract .cls-name{font-style:italic;}
+.node.enum-cls .cls-name{color:#b090ff;}
+.cls-section{padding:5px 13px;border-bottom:1px solid rgba(26,42,74,.6);font-size:.72rem;line-height:1.8;}
+.cls-section:last-child{border-bottom:none;}
+.vis{color:var(--muted);}
+.type{color:#60c8ff;}
+.ret{color:#ffcf60;}
+.ev{color:#b090ff;font-weight:700;letter-spacing:1px;}
+.badge{display:inline-block;background:rgba(0,207,255,.1);border:1px solid var(--accent);border-radius:2px;padding:0 4px;font-size:.6rem;color:var(--accent);margin-left:3px;}
+.legend{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;padding:12px 0 18px;font-size:.71rem;color:var(--muted);}
+.legend-item{display:flex;align-items:center;gap:5px;}
+</style>
+</head>
+<body>
+<h1>🌌 SISTEMA SOLAR</h1>
+<p class="subtitle">Diagrama UML · Java OOP · Herencia &amp; Enums</p>
+<div class="note">🚀 <strong>Ejercicio:</strong> Modela los cuerpos celestes del sistema solar en Java. Usa el enum <code>TipoCuerpo</code>.</div>
+<p class="hint">✦ Arrastra las cajas para reorganizar el diagrama</p>
+<div id="canvas"><svg id="arrows"></svg></div>
+<div class="legend">
+  <div class="legend-item"><svg width="34" height="13"><line x1="0" y1="6" x2="22" y2="6" stroke="#00cfff" stroke-width="2"/><polygon points="16,1 28,6 16,11" fill="#03060f" stroke="#00cfff" stroke-width="1.5"/></svg>Herencia</div>
+  <div class="legend-item"><span style="color:#60c8ff">azul</span>=tipo</div>
+  <div class="legend-item"><span style="color:#ffcf60">dorado</span>=retorno</div>
+</div>
+<script>
+const NODES=[
+  {id:'cuerpo',x:340,y:20,cls:'abstract',st:'«abstract»',name:'CUERPO_CELESTE',secs:[
+    ['f:- nombre:String','f:- masa:double','f:- radio:double','f:- distanciaAlSol:double','f:- tipo:TipoCuerpo'],
+    ['m:+ CuerpoCeleste(String,double,double,double,TipoCuerpo)','m:+ getNombre():String','m:+ getMasa():double','m:+ calcularGravedad():double','m:+ <i>describir()</i>:String:abstract','m:+ <i>orbitar()</i>:void:abstract','m:+ toString():String']
+  ]},
+  {id:'estrella',x:20,y:320,cls:'',name:'ESTRELLA',secs:[
+    ['f:- temperatura:double','f:- luminosidad:double','f:- edadEnAnios:long'],
+    ['m:+ Estrella(String,double,double,double)','m:+ describir():String','m:+ orbitar():void','m:+ emitirLuz():double','m:+ calcularEnergia():double']
+  ]},
+  {id:'planeta',x:280,y:320,cls:'',name:'PLANETA',secs:[
+    ['f:- tieneAtmosfera:boolean','f:- numSatelites:int','f:- periodoOrbital:double','f:- esPiedra:boolean'],
+    ['m:+ Planeta(String,double,double,double,boolean,int)','m:+ describir():String','m:+ orbitar():void','m:+ getNumSatelites():int','m:+ tieneLunas():boolean']
+  ]},
+  {id:'satelite',x:560,y:320,cls:'',name:'SATELITE',secs:[
+    ['f:- planetaAnfitrion:String','f:- periodoRotacion:double'],
+    ['m:+ Satelite(String,double,double,double,String)','m:+ describir():String','m:+ orbitar():void','m:+ getPlanetaAnfitrion():String']
+  ]},
+  {id:'asteroide',x:800,y:320,cls:'',name:'ASTEROIDE',secs:[
+    ['f:- composicion:String','f:- peligroso:boolean'],
+    ['m:+ Asteroide(String,double,double,double,boolean)','m:+ describir():String','m:+ orbitar():void','m:+ esPeligroso():boolean']
+  ]},
+  {id:'rocoso',x:200,y:600,cls:'',name:'P_ROCOSO',secs:[
+    ['f:- tieneNucleo:boolean'],
+    ['m:+ PlanetaRocoso(String,double,double,double)','m:+ describir():String','m:+ analizarComposicion():String']
+  ]},
+  {id:'gigante',x:400,y:600,cls:'',name:'GIGANTE_GAS',secs:[
+    ['f:- gasPredom:String'],
+    ['m:+ GiganteGas(String,double,double,double,String)','m:+ describir():String','m:+ tieneAnillos():boolean']
+  ]},
+  {id:'tipocuerpo',x:920,y:20,cls:'enum-cls',st:'«enum»',name:'TIPO_CUERPO',secs:[
+    ['e:ESTRELLA','e:PLANETA_ROCOSO','e:GIGANTE_GASEOSO','e:GIGANTE_HELADO','e:PLANETA_ENANO','e:SATELITE_NATURAL','e:ASTEROIDE','e:COMETA'],
+    ['f:- descripcion:String','f:- masaPromedio:double'],
+    ['m:+ getDescripcion():String','m:+ getMasaPromedio():double']
+  ]}
+];
+const EDGES=[
+  ['cuerpo','estrella'],['cuerpo','planeta'],['cuerpo','satelite'],['cuerpo','asteroide'],
+  ['planeta','rocoso'],['planeta','gigante']
+];
+const ARROW_COLOR='#00cfff';const BG='#03060f';
+
+const canvas=document.getElementById('canvas');
+const svgEl=document.getElementById('arrows');
+const pos={};
+
+function renderItem(s){
+  const type=s[0];const rest=s.slice(2);
+  if(type==='e') return `<div class="ev">${rest}</div>`;
+  if(type==='f'){
+    const parts=rest.split(':');
+    const [vis,...name]=parts[0].split(' ');
+    const t=parts[1]||'';
+    return `<div><span class="vis">${vis} </span>${name.join(' ')}${t?`<span class="vis"> : </span><span class="type">${t}</span>`:''}</div>`;
+  }
+  const parts=rest.split(':');
+  const sig=parts[0];const ret=parts[1]||'';const badge=parts[2]||'';
+  return `<div>${sig}${ret?`<span class="vis"> : </span><span class="ret">${ret}</span>`:''}${badge?`<span class="badge">${badge}</span>`:''}</div>`;
+}
+
+NODES.forEach(n=>{
+  const el=document.createElement('div');
+  el.className='node'+(n.cls?' '+n.cls:'');
+  el.id='n-'+n.id;
+  el.style.left=n.x+'px'; el.style.top=n.y+'px';
+  pos[n.id]={x:n.x,y:n.y};
+  let h=`<div class="cls-header">${n.st?`<span class="stereotype">${n.st}</span>`:''}<span class="cls-name">${n.name}</span></div>`;
+  n.secs.forEach(sec=>{h+=`<div class="cls-section">${sec.map(renderItem).join('')}</div>`;});
+  el.innerHTML=h;
+  canvas.appendChild(el);
+});
+
+let drag=null,ox=0,oy=0;
+function startDrag(e,id,cx,cy){
+  drag=id;
+  const el=document.getElementById('n-'+id);
+  const r=el.getBoundingClientRect();
+  ox=cx-r.left; oy=cy-r.top;
+  el.classList.add('dragging'); e.preventDefault();
+}
+function moveDrag(cx,cy){
+  if(!drag)return;
+  const cr=canvas.getBoundingClientRect();
+  const x=cx-cr.left-ox;const y=cy-cr.top-oy;
+  pos[drag]={x,y};
+  const el=document.getElementById('n-'+drag);
+  el.style.left=x+'px'; el.style.top=y+'px';
+  resize(); drawArrows();
+}
+function endDrag(){if(drag){document.getElementById('n-'+drag).classList.remove('dragging');drag=null;}}
+Object.keys(pos).forEach(id=>{
+  const el=document.getElementById('n-'+id);
+  el.addEventListener('mousedown',e=>{if(e.button===0)startDrag(e,id,e.clientX,e.clientY);});
+  el.addEventListener('touchstart',e=>{const t=e.touches[0];startDrag(e,id,t.clientX,t.clientY);},{passive:false});
+});
+document.addEventListener('mousemove',e=>moveDrag(e.clientX,e.clientY));
+document.addEventListener('mouseup',endDrag);
+document.addEventListener('touchmove',e=>{const t=e.touches[0];moveDrag(t.clientX,t.clientY);},{passive:false});
+document.addEventListener('touchend',endDrag);
+
+function resize(){
+  let mx=800,my=600;
+  Object.keys(pos).forEach(id=>{
+    const el=document.getElementById('n-'+id);
+    mx=Math.max(mx,pos[id].x+el.offsetWidth+60);
+    my=Math.max(my,pos[id].y+el.offsetHeight+60);
+  });
+  canvas.style.minWidth=mx+'px'; canvas.style.minHeight=my+'px';
+  svgEl.setAttribute('width',mx); svgEl.setAttribute('height',my);
+}
+function drawArrows(){
+  svgEl.innerHTML='';
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  const mk=document.createElementNS('http://www.w3.org/2000/svg','marker');
+  mk.setAttribute('id','arr'); mk.setAttribute('markerWidth','10');
+  mk.setAttribute('markerHeight','10'); mk.setAttribute('refX','8');
+  mk.setAttribute('refY','5'); mk.setAttribute('orient','auto');
+  const pg=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  pg.setAttribute('points','0,1 9,5 0,9'); pg.setAttribute('fill',BG);
+  pg.setAttribute('stroke',ARROW_COLOR); pg.setAttribute('stroke-width','1.5');
+  mk.appendChild(pg); defs.appendChild(mk); svgEl.appendChild(defs);
+  EDGES.forEach(([fid,tid])=>{
+    const fe=document.getElementById('n-'+fid);
+    const te=document.getElementById('n-'+tid);
+    const fp=pos[fid];const tp=pos[tid];
+    const fcx=fp.x+fe.offsetWidth/2, fbot=fp.y+fe.offsetHeight;
+    const tcx=tp.x+te.offsetWidth/2, ttop=tp.y;
+    const my=(fbot+ttop)/2;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${fcx},${fbot} C${fcx},${my} ${tcx},${my} ${tcx},${ttop}`);
+    path.setAttribute('stroke',ARROW_COLOR); path.setAttribute('stroke-width','2');
+    path.setAttribute('fill','none'); path.setAttribute('marker-end','url(#arr)');
+    svgEl.appendChild(path);
+  });
+}
+setTimeout(()=>{resize();drawArrows();},120);
+window.addEventListener('resize',()=>{resize();drawArrows();});
+</script>
+</body>
+</html>

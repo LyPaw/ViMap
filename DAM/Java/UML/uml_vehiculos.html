@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>UML – Vehículos</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#1a1208;--panel:#221a0c;--border:#4a3a18;--accent:#e8a020;--accent2:#ffc840;--text:#f0dca0;--muted:#7a6030;--enum-bg:#1c1408;--enum-border:#a06820;--header-bg:#2a2010;--shadow:rgba(232,160,32,0.22);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);font-family:'Roboto Mono',monospace;color:var(--text);min-height:100vh;overflow:auto;background-image:repeating-linear-gradient(45deg,rgba(74,58,24,.07) 0px,rgba(74,58,24,.07) 1px,transparent 1px,transparent 20px),repeating-linear-gradient(-45deg,rgba(74,58,24,.07) 0px,rgba(74,58,24,.07) 1px,transparent 1px,transparent 20px);}
+h1{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--accent2);text-align:center;letter-spacing:10px;padding:24px 0 4px;text-shadow:2px 2px 0 rgba(232,160,32,.3),0 0 40px rgba(255,200,64,.4);}
+.subtitle{text-align:center;color:var(--muted);font-size:.76rem;letter-spacing:4px;text-transform:uppercase;margin-bottom:6px;}
+.note{background:rgba(232,160,32,.06);border:1px solid var(--border);border-left:4px solid var(--accent);padding:8px 18px;font-size:.76rem;color:var(--muted);max-width:640px;margin:0 auto 6px;text-align:center;}
+.hint{text-align:center;font-size:.71rem;color:var(--muted);padding-bottom:10px;letter-spacing:1px;}
+#canvas{position:relative;width:100%;min-height:820px;}
+svg#arrows{position:absolute;top:0;left:0;pointer-events:none;overflow:visible;}
+.node{position:absolute;border:2px solid var(--border);background:var(--panel);min-width:210px;box-shadow:4px 4px 0 rgba(74,58,24,.5),0 0 18px var(--shadow);cursor:grab;user-select:none;transition:box-shadow .15s,transform .15s;}
+.node:hover{box-shadow:5px 5px 0 rgba(232,160,32,.3),0 0 28px var(--shadow);}
+.node.dragging{cursor:grabbing;z-index:9999;box-shadow:8px 8px 0 rgba(232,160,32,.4),0 0 44px var(--shadow);transform:translate(-2px,-2px);}
+.node.abstract{border-color:var(--accent);border-style:dashed;}
+.node.enum-cls{border-color:var(--enum-border);background:var(--enum-bg);}
+.cls-header{background:var(--header-bg);padding:8px 13px;border-bottom:2px solid var(--border);text-align:center;position:relative;overflow:hidden;}
+.cls-header::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent);}
+.node.abstract .cls-header::before{background:var(--accent2);}
+.node.enum-cls .cls-header::before{background:var(--enum-border);}
+.stereotype{font-size:.65rem;color:var(--muted);display:block;letter-spacing:1px;}
+.cls-name{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--accent2);letter-spacing:4px;}
+.node.abstract .cls-name{font-style:italic;}
+.node.enum-cls .cls-name{color:#e8c080;}
+.cls-section{padding:5px 13px;border-bottom:1px solid rgba(74,58,24,.5);font-size:.73rem;line-height:1.8;}
+.cls-section:last-child{border-bottom:none;}
+.vis{color:var(--muted);}
+.type{color:#a0c8e8;}
+.ret{color:var(--accent);}
+.ev{color:#e8c080;font-weight:700;letter-spacing:2px;font-family:'Bebas Neue',sans-serif;font-size:.88rem;}
+.badge{display:inline-block;background:rgba(232,160,32,.12);border:1px solid var(--accent);padding:0 4px;font-size:.6rem;color:var(--accent);margin-left:3px;}
+.legend{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;padding:12px 0 18px;font-size:.71rem;color:var(--muted);}
+.legend-item{display:flex;align-items:center;gap:5px;}
+</style>
+</head>
+<body>
+<h1>🚗 VEHÍCULOS</h1>
+<p class="subtitle">Diagrama UML · Java OOP · Herencia &amp; Enums</p>
+<div class="note">🔧 <strong>Ejercicio:</strong> Implementa el sistema de vehículos en Java. Usa el enum <code>TipoCombustible</code>.</div>
+<p class="hint">✦ Arrastra las cajas para reorganizar el diagrama</p>
+<div id="canvas"><svg id="arrows"></svg></div>
+<div class="legend">
+  <div class="legend-item"><svg width="34" height="13"><line x1="0" y1="6" x2="22" y2="6" stroke="#e8a020" stroke-width="2"/><polygon points="16,1 28,6 16,11" fill="#1a1208" stroke="#e8a020" stroke-width="1.5"/></svg>Herencia</div>
+  <div class="legend-item"><span style="color:#a0c8e8">azul</span>=tipo</div>
+  <div class="legend-item"><span style="color:#e8a020">naranja</span>=retorno</div>
+  <div class="legend-item"><span style="font-style:italic;color:#ffc840">italic</span>=abstracto</div>
+</div>
+<script>
+const NODES=[
+  {id:'vehiculo',x:320,y:20,cls:'abstract',st:'«abstract»',name:'Vehiculo',secs:[
+    ['f:- marca:String','f:- modelo:String','f:- anio:int','f:- velocidadMax:double','f:- velocidadActual:double','f:- combustible:TipoCombustible','f:- encendido:boolean'],
+    ['m:+ Vehiculo(String,String,int,double,TipoCombustible)','m:+ getMarca():String','m:+ getVelocidadActual():double','m:+ acelerar(double):void','m:+ frenar(double):void','m:+ <i>arrancar()</i>:String:abstract','m:+ <i>calcularConsumo(double)</i>:double:abstract','m:+ toString():String']
+  ]},
+  {id:'auto',x:20,y:320,cls:'',name:'Auto',secs:[
+    ['f:- numPuertas:int','f:- tieneAireAcond:boolean','f:- numPasajeros:int'],
+    ['m:+ Auto(String,String,int,double,TipoCombustible,int)','m:+ arrancar():String','m:+ calcularConsumo(double):double','m:+ activarAC():void']
+  ]},
+  {id:'moto',x:260,y:320,cls:'',name:'Moto',secs:[
+    ['f:- cilindrada:int','f:- tieneSidecar:boolean'],
+    ['m:+ Moto(String,String,int,double,TipoCombustible,int)','m:+ arrancar():String','m:+ calcularConsumo(double):double','m:+ hacerCaballito():String']
+  ]},
+  {id:'camion',x:490,y:320,cls:'',name:'Camion',secs:[
+    ['f:- capacidadCarga:double','f:- ejes:int','f:- remolque:boolean'],
+    ['m:+ Camion(String,String,int,double,TipoCombustible,double)','m:+ arrancar():String','m:+ calcularConsumo(double):double','m:+ cargar(double):boolean']
+  ]},
+  {id:'bici',x:730,y:320,cls:'',name:'Bicicleta',secs:[
+    ['f:- numVelocidades:int','f:- esElectrica:boolean'],
+    ['m:+ Bicicleta(String,String,int,double,TipoCombustible,int)','m:+ arrancar():String','m:+ calcularConsumo(double):double','m:+ cambiarMarcha(int):void']
+  ]},
+  {id:'sedan',x:20,y:600,cls:'',name:'Sedan',secs:[
+    ['f:- maleteroLitros:int'],
+    ['m:+ Sedan(String,String,int,double,TipoCombustible)','m:+ abrirMaletero():void']
+  ]},
+  {id:'suv',x:200,y:600,cls:'',name:'SUV',secs:[
+    ['f:- alturaTerreno:double'],
+    ['m:+ SUV(String,String,int,double,TipoCombustible)','m:+ activar4x4():void']
+  ]},
+  {id:'combustible',x:900,y:20,cls:'enum-cls',st:'«enum»',name:'TipoCombustible',secs:[
+    ['e:GASOLINA','e:DIESEL','e:ELECTRICO','e:HIBRIDO','e:HIDROGENO','e:HUMANO'],
+    ['f:- costoPorLitro:double','f:- esRenovable:boolean','f:- emisionCO2:double'],
+    ['m:+ getCosto():double','m:+ esEcologico():boolean','m:+ getEmision():double']
+  ]}
+];
+const EDGES=[
+  ['vehiculo','auto'],['vehiculo','moto'],['vehiculo','camion'],['vehiculo','bici'],
+  ['auto','sedan'],['auto','suv']
+];
+const ARROW_COLOR='#e8a020';const BG='#1a1208';
+
+const canvas=document.getElementById('canvas');
+const svgEl=document.getElementById('arrows');
+const pos={};
+
+function renderItem(s){
+  const type=s[0];const rest=s.slice(2);
+  if(type==='e') return `<div class="ev">${rest}</div>`;
+  if(type==='f'){
+    const parts=rest.split(':');
+    const [vis,...name]=parts[0].split(' ');
+    const t=parts[1]||'';
+    return `<div><span class="vis">${vis} </span>${name.join(' ')}${t?`<span class="vis"> : </span><span class="type">${t}</span>`:''}</div>`;
+  }
+  const parts=rest.split(':');
+  const sig=parts[0];const ret=parts[1]||'';const badge=parts[2]||'';
+  return `<div>${sig}${ret?`<span class="vis"> : </span><span class="ret">${ret}</span>`:''}${badge?`<span class="badge">${badge}</span>`:''}</div>`;
+}
+
+NODES.forEach(n=>{
+  const el=document.createElement('div');
+  el.className='node'+(n.cls?' '+n.cls:'');
+  el.id='n-'+n.id;
+  el.style.left=n.x+'px'; el.style.top=n.y+'px';
+  pos[n.id]={x:n.x,y:n.y};
+  let h=`<div class="cls-header">${n.st?`<span class="stereotype">${n.st}</span>`:''}<span class="cls-name">${n.name}</span></div>`;
+  n.secs.forEach(sec=>{h+=`<div class="cls-section">${sec.map(renderItem).join('')}</div>`;});
+  el.innerHTML=h;
+  canvas.appendChild(el);
+});
+
+let drag=null,ox=0,oy=0;
+function startDrag(e,id,cx,cy){
+  drag=id;
+  const el=document.getElementById('n-'+id);
+  const r=el.getBoundingClientRect();
+  ox=cx-r.left; oy=cy-r.top;
+  el.classList.add('dragging'); e.preventDefault();
+}
+function moveDrag(cx,cy){
+  if(!drag)return;
+  const cr=canvas.getBoundingClientRect();
+  const x=cx-cr.left-ox;const y=cy-cr.top-oy;
+  pos[drag]={x,y};
+  const el=document.getElementById('n-'+drag);
+  el.style.left=x+'px'; el.style.top=y+'px';
+  resize(); drawArrows();
+}
+function endDrag(){if(drag){document.getElementById('n-'+drag).classList.remove('dragging');drag=null;}}
+Object.keys(pos).forEach(id=>{
+  const el=document.getElementById('n-'+id);
+  el.addEventListener('mousedown',e=>{if(e.button===0)startDrag(e,id,e.clientX,e.clientY);});
+  el.addEventListener('touchstart',e=>{const t=e.touches[0];startDrag(e,id,t.clientX,t.clientY);},{passive:false});
+});
+document.addEventListener('mousemove',e=>moveDrag(e.clientX,e.clientY));
+document.addEventListener('mouseup',endDrag);
+document.addEventListener('touchmove',e=>{const t=e.touches[0];moveDrag(t.clientX,t.clientY);},{passive:false});
+document.addEventListener('touchend',endDrag);
+
+function resize(){
+  let mx=800,my=600;
+  Object.keys(pos).forEach(id=>{
+    const el=document.getElementById('n-'+id);
+    mx=Math.max(mx,pos[id].x+el.offsetWidth+60);
+    my=Math.max(my,pos[id].y+el.offsetHeight+60);
+  });
+  canvas.style.minWidth=mx+'px'; canvas.style.minHeight=my+'px';
+  svgEl.setAttribute('width',mx); svgEl.setAttribute('height',my);
+}
+function drawArrows(){
+  svgEl.innerHTML='';
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  const mk=document.createElementNS('http://www.w3.org/2000/svg','marker');
+  mk.setAttribute('id','arr'); mk.setAttribute('markerWidth','10');
+  mk.setAttribute('markerHeight','10'); mk.setAttribute('refX','8');
+  mk.setAttribute('refY','5'); mk.setAttribute('orient','auto');
+  const pg=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  pg.setAttribute('points','0,1 9,5 0,9'); pg.setAttribute('fill',BG);
+  pg.setAttribute('stroke',ARROW_COLOR); pg.setAttribute('stroke-width','1.5');
+  mk.appendChild(pg); defs.appendChild(mk); svgEl.appendChild(defs);
+  EDGES.forEach(([fid,tid])=>{
+    const fe=document.getElementById('n-'+fid);
+    const te=document.getElementById('n-'+tid);
+    const fp=pos[fid];const tp=pos[tid];
+    const fcx=fp.x+fe.offsetWidth/2, fbot=fp.y+fe.offsetHeight;
+    const tcx=tp.x+te.offsetWidth/2, ttop=tp.y;
+    const my=(fbot+ttop)/2;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${fcx},${fbot} C${fcx},${my} ${tcx},${my} ${tcx},${ttop}`);
+    path.setAttribute('stroke',ARROW_COLOR); path.setAttribute('stroke-width','2');
+    path.setAttribute('fill','none'); path.setAttribute('marker-end','url(#arr)');
+    svgEl.appendChild(path);
+  });
+}
+setTimeout(()=>{resize();drawArrows();},120);
+window.addEventListener('resize',()=>{resize();drawArrows();});
+</script>
+</body>
+</html>

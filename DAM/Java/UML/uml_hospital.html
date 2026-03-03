@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>UML – Hospital</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0f4f8;--panel:#ffffff;--border:#b8cfe0;--accent:#0a5c8c;--accent2:#0e7ab5;--text:#1a2e3a;--muted:#6a8fa8;--enum-bg:#f0f7ff;--enum-border:#2a7cc7;--header-bg:#e6f0f8;--shadow:rgba(10,92,140,0.14);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);font-family:'IBM Plex Mono',monospace;color:var(--text);min-height:100vh;overflow:auto;background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(180,210,230,.3) 39px,rgba(180,210,230,.3) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(180,210,230,.3) 39px,rgba(180,210,230,.3) 40px);}
+h1{font-family:'DM Serif Display',serif;font-size:2.2rem;color:var(--accent);text-align:center;padding:28px 0 4px;}
+.subtitle{text-align:center;color:var(--muted);font-size:.78rem;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;}
+.note{background:rgba(10,92,140,.06);border:1px solid var(--border);border-left:4px solid var(--accent2);padding:8px 18px;font-size:.76rem;color:var(--muted);max-width:640px;margin:0 auto 6px;text-align:center;}
+.hint{text-align:center;font-size:.71rem;color:var(--muted);padding-bottom:10px;letter-spacing:1px;}
+#canvas{position:relative;width:100%;min-height:820px;}
+svg#arrows{position:absolute;top:0;left:0;pointer-events:none;overflow:visible;}
+.node{position:absolute;border:1.5px solid var(--border);background:var(--panel);min-width:210px;box-shadow:0 2px 12px var(--shadow);cursor:grab;user-select:none;transition:box-shadow .15s;border-radius:2px;}
+.node:hover{box-shadow:0 6px 22px rgba(10,92,140,.2);}
+.node.dragging{cursor:grabbing;z-index:9999;box-shadow:0 10px 36px rgba(10,92,140,.28);}
+.node.abstract{border-color:var(--accent2);border-style:dashed;border-width:2px;}
+.node.enum-cls{border-color:var(--enum-border);background:var(--enum-bg);}
+.cls-header{background:var(--header-bg);padding:8px 13px;border-bottom:1.5px solid var(--border);text-align:center;}
+.node.abstract .cls-header{background:#e0f0fa;border-bottom-color:var(--accent2);}
+.node.enum-cls .cls-header{background:#ddeeff;border-bottom-color:var(--enum-border);}
+.stereotype{font-size:.65rem;color:var(--muted);display:block;letter-spacing:1px;}
+.cls-name{font-weight:700;font-size:.95rem;color:var(--accent);}
+.node.abstract .cls-name{font-style:italic;}
+.node.enum-cls .cls-name{color:var(--enum-border);}
+.cls-section{padding:5px 13px;border-bottom:1px solid #dce8f0;font-size:.73rem;line-height:1.8;}
+.cls-section:last-child{border-bottom:none;}
+.vis{color:var(--muted);}
+.type{color:#2255aa;}
+.ret{color:#b86a00;}
+.ev{color:var(--enum-border);font-weight:700;letter-spacing:1px;}
+.badge{display:inline-block;background:rgba(10,92,140,.08);border:1px solid var(--accent2);border-radius:2px;padding:0 4px;font-size:.6rem;color:var(--accent2);margin-left:3px;}
+.legend{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;padding:12px 0 18px;font-size:.71rem;color:var(--muted);}
+.legend-item{display:flex;align-items:center;gap:5px;}
+</style>
+</head>
+<body>
+<h1>🏥 Sistema Hospitalario</h1>
+<p class="subtitle">Diagrama UML · Java OOP · Herencia &amp; Enums</p>
+<div class="note">💊 <strong>Ejercicio:</strong> Modela el sistema hospitalario en Java. Usa los enums <code>Especialidad</code> y <code>TipoSangre</code>.</div>
+<p class="hint">✦ Arrastra las cajas para reorganizar el diagrama</p>
+<div id="canvas"><svg id="arrows"></svg></div>
+<div class="legend">
+  <div class="legend-item"><svg width="34" height="13"><line x1="0" y1="6" x2="22" y2="6" stroke="#0a5c8c" stroke-width="2"/><polygon points="16,1 28,6 16,11" fill="#f0f4f8" stroke="#0a5c8c" stroke-width="1.5"/></svg>Herencia</div>
+  <div class="legend-item"><span style="color:#2255aa">azul</span>=tipo</div>
+  <div class="legend-item"><span style="color:#b86a00">naranja</span>=retorno</div>
+  <div class="legend-item"><span style="font-style:italic;color:#0a5c8c">italic</span>=abstracto</div>
+</div>
+<script>
+const NODES=[
+  {id:'persona',x:340,y:20,cls:'abstract',st:'«abstract»',name:'PersonaHospital',secs:[
+    ['f:- id:String','f:- nombre:String','f:- apellido:String','f:- edad:int','f:- telefono:String'],
+    ['m:+ PersonaHospital(String,String,String,int,String)','m:+ getId():String','m:+ getNombreCompleto():String','m:+ <i>getRol()</i>:String:abstract','m:+ <i>mostrarInfo()</i>:void:abstract','m:+ toString():String']
+  ]},
+  {id:'medico',x:20,y:310,cls:'',name:'Medico',secs:[
+    ['f:- matricula:String','f:- especialidad:Especialidad','f:- aniosExperiencia:int','f:- disponible:boolean'],
+    ['m:+ Medico(String,String,String,int,String,Especialidad)','m:+ getRol():String','m:+ mostrarInfo():void','m:+ getEspecialidad():Especialidad','m:+ atenderPaciente(Paciente):void','m:+ emitirDiagnostico(String):String']
+  ]},
+  {id:'paciente',x:330,y:310,cls:'',name:'Paciente',secs:[
+    ['f:- numHistorial:String','f:- tipoSangre:TipoSangre','f:- diagnostico:String','f:- estaHospitalizado:boolean','f:- alergias:String[]'],
+    ['m:+ Paciente(String,String,String,int,TipoSangre)','m:+ getRol():String','m:+ mostrarInfo():void','m:+ getTipoSangre():TipoSangre','m:+ hospitalizarse():void','m:+ darDeAlta():void']
+  ]},
+  {id:'enfermero',x:650,y:310,cls:'',name:'Enfermero',secs:[
+    ['f:- turno:String','f:- pabellon:String','f:- certificaciones:String[]'],
+    ['m:+ Enfermero(String,String,String,int,String,String)','m:+ getRol():String','m:+ mostrarInfo():void','m:+ administrarMedicamento(Paciente,String):void','m:+ tomarSignosVitales(Paciente):String']
+  ]},
+  {id:'cirujano',x:20,y:600,cls:'',name:'Cirujano',secs:[
+    ['f:- operacionesRealizadas:int','f:- especialidadQx:String'],
+    ['m:+ Cirujano(String,String,String,int,String)','m:+ mostrarInfo():void','m:+ operar(Paciente):void']
+  ]},
+  {id:'general',x:240,y:600,cls:'',name:'MedicoGeneral',secs:[
+    ['f:- consultasDiarias:int'],
+    ['m:+ MedicoGeneral(String,String,String,int,String)','m:+ mostrarInfo():void','m:+ realizarConsulta():String']
+  ]},
+  {id:'especialidad',x:20,y:840,cls:'enum-cls',st:'«enum»',name:'Especialidad',secs:[
+    ['e:CARDIOLOGIA','e:NEUROLOGIA','e:PEDIATRIA','e:TRAUMATOLOGIA','e:ONCOLOGIA','e:CIRUGIA_GENERAL','e:URGENCIAS'],
+    ['f:- descripcion:String','f:- pisoHospital:int'],
+    ['m:+ getDescripcion():String','m:+ getPiso():int']
+  ]},
+  {id:'sangre',x:350,y:840,cls:'enum-cls',st:'«enum»',name:'TipoSangre',secs:[
+    ['e:A_POSITIVO','e:A_NEGATIVO','e:B_POSITIVO','e:B_NEGATIVO','e:AB_POSITIVO','e:AB_NEGATIVO','e:O_POSITIVO','e:O_NEGATIVO'],
+    ['f:- donadorUniversal:boolean','f:- receptorUniversal:boolean'],
+    ['m:+ esDonadorUniversal():boolean','m:+ esReceptorUniversal():boolean']
+  ]}
+];
+const EDGES=[
+  ['persona','medico'],['persona','paciente'],['persona','enfermero'],
+  ['medico','cirujano'],['medico','general']
+];
+const ARROW_COLOR='#0a5c8c';const BG='#f0f4f8';
+
+const canvas=document.getElementById('canvas');
+const svgEl=document.getElementById('arrows');
+const pos={};
+
+function renderItem(s){
+  const type=s[0];const rest=s.slice(2);
+  if(type==='e') return `<div class="ev">${rest}</div>`;
+  if(type==='f'){
+    const parts=rest.split(':');
+    const [vis,...name]=parts[0].split(' ');
+    const t=parts[1]||'';
+    return `<div><span class="vis">${vis} </span>${name.join(' ')}${t?`<span class="vis"> : </span><span class="type">${t}</span>`:''}</div>`;
+  }
+  const parts=rest.split(':');
+  const sig=parts[0];const ret=parts[1]||'';const badge=parts[2]||'';
+  return `<div>${sig}${ret?`<span class="vis"> : </span><span class="ret">${ret}</span>`:''}${badge?`<span class="badge">${badge}</span>`:''}</div>`;
+}
+
+NODES.forEach(n=>{
+  const el=document.createElement('div');
+  el.className='node'+(n.cls?' '+n.cls:'');
+  el.id='n-'+n.id;
+  el.style.left=n.x+'px'; el.style.top=n.y+'px';
+  pos[n.id]={x:n.x,y:n.y};
+  let h=`<div class="cls-header">${n.st?`<span class="stereotype">${n.st}</span>`:''}<span class="cls-name">${n.name}</span></div>`;
+  n.secs.forEach(sec=>{h+=`<div class="cls-section">${sec.map(renderItem).join('')}</div>`;});
+  el.innerHTML=h;
+  canvas.appendChild(el);
+});
+
+let drag=null,ox=0,oy=0;
+function startDrag(e,id,cx,cy){
+  drag=id;
+  const el=document.getElementById('n-'+id);
+  const r=el.getBoundingClientRect();
+  ox=cx-r.left; oy=cy-r.top;
+  el.classList.add('dragging'); e.preventDefault();
+}
+function moveDrag(cx,cy){
+  if(!drag)return;
+  const cr=canvas.getBoundingClientRect();
+  const x=cx-cr.left-ox;const y=cy-cr.top-oy;
+  pos[drag]={x,y};
+  const el=document.getElementById('n-'+drag);
+  el.style.left=x+'px'; el.style.top=y+'px';
+  resize(); drawArrows();
+}
+function endDrag(){if(drag){document.getElementById('n-'+drag).classList.remove('dragging');drag=null;}}
+Object.keys(pos).forEach(id=>{
+  const el=document.getElementById('n-'+id);
+  el.addEventListener('mousedown',e=>{if(e.button===0)startDrag(e,id,e.clientX,e.clientY);});
+  el.addEventListener('touchstart',e=>{const t=e.touches[0];startDrag(e,id,t.clientX,t.clientY);},{passive:false});
+});
+document.addEventListener('mousemove',e=>moveDrag(e.clientX,e.clientY));
+document.addEventListener('mouseup',endDrag);
+document.addEventListener('touchmove',e=>{const t=e.touches[0];moveDrag(t.clientX,t.clientY);},{passive:false});
+document.addEventListener('touchend',endDrag);
+
+function resize(){
+  let mx=800,my=700;
+  Object.keys(pos).forEach(id=>{
+    const el=document.getElementById('n-'+id);
+    mx=Math.max(mx,pos[id].x+el.offsetWidth+60);
+    my=Math.max(my,pos[id].y+el.offsetHeight+60);
+  });
+  canvas.style.minWidth=mx+'px'; canvas.style.minHeight=my+'px';
+  svgEl.setAttribute('width',mx); svgEl.setAttribute('height',my);
+}
+function drawArrows(){
+  svgEl.innerHTML='';
+  const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+  const mk=document.createElementNS('http://www.w3.org/2000/svg','marker');
+  mk.setAttribute('id','arr'); mk.setAttribute('markerWidth','10');
+  mk.setAttribute('markerHeight','10'); mk.setAttribute('refX','8');
+  mk.setAttribute('refY','5'); mk.setAttribute('orient','auto');
+  const pg=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  pg.setAttribute('points','0,1 9,5 0,9'); pg.setAttribute('fill',BG);
+  pg.setAttribute('stroke',ARROW_COLOR); pg.setAttribute('stroke-width','1.5');
+  mk.appendChild(pg); defs.appendChild(mk); svgEl.appendChild(defs);
+  EDGES.forEach(([fid,tid])=>{
+    const fe=document.getElementById('n-'+fid);
+    const te=document.getElementById('n-'+tid);
+    const fp=pos[fid];const tp=pos[tid];
+    const fcx=fp.x+fe.offsetWidth/2, fbot=fp.y+fe.offsetHeight;
+    const tcx=tp.x+te.offsetWidth/2, ttop=tp.y;
+    const my=(fbot+ttop)/2;
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',`M${fcx},${fbot} C${fcx},${my} ${tcx},${my} ${tcx},${ttop}`);
+    path.setAttribute('stroke',ARROW_COLOR); path.setAttribute('stroke-width','2');
+    path.setAttribute('fill','none'); path.setAttribute('marker-end','url(#arr)');
+    svgEl.appendChild(path);
+  });
+}
+setTimeout(()=>{resize();drawArrows();},120);
+window.addEventListener('resize',()=>{resize();drawArrows();});
+</script>
+</body>
+</html>
