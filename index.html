@@ -490,12 +490,6 @@ pre.code-block {
 
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar-panel">
-    <div class="sidebar-header">
-      <div class="search-box">
-        <span class="search-icon">⌕</span>
-        <input type="text" placeholder="buscar archivo..." id="search-input" autocomplete="off" spellcheck="false">
-      </div>
-    </div>
     <div class="sidebar-tree" id="tree-root"></div>
     <div class="sidebar-logo">
       <img src="https://raw.githubusercontent.com/LyPaw/ViMap/main/Logo/logo.png" alt="ViMap logo">
@@ -925,32 +919,6 @@ function esc(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-/* ═══════════════════════════════════════════════════════════
-   SEARCH
-═══════════════════════════════════════════════════════════ */
-document.getElementById('search-input').addEventListener('input', function() {
-  const q = this.value.toLowerCase().trim();
-  document.querySelectorAll('.tree-item').forEach(item => {
-    const label = item.querySelector('.tree-label');
-    if (!label) return;
-    const text = label.textContent.toLowerCase();
-    if (!q) {
-      item.style.display = '';
-    } else {
-      item.style.display = text.includes(q) ? '' : 'none';
-      if (text.includes(q)) {
-        // expand parents
-        let p = item.parentElement;
-        while (p && !p.id) {
-          if (p.classList.contains('tree-children')) {
-            p.parentElement.classList.add('open');
-          }
-          p = p.parentElement;
-        }
-      }
-    }
-  });
-});
 
 /* ═══════════════════════════════════════════════════════════
    SIDEBAR RESIZE
@@ -977,3 +945,4 @@ document.addEventListener('mouseup', () => {
 </script>
 </body>
 </html>
+
