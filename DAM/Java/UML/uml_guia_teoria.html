@@ -505,14 +505,6 @@ pre{
 .ai-send:hover{opacity:.9;transform:scale(1.05);}
 .ai-send:disabled{opacity:.4;cursor:not-allowed;}
 
-/* ── QUICK CHIPS (fixed) ────────────────────────────────── */
-.quick-pills{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
-  display:flex;gap:8px;z-index:150;flex-wrap:wrap;justify-content:center;
-  padding:0 100px;
-  pointer-events:none;
-}
-
 /* ── FOOTER ─────────────────────────────────────────────── */
 footer{
   position:relative;z-index:1;
@@ -1056,6 +1048,208 @@ habitat = <span class="cls-c">Habitat</span>.SELVA;
       </div>
     </div>
 
+    <!-- ═══ EJEMPLOS DE CÓDIGO POR RELACIÓN ═══ -->
+
+    <!-- ASOCIACIÓN -->
+    <div style="margin-bottom:28px;">
+      <p style="font-size:.72rem;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Ejemplo · Asociación</p>
+      <div class="compare">
+        <div class="compare-panel uml">
+          <h4>UML</h4>
+          <div class="uml-mini" style="margin-bottom:10px;">
+            <div class="uml-mini-header">Persona</div>
+            <div class="uml-mini-section">
+              <div class="field"><span class="vis">- </span>dni<span class="vis"> : </span><span class="tp">String</span></div>
+              <div class="field"><span class="vis">- </span>direccion<span class="vis"> : </span><span class="tp">Direccion</span></div>
+            </div>
+            <div class="uml-mini-section">
+              <div class="method"><span class="vis">+ </span>Persona(String, Direccion)</div>
+              <div class="method"><span class="vis">+ </span>getDireccion()<span class="vis"> : </span><span class="ret">Direccion</span></div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+            <svg width="80" height="20"><line x1="0" y1="10" x2="60" y2="10" stroke="#6ee7b7" stroke-width="2"/><polygon points="52,5 68,10 52,15" fill="#6ee7b7"/></svg>
+            <span style="font-size:.68rem;color:var(--text2);">Persona → Dirección</span>
+          </div>
+          <div style="font-size:.7rem;color:var(--text2);margin-top:6px;line-height:1.5;">Persona <strong style="color:#6ee7b7;">conoce</strong> a Dirección. Dirección puede existir sin Persona.</div>
+        </div>
+        <div class="compare-arrow">→</div>
+        <div class="compare-panel java">
+          <h4>JAVA</h4>
+          <pre style="padding:10px;font-size:.72rem;"><span class="kw">public class</span> <span class="cls-c">Persona</span> {
+  <span class="kw">private</span> <span class="type">String</span> dni;
+  <span class="cmt">// Atributo del tipo asociado</span>
+  <span class="kw">private</span> <span class="cls-c">Direccion</span> direccion;
+
+  <span class="cmt">// Se recibe como parámetro</span>
+  <span class="kw">public</span> <span class="cls-c">Persona</span>(<span class="type">String</span> dni,
+                 <span class="cls-c">Direccion</span> dir) {
+    <span class="kw">this</span>.dni = dni;
+    <span class="kw">this</span>.direccion = dir;
+  }
+
+  <span class="kw">public</span> <span class="cls-c">Direccion</span> getDireccion() {
+    <span class="kw">return</span> direccion;
+  }
+}</pre>
+        </div>
+      </div>
+      <div class="callout info" style="margin-top:0;">
+        <span class="callout-icon">ℹ</span>
+        <div><strong>Clave:</strong> <code>Direccion</code> se crea <em>fuera</em> de <code>Persona</code> y se pasa como parámetro. Ambos objetos son independientes en memoria.</div>
+      </div>
+    </div>
+
+    <!-- AGREGACIÓN -->
+    <div style="margin-bottom:28px;">
+      <p style="font-size:.72rem;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Ejemplo · Agregación (rombo hueco ◇)</p>
+      <div class="compare">
+        <div class="compare-panel uml">
+          <h4>UML</h4>
+          <div class="uml-mini" style="margin-bottom:10px;">
+            <div class="uml-mini-header">Equipo</div>
+            <div class="uml-mini-section">
+              <div class="field"><span class="vis">- </span>nombre<span class="vis"> : </span><span class="tp">String</span></div>
+              <div class="field"><span class="vis">- </span>jugadores<span class="vis"> : </span><span class="tp">List&lt;Jugador&gt;</span></div>
+            </div>
+            <div class="uml-mini-section">
+              <div class="method"><span class="vis">+ </span>Equipo(String)</div>
+              <div class="method"><span class="vis">+ </span>addJugador(Jugador)<span class="vis"> : </span><span class="ret">void</span></div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+            <svg width="80" height="20"><polygon points="0,10 10,4 20,10 10,16" fill="#111827" stroke="#fcd34d" stroke-width="1.5"/><line x1="20" y1="10" x2="70" y2="10" stroke="#fcd34d" stroke-width="2"/></svg>
+            <span style="font-size:.68rem;color:var(--text2);">Equipo ◇─── Jugador</span>
+          </div>
+          <div style="font-size:.7rem;color:var(--text2);margin-top:6px;line-height:1.5;">El equipo <strong style="color:var(--warn);">contiene</strong> jugadores, pero un jugador puede existir sin equipo.</div>
+        </div>
+        <div class="compare-arrow">→</div>
+        <div class="compare-panel java">
+          <h4>JAVA</h4>
+          <pre style="padding:10px;font-size:.72rem;"><span class="kw">import</span> java.util.ArrayList;
+<span class="kw">import</span> java.util.List;
+
+<span class="kw">public class</span> <span class="cls-c">Equipo</span> {
+  <span class="kw">private</span> <span class="type">String</span> nombre;
+  <span class="cmt">// Lista de objetos externos</span>
+  <span class="kw">private</span> List&lt;<span class="cls-c">Jugador</span>&gt; jugadores;
+
+  <span class="kw">public</span> <span class="cls-c">Equipo</span>(<span class="type">String</span> nombre) {
+    <span class="kw">this</span>.nombre = nombre;
+    <span class="kw">this</span>.jugadores = <span class="kw">new</span> ArrayList&lt;&gt;();
+  }
+
+  <span class="cmt">// Se añaden desde fuera</span>
+  <span class="kw">public void</span> addJugador(<span class="cls-c">Jugador</span> j) {
+    jugadores.add(j);
+  }
+}</pre>
+        </div>
+      </div>
+      <div class="callout warn" style="margin-top:0;">
+        <span class="callout-icon">◇</span>
+        <div><strong>Rombo hueco:</strong> Los <code>Jugador</code> se crean fuera y se añaden. Si el equipo desaparece, los jugadores <strong>siguen existiendo</strong> en memoria.</div>
+      </div>
+    </div>
+
+    <!-- COMPOSICIÓN -->
+    <div style="margin-bottom:28px;">
+      <p style="font-size:.72rem;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Ejemplo · Composición (rombo relleno ◆)</p>
+      <div class="compare">
+        <div class="compare-panel uml">
+          <h4>UML</h4>
+          <div class="uml-mini" style="margin-bottom:10px;">
+            <div class="uml-mini-header">Casa</div>
+            <div class="uml-mini-section">
+              <div class="field"><span class="vis">- </span>direccion<span class="vis"> : </span><span class="tp">String</span></div>
+              <div class="field"><span class="vis">- </span>habitaciones<span class="vis"> : </span><span class="tp">List&lt;Habitacion&gt;</span></div>
+            </div>
+            <div class="uml-mini-section">
+              <div class="method"><span class="vis">+ </span>Casa(String, int)</div>
+              <div class="method"><span class="vis">+ </span>getHabitaciones()<span class="vis"> : </span><span class="ret">List</span></div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+            <svg width="80" height="20"><polygon points="0,10 10,4 20,10 10,16" fill="#f87171" stroke="#f87171" stroke-width="1.5"/><line x1="20" y1="10" x2="70" y2="10" stroke="#f87171" stroke-width="2"/></svg>
+            <span style="font-size:.68rem;color:var(--text2);">Casa ◆─── Habitacion</span>
+          </div>
+          <div style="font-size:.7rem;color:var(--text2);margin-top:6px;line-height:1.5;">Las habitaciones <strong style="color:var(--red);">no existen</strong> sin la casa. Se crean y destruyen con ella.</div>
+        </div>
+        <div class="compare-arrow">→</div>
+        <div class="compare-panel java">
+          <h4>JAVA</h4>
+          <pre style="padding:10px;font-size:.72rem;"><span class="kw">public class</span> <span class="cls-c">Casa</span> {
+  <span class="kw">private</span> <span class="type">String</span> direccion;
+  <span class="kw">private</span> List&lt;<span class="cls-c">Habitacion</span>&gt; habitaciones;
+
+  <span class="kw">public</span> <span class="cls-c">Casa</span>(<span class="type">String</span> dir, <span class="kw">int</span> num) {
+    <span class="kw">this</span>.direccion = dir;
+    <span class="kw">this</span>.habitaciones = <span class="kw">new</span> ArrayList&lt;&gt;();
+    <span class="cmt">// Se crean DENTRO del constructor</span>
+    <span class="kw">for</span> (<span class="kw">int</span> i = 0; i &lt; num; i++) {
+      habitaciones.add(
+        <span class="kw">new</span> <span class="cls-c">Habitacion</span>(i + 1)
+      );
+    }
+  }
+}</pre>
+        </div>
+      </div>
+      <div class="callout danger" style="margin-top:0;">
+        <span class="callout-icon">◆</span>
+        <div><strong>Rombo relleno:</strong> Las <code>Habitacion</code> se instancian <strong>dentro del constructor</strong> de <code>Casa</code> con <code>new</code>. Sin casa, no hay habitaciones.</div>
+      </div>
+    </div>
+
+    <!-- TABLA COMPARATIVA -->
+    <div style="margin-bottom:28px;">
+      <p style="font-size:.72rem;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Comparativa rápida</p>
+      <table class="symbol-table">
+        <thead>
+          <tr>
+            <th>Relación</th>
+            <th>Símbolo UML</th>
+            <th>¿La parte existe sola?</th>
+            <th>Implementación Java</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:#6ee7b7;font-weight:600;">Asociación</td>
+            <td>→ flecha sólida</td>
+            <td style="color:var(--accent3);">✅ Sí, independiente</td>
+            <td><code style="color:#6ee7b7;background:rgba(16,185,129,.08);padding:2px 6px;border-radius:3px;">Atributo recibido como parámetro</code></td>
+          </tr>
+          <tr>
+            <td style="color:var(--warn);font-weight:600;">Agregación</td>
+            <td>◇ rombo hueco</td>
+            <td style="color:var(--accent3);">✅ Sí, puede sobrevivir</td>
+            <td><code style="color:var(--warn);background:rgba(245,158,11,.08);padding:2px 6px;border-radius:3px;">List&lt;Tipo&gt;, añadidos con add()</code></td>
+          </tr>
+          <tr>
+            <td style="color:#f87171;font-weight:600;">Composición</td>
+            <td>◆ rombo relleno</td>
+            <td style="color:var(--red);">❌ No, muere con el padre</td>
+            <td><code style="color:#f87171;background:rgba(239,68,68,.08);padding:2px 6px;border-radius:3px;">new Tipo() dentro del constructor</code></td>
+          </tr>
+          <tr>
+            <td style="color:#a78bfa;font-weight:600;">Herencia</td>
+            <td>▷ triángulo hueco</td>
+            <td style="color:var(--text3);">— (no aplica)</td>
+            <td><code style="color:#a78bfa;background:rgba(167,139,250,.08);padding:2px 6px;border-radius:3px;">class Hijo extends Padre</code></td>
+          </tr>
+          <tr>
+            <td style="color:var(--accent);font-weight:600;">Realización</td>
+            <td>⇢ línea discontinua</td>
+            <td style="color:var(--text3);">— (no aplica)</td>
+            <td><code style="color:var(--accent);background:rgba(0,212,255,.08);padding:2px 6px;border-radius:3px;">class Clase implements Interfaz</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TARJETAS RESUMEN VISUAL -->
+    <p style="font-size:.72rem;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Resumen visual de flechas</p>
     <div class="card-grid" style="gap:10px;">
       <div class="card">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
@@ -1079,15 +1273,23 @@ habitat = <span class="cls-c">Habitat</span>.SELVA;
           <span class="section-tag tag-green" style="margin:0;">ASOCIACIÓN</span>
         </div>
         <h3>Línea sólida + flecha sólida</h3>
-        <p>Una clase "conoce" a otra. Se implementa como un <strong>atributo</strong> del tipo de la otra clase.</p>
+        <p>Una clase "conoce" a otra. Se implementa como un <strong>atributo</strong> del tipo de la otra clase, recibido desde fuera.</p>
       </div>
       <div class="card">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
-          <svg width="80" height="24" style="flex-shrink:0;"><line x1="10" y1="12" x2="68" y2="12" stroke="#fcd34d" stroke-width="2"/><polygon points="0,7 14,12 0,17" fill="#0c0f1a" stroke="#fcd34d" stroke-width="2"/><polygon points="60,7 75,12 60,17" fill="#0c0f1a" stroke="#fcd34d" stroke-width="2"/></svg>
-          <span class="section-tag tag-warn" style="margin:0;">COMPOSICIÓN</span>
+          <svg width="80" height="24" style="flex-shrink:0;"><polygon points="0,12 10,6 20,12 10,18" fill="#111827" stroke="#fcd34d" stroke-width="1.5"/><line x1="20" y1="12" x2="70" y2="12" stroke="#fcd34d" stroke-width="2"/></svg>
+          <span class="section-tag tag-warn" style="margin:0;">AGREGACIÓN</span>
         </div>
-        <h3>Línea + rombo relleno</h3>
-        <p>La parte no puede existir sin el todo. Si el padre se destruye, el hijo también. Se implementa creando la instancia hija <strong>dentro del constructor</strong> del padre.</p>
+        <h3>Rombo hueco</h3>
+        <p>El todo contiene las partes, pero estas pueden existir de forma independiente. Se añaden desde fuera con <code>add()</code>.</p>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+          <svg width="80" height="24" style="flex-shrink:0;"><polygon points="0,12 10,6 20,12 10,18" fill="#f87171" stroke="#f87171" stroke-width="1.5"/><line x1="20" y1="12" x2="70" y2="12" stroke="#f87171" stroke-width="2"/></svg>
+          <span class="section-tag tag-red" style="margin:0;">COMPOSICIÓN</span>
+        </div>
+        <h3>Rombo relleno</h3>
+        <p>La parte no puede existir sin el todo. Si el padre se destruye, el hijo también. Se crea con <code>new</code> <strong>dentro del constructor</strong> del padre.</p>
       </div>
     </div>
   </div>
@@ -1182,7 +1384,6 @@ function updateCheckStatus() {
   } else {
     cal.className = 'callout info';
   }
-  // Update progress track
   const steps = document.querySelectorAll('.progress-step');
   if (done > 0) steps[7].classList.add('done');
   else steps[7].classList.remove('done');
@@ -1233,13 +1434,11 @@ async function sendMessage() {
   const text  = input.value.trim();
   if (!text) return;
 
-  // Add user message
   addMessage('user', text);
   chatHistory.push({ role: 'user', content: text });
   input.value = '';
   btn.disabled = true;
 
-  // Thinking indicator
   const thinkEl = addMessage('bot', '...', true);
 
   try {
@@ -1271,7 +1470,6 @@ async function sendMessage() {
 }
 
 function formatBotReply(text) {
-  // Convert markdown code blocks to styled spans
   text = text.replace(/```java\n?([\s\S]*?)```/g, (_, code) => {
     const escaped = code.replace(/</g,'&lt;').replace(/>/g,'&gt;');
     return `<div style="background:#0c0f1a;border:1px solid #1e2d45;border-radius:6px;padding:10px 12px;margin:6px 0;font-family:'JetBrains Mono',monospace;font-size:.7rem;line-height:1.7;white-space:pre;overflow-x:auto;color:#cdd6f4;">${escaped}</div>`;
@@ -1280,11 +1478,8 @@ function formatBotReply(text) {
     const escaped = code.replace(/</g,'&lt;').replace(/>/g,'&gt;');
     return `<div style="background:#0c0f1a;border:1px solid #1e2d45;border-radius:6px;padding:8px 12px;margin:4px 0;font-size:.7rem;white-space:pre;overflow-x:auto;color:#cdd6f4;">${escaped}</div>`;
   });
-  // Inline code
   text = text.replace(/`([^`]+)`/g, '<code style="background:rgba(0,212,255,.08);color:#67e8f9;padding:1px 5px;border-radius:3px;font-size:.72rem;">$1</code>');
-  // Bold
   text = text.replace(/\*\*([^*]+)\*\*/g, '<strong style="color:#e8edf5;">$1</strong>');
-  // Line breaks
   text = text.replace(/\n/g, '<br>');
   return text;
 }
@@ -1298,17 +1493,6 @@ function addMessage(role, content, thinking = false) {
   msgs.scrollTop = msgs.scrollHeight;
   return div;
 }
-
-/* ── CODE COPY ────────────────────────────────────────── */
-document.querySelectorAll('.code-copy').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const pre = btn.closest('.code-block').querySelector('pre');
-    navigator.clipboard.writeText(pre.textContent).then(() => {
-      btn.textContent = '✓ copiado';
-      setTimeout(() => { btn.textContent = 'copiar'; }, 1500);
-    });
-  });
-});
 
 /* ── AUTO-RESIZE TEXTAREA ─────────────────────────────── */
 document.getElementById('ai-input').addEventListener('input', function(){
