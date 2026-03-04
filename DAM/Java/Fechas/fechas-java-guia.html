@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fechas en Java — Guía Rápida</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e2a;
+    --border: #252a38;
+    --accent: #5affa2;
+    --accent2: #5ab4ff;
+    --accent3: #ff7b5a;
+    --accent4: #c77dff;
+    --text: #e8ecf5;
+    --muted: #7a8099;
+    --code-bg: #0a0c12;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* HEADER */
+  header {
+    max-width: 1100px;
+    margin: 0 auto 3rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  header .title-block h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+  header .title-block h1 span { color: var(--accent); }
+  header .title-block p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-top: 0.4rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .badge {
+    background: var(--accent);
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  /* GRID */
+  .grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .card.wide { grid-column: span 2; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.9rem 1.1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-header .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .card-header h2 {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .card-body { padding: 1.1rem; flex: 1; }
+
+  /* CLASS PILLS */
+  .class-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+  .class-pill {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.7rem 0.9rem;
+  }
+  .class-pill .name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .class-pill .desc {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* CODE BLOCK */
+  pre {
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    line-height: 1.7;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    white-space: pre;
+  }
+
+  /* INLINE CODE */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.15em 0.4em;
+    font-size: 0.8em;
+  }
+
+  /* METHOD TABLE */
+  .method-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .method-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.55rem 0.7rem;
+    background: var(--code-bg);
+    border-radius: 7px;
+    border: 1px solid var(--border);
+  }
+  .method-row .method-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    min-width: 0;
+    flex-shrink: 0;
+    word-break: break-all;
+  }
+  .method-row .method-desc {
+    font-size: 0.73rem;
+    color: var(--muted);
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  /* COLORS */
+  .c-green  { color: var(--accent);  }
+  .c-blue   { color: var(--accent2); }
+  .c-orange { color: var(--accent3); }
+  .c-purple { color: var(--accent4); }
+
+  .dot-green  { background: var(--accent);  }
+  .dot-blue   { background: var(--accent2); }
+  .dot-orange { background: var(--accent3); }
+  .dot-purple { background: var(--accent4); }
+
+  /* SECTION LABEL */
+  .section-label {
+    max-width: 1100px;
+    margin: 2.5rem auto 0.8rem;
+    font-size: 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* SYNTAX HIGHLIGHT */
+  .kw   { color: var(--accent4); }
+  .cls  { color: var(--accent2); }
+  .mth  { color: var(--accent);  }
+  .str  { color: var(--accent3); }
+  .cmt  { color: #4a5068; font-style: italic; }
+  .num  { color: #ffcf5a; }
+
+  /* IMPORT BLOCK */
+  .import-list {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+  }
+  .import-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.3rem 0.6rem;
+    color: var(--accent4);
+  }
+
+  /* COMPARE TABLE */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 0.74rem; }
+  .compare-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    text-align: left;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .compare-table td {
+    padding: 0.45rem 0.6rem;
+    border-bottom: 1px solid #1d2030;
+    vertical-align: top;
+    line-height: 1.4;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+
+  @media (max-width: 720px) {
+    .card.wide { grid-column: span 1; }
+    .class-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-block">
+    <h1>Fechas en <span>Java</span></h1>
+    <p>import java.time.*  ·  Java 8+  ·  Guía de referencia rápida</p>
+  </div>
+  <span class="badge">java.time</span>
+</header>
+
+<!-- ─── SECCIÓN 1: CLASES ─── -->
+<div class="section-label">01 — Clases principales</div>
+<div class="grid">
+
+  <div class="card wide">
+    <div class="card-header">
+      <span class="dot dot-blue"></span>
+      <h2 class="c-blue">Clases de java.time</h2>
+    </div>
+    <div class="card-body">
+      <div class="class-grid">
+        <div class="class-pill">
+          <div class="name c-blue">LocalDate</div>
+          <div class="desc">Fecha sin hora (año, mes, día). Ej: <code>2024-07-06</code></div>
+        </div>
+        <div class="class-pill">
+          <div class="name c-blue">LocalTime</div>
+          <div class="desc">Hora sin fecha (hora, min, seg). Ej: <code>08:40:15</code></div>
+        </div>
+        <div class="class-pill">
+          <div class="name c-green">LocalDateTime</div>
+          <div class="desc">Fecha + hora sin zona horaria. Combina las dos anteriores.</div>
+        </div>
+        <div class="class-pill">
+          <div class="name c-purple">ZonedDateTime</div>
+          <div class="desc">Como LocalDateTime pero con zona horaria concreta.</div>
+        </div>
+        <div class="class-pill">
+          <div class="name c-orange">Instant</div>
+          <div class="desc">Timestamp UNIX en nanosegundos desde epoch (1/1/1970 UTC).</div>
+        </div>
+        <div class="class-pill">
+          <div class="name c-green">Period</div>
+          <div class="desc">Diferencia entre <em>fechas</em> en días, meses, años.</div>
+        </div>
+        <div class="class-pill">
+          <div class="name c-orange">Duration</div>
+          <div class="desc">Diferencia entre <em>horas</em> en horas, minutos, segundos, nanos.</div>
+        </div>
+        <div class="class-pill">
+          <div class="name c-purple">ChronoUnit</div>
+          <div class="desc">Enumeración de unidades de tiempo para <code>between()</code>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── SECCIÓN 2: IMPORTS ─── -->
+<div class="section-label">02 — Imports necesarios</div>
+<div class="grid">
+  <div class="card wide">
+    <div class="card-header">
+      <span class="dot dot-purple"></span>
+      <h2 class="c-purple">Imports</h2>
+    </div>
+    <div class="card-body">
+      <div class="import-list">
+        <span class="import-tag">import java.time.LocalDate;</span>
+        <span class="import-tag">import java.time.LocalTime;</span>
+        <span class="import-tag">import java.time.LocalDateTime;</span>
+        <span class="import-tag">import java.time.ZonedDateTime;</span>
+        <span class="import-tag">import java.time.Instant;</span>
+        <span class="import-tag">import java.time.Period;</span>
+        <span class="import-tag">import java.time.Duration;</span>
+        <span class="import-tag">import java.time.temporal.ChronoUnit;</span>
+        <span class="import-tag">import java.time.temporal.TemporalAdjusters;</span>
+        <span class="import-tag">import java.time.format.DateTimeFormatter;</span>
+        <span class="import-tag">import java.time.format.FormatStyle;</span>
+        <span class="import-tag">import java.util.Locale;</span>
+        <span class="import-tag">import java.time.Month;</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SECCIÓN 3: MÉTODOS FACTORÍA ─── -->
+<div class="section-label">03 — Métodos factoría (crear objetos)</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="dot dot-green"></span>
+      <h2 class="c-green">now() — fecha/hora actual</h2>
+    </div>
+    <div class="card-body">
+<pre><span class="cls">LocalDate</span>     ld  = <span class="cls">LocalDate</span>.<span class="mth">now</span>();
+<span class="cls">LocalTime</span>     lt  = <span class="cls">LocalTime</span>.<span class="mth">now</span>();
+<span class="cls">LocalDateTime</span> ldt = <span class="cls">LocalDateTime</span>.<span class="mth">now</span>();
+<span class="cls">ZonedDateTime</span> zdt = <span class="cls">ZonedDateTime</span>.<span class="mth">now</span>();
+<span class="cls">Instant</span>       ins = <span class="cls">Instant</span>.<span class="mth">now</span>();
+
+<span class="cmt">// Salida ejemplo (ISO 8601):</span>
+<span class="cmt">// 2024-07-06</span>
+<span class="cmt">// 08:40:15.123</span>
+<span class="cmt">// 2024-07-06T08:40:15.123</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="dot dot-blue"></span>
+      <h2 class="c-blue">of() — fecha/hora concreta</h2>
+    </div>
+    <div class="card-body">
+<pre><span class="cls">LocalDate</span> fecha = <span class="cls">LocalDate</span>.<span class="mth">of</span>(<span class="num">2024</span>, <span class="cls">Month</span>.MAY, <span class="num">15</span>);
+<span class="cmt">// También: .of(2024, 5, 15)</span>
+
+<span class="cls">LocalTime</span> hora = <span class="cls">LocalTime</span>.<span class="mth">of</span>(<span class="num">8</span>, <span class="num">40</span>, <span class="num">15</span>);
+
+<span class="cls">LocalDateTime</span> ldt = <span class="cls">LocalDateTime</span>.<span class="mth">of</span>(
+    <span class="num">2024</span>, <span class="cls">Month</span>.MAY, <span class="num">15</span>, <span class="num">8</span>, <span class="num">40</span>, <span class="num">15</span>
+);
+
+<span class="cmt">// ⚠️ Fecha inválida → lanza excepción:</span>
+<span class="cmt">// LocalDate.of(2019, 2, 29)  ← ERROR</span></pre>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── SECCIÓN 4: GETTERS ─── -->
+<div class="section-label">04 — Extraer partes de una fecha/hora</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="dot dot-orange"></span>
+      <h2 class="c-orange">Métodos getXXX()</h2>
+    </div>
+    <div class="card-body">
+      <div class="method-list">
+        <div class="method-row"><span class="method-name c-orange">getYear()</span><span class="method-desc">Devuelve el año como int</span></div>
+        <div class="method-row"><span class="method-name c-orange">getMonth()</span><span class="method-desc">Devuelve enum Month (JANUARY…)</span></div>
+        <div class="method-row"><span class="method-name c-orange">getMonthValue()</span><span class="method-desc">Devuelve el mes como int (1–12)</span></div>
+        <div class="method-row"><span class="method-name c-orange">getDayOfMonth()</span><span class="method-desc">Día del mes (1–31)</span></div>
+        <div class="method-row"><span class="method-name c-orange">getDayOfWeek()</span><span class="method-desc">Enum DayOfWeek (MONDAY…)</span></div>
+        <div class="method-row"><span class="method-name c-orange">getDayOfYear()</span><span class="method-desc">Día del año (1–365/366)</span></div>
+        <div class="method-row"><span class="method-name c-orange">getHour()</span><span class="method-desc">Hora (0–23)</span></div>
+        <div class="method-row"><span class="method-name c-orange">getMinute()</span><span class="method-desc">Minutos (0–59)</span></div>
+        <div class="method-row"><span class="method-name c-orange">getSecond()</span><span class="method-desc">Segundos (0–59)</span></div>
+        <div class="method-row"><span class="method-name c-orange">getNano()</span><span class="method-desc">Nanosegundos</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="dot dot-orange"></span>
+      <h2 class="c-orange">Ejemplo getters</h2>
+    </div>
+    <div class="card-body">
+<pre><span class="cls">LocalDateTime</span> ldt = <span class="cls">LocalDateTime</span>.<span class="mth">now</span>();
+
+<span class="kw">int</span>    anio  = ldt.<span class="mth">getYear</span>();
+<span class="cls">Month</span>  mes   = ldt.<span class="mth">getMonth</span>();
+<span class="kw">int</span>    dia   = ldt.<span class="mth">getDayOfMonth</span>();
+<span class="cls">DayOfWeek</span> dow = ldt.<span class="mth">getDayOfWeek</span>();
+<span class="kw">int</span>    hora  = ldt.<span class="mth">getHour</span>();
+<span class="kw">int</span>    min   = ldt.<span class="mth">getMinute</span>();
+
+<span class="cls">System</span>.out.<span class="mth">println</span>(dow); <span class="cmt">// MONDAY</span>
+<span class="cls">System</span>.out.<span class="mth">println</span>(mes); <span class="cmt">// JULY</span></pre>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── SECCIÓN 5: SUMA Y RESTA ─── -->
+<div class="section-label">05 — Sumar y restar tiempo</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="dot dot-green"></span>
+      <h2 class="c-green">plus / minus — LocalDate</h2>
+    </div>
+    <div class="card-body">
+      <div class="method-list">
+        <div class="method-row"><span class="method-name c-green">plusDays(n)</span><span class="method-desc">Suma n días</span></div>
+        <div class="method-row"><span class="method-name c-green">minusDays(n)</span><span class="method-desc">Resta n días</span></div>
+        <div class="method-row"><span class="method-name c-green">plusWeeks(n)</span><span class="method-desc">Suma n semanas</span></div>
+        <div class="method-row"><span class="method-name c-green">minusWeeks(n)</span><span class="method-desc">Resta n semanas</span></div>
+        <div class="method-row"><span class="method-name c-green">plusMonths(n)</span><span class="method-desc">Suma n meses</span></div>
+        <div class="method-row"><span class="method-name c-green">minusMonths(n)</span><span class="method-desc">Resta n meses</span></div>
+        <div class="method-row"><span class="method-name c-green">plusYears(n)</span><span class="method-desc">Suma n años</span></div>
+        <div class="method-row"><span class="method-name c-green">minusYears(n)</span><span class="method-desc">Resta n años</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="dot dot-green"></span>
+      <h2 class="c-green">plus / minus — LocalTime</h2>
+    </div>
+    <div class="card-body">
+      <div class="method-list">
+        <div class="method-row"><span class="method-name c-green">plusHours(n)</span><span class="method-desc">Suma n horas</span></div>
+        <div class="method-row"><span class="method-name c-green">minusHours(n)</span><span class="method-desc">Resta n horas</span></div>
+        <div class="method-row"><span class="method-name c-green">plusMinutes(n)</span><span class="method-desc">Suma n minutos</span></div>
+        <div class="method-row"><span class="method-name c-green">minusMinutes(n)</span><span class="method-desc">Resta n minutos</span></div>
+        <div class="method-row"><span class="method-name c-green">plusSeconds(n)</span><span class="method-desc">Suma n segundos</span></div>
+        <div class="method-row"><span class="method-name c-green">minusSeconds(n)</span><span class="method-desc">Resta n segundos</span></div>
+        <div class="method-row"><span class="method-name c-green">plusNanos(n)</span><span class="method-desc">Suma n nanosegundos</span></div>
+        <div class="method-row"><span class="method-name c-green">minusNanos(n)</span><span class="method-desc">Resta n nanosegundos</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="dot dot-green"></span>
+      <h2 class="c-green">Ejemplo suma/resta</h2>
+    </div>
+    <div class="card-body">
+<pre><span class="cls">LocalDate</span> hoy    = <span class="cls">LocalDate</span>.<span class="mth">now</span>();
+<span class="cls">LocalDate</span> manana = hoy.<span class="mth">plusDays</span>(<span class="num">1</span>);
+<span class="cls">LocalDate</span> ayer   = hoy.<span class="mth">minusDays</span>(<span class="num">1</span>);
+<span class="cls">LocalDate</span> mesQ   = hoy.<span class="mth">plusMonths</span>(<span class="num">3</span>);
+
+<span class="cls">LocalTime</span> hora   = <span class="cls">LocalTime</span>.<span class="mth">of</span>(<span class="num">8</span>, <span class="num">0</span>);
+<span class="cls">LocalTime</span> tarde  = hora.<span class="mth">plusHours</span>(<span class="num">6</span>);  <span class="cmt">// 14:00</span>
+
+<span class="cmt">// ⚠️ Son inmutables → siempre nueva instancia</span>
+<span class="cmt">// plusXXX(-n) == minusXXX(n)</span></pre>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── SECCIÓN 6: AJUSTADORES ─── -->
+<div class="section-label">06 — Ajustadores temporales (TemporalAdjusters)</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="dot dot-purple"></span>
+      <h2 class="c-purple">Ajustadores disponibles</h2>
+    </div>
+    <div class="card-body">
+      <div class="method-list">
+        <div class="method-row"><span class="method-name c-purple">firstDayOfMonth()</span><span class="method-desc">Primer día del mes actual</span></div>
+        <div class="method-row"><span class="method-name c-purple">lastDayOfMonth()</span><span class="method-desc">Último día del mes actual</span></div>
+        <div class="method-row"><span class="method-name c-purple">firstDayOfNextMonth()</span><span class="method-desc">Primer día del mes siguiente</span></div>
+        <div class="method-row"><span class="method-name c-purple">firstDayOfNextYear()</span><span class="method-desc">Primer día del año siguiente</span></div>
+        <div class="method-row"><span class="method-name c-purple">firstDayOfYear()</span><span class="method-desc">Primer día del año actual</span></div>
+        <div class="method-row"><span class="method-name c-purple">lastDayOfYear()</span><span class="method-desc">Último día del año actual</span></div>
+        <div class="method-row"><span class="method-name c-purple">next(DayOfWeek)</span><span class="method-desc">Próximo día de la semana indicado</span></div>
+        <div class="method-row"><span class="method-name c-purple">previous(DayOfWeek)</span><span class="method-desc">Anterior día de la semana indicado</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="dot dot-purple"></span>
+      <h2 class="c-purple">Ejemplo with() + ajustadores</h2>
+    </div>
+    <div class="card-body">
+<pre><span class="cls">LocalDate</span> hoy = <span class="cls">LocalDate</span>.<span class="mth">now</span>();
+
+<span class="cmt">// Primer día del mes siguiente</span>
+<span class="cls">LocalDate</span> primero = hoy.<span class="mth">with</span>(
+    <span class="cls">TemporalAdjusters</span>.<span class="mth">firstDayOfNextMonth</span>()
+);
+
+<span class="cmt">// Saber qué día de la semana es</span>
+<span class="cls">DayOfWeek</span> dow = primero.<span class="mth">getDayOfWeek</span>();
+
+<span class="cmt">// Último día del mes actual</span>
+<span class="cls">LocalDate</span> ultimo = hoy.<span class="mth">with</span>(
+    <span class="cls">TemporalAdjusters</span>.<span class="mth">lastDayOfMonth</span>()
+);</pre>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── SECCIÓN 7: DIFERENCIA ENTRE FECHAS ─── -->
+<div class="section-label">07 — Diferencia entre fechas y horas</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="dot dot-orange"></span>
+      <h2 class="c-orange">ChronoUnit.between()</h2>
+    </div>
+    <div class="card-body">
+<pre><span class="cls">LocalDate</span> nacimiento = <span class="cls">LocalDate</span>.<span class="mth">of</span>(<span class="num">1995</span>, <span class="num">3</span>, <span class="num">20</span>);
+<span class="cls">LocalDate</span> hoy = <span class="cls">LocalDate</span>.<span class="mth">now</span>();
+
+<span class="kw">long</span> anios = <span class="cls">ChronoUnit</span>.YEARS.<span class="mth">between</span>(nacimiento, hoy);
+<span class="kw">long</span> dias  = <span class="cls">ChronoUnit</span>.DAYS.<span class="mth">between</span>(nacimiento, hoy);
+<span class="kw">long</span> meses = <span class="cls">ChronoUnit</span>.MONTHS.<span class="mth">between</span>(nacimiento, hoy);
+
+<span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"Años: "</span> + anios);</pre>
+      <div style="margin-top:0.8rem">
+        <div class="method-list">
+          <div class="method-row"><span class="method-name c-orange">YEARS</span><span class="method-desc">Diferencia en años</span></div>
+          <div class="method-row"><span class="method-name c-orange">MONTHS</span><span class="method-desc">Diferencia en meses</span></div>
+          <div class="method-row"><span class="method-name c-orange">DAYS</span><span class="method-desc">Diferencia en días</span></div>
+          <div class="method-row"><span class="method-name c-orange">HOURS</span><span class="method-desc">Diferencia en horas</span></div>
+          <div class="method-row"><span class="method-name c-orange">MINUTES</span><span class="method-desc">Diferencia en minutos</span></div>
+          <div class="method-row"><span class="method-name c-orange">SECONDS</span><span class="method-desc">Diferencia en segundos</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="dot dot-orange"></span>
+      <h2 class="c-orange">Period — diferencia completa</h2>
+    </div>
+    <div class="card-body">
+<pre><span class="cls">LocalDate</span> inicio = <span class="cls">LocalDate</span>.<span class="mth">of</span>(<span class="num">2024</span>, <span class="num">1</span>, <span class="num">1</span>);
+<span class="cls">LocalDate</span> fin    = <span class="cls">LocalDate</span>.<span class="mth">now</span>();
+
+<span class="cmt">// Opción 1: until()</span>
+<span class="cls">Period</span> p1 = inicio.<span class="mth">until</span>(fin);
+
+<span class="cmt">// Opción 2: between()</span>
+<span class="cls">Period</span> p2 = <span class="cls">Period</span>.<span class="mth">between</span>(inicio, fin);
+
+<span class="cls">System</span>.out.<span class="mth">println</span>(p2.<span class="mth">getYears</span>());
+<span class="cls">System</span>.out.<span class="mth">println</span>(p2.<span class="mth">getMonths</span>());
+<span class="cls">System</span>.out.<span class="mth">println</span>(p2.<span class="mth">getDays</span>());
+<span class="cmt">// Ej: "0 años, 3 meses y 7 días"</span></pre>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── SECCIÓN 8: PARSE ─── -->
+<div class="section-label">08 — Parsear fechas (texto → objeto)</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="dot dot-blue"></span>
+      <h2 class="c-blue">parse() — leer desde String</h2>
+    </div>
+    <div class="card-body">
+<pre><span class="cmt">// ISO 8601 por defecto</span>
+<span class="cls">LocalDate</span> d = <span class="cls">LocalDate</span>.<span class="mth">parse</span>(<span class="str">"2024-07-06"</span>);
+<span class="cls">LocalTime</span> t = <span class="cls">LocalTime</span>.<span class="mth">parse</span>(<span class="str">"08:40:15"</span>);
+<span class="cls">LocalDateTime</span> ldt = <span class="cls">LocalDateTime</span>.<span class="mth">parse</span>(
+    <span class="str">"2024-07-06T08:40:15"</span>
+);
+
+<span class="cmt">// Formato personalizado</span>
+<span class="cls">DateTimeFormatter</span> fmt =
+    <span class="cls">DateTimeFormatter</span>.<span class="mth">ofPattern</span>(<span class="str">"dd/MM/yyyy"</span>);
+<span class="cls">LocalDate</span> d2 = <span class="cls">LocalDate</span>.<span class="mth">parse</span>(<span class="str">"06/07/2024"</span>, fmt);</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="dot dot-blue"></span>
+      <h2 class="c-blue">format() — objeto → String</h2>
+    </div>
+    <div class="card-body">
+<pre><span class="cls">LocalDate</span> hoy = <span class="cls">LocalDate</span>.<span class="mth">now</span>();
+
+<span class="cmt">// ISO 8601 (toString por defecto)</span>
+<span class="cls">System</span>.out.<span class="mth">println</span>(hoy);
+<span class="cmt">// → 2024-07-06</span>
+
+<span class="cmt">// Formato español</span>
+<span class="cls">DateTimeFormatter</span> esp =
+    <span class="cls">DateTimeFormatter</span>.<span class="mth">ofPattern</span>(<span class="str">"dd/MM/yyyy"</span>);
+<span class="cls">System</span>.out.<span class="mth">println</span>(hoy.<span class="mth">format</span>(esp));
+<span class="cmt">// → 06/07/2024</span>
+
+<span class="cmt">// Predefinidos de DateTimeFormatter:</span>
+<span class="cmt">// ISO_LOCAL_DATE, ISO_LOCAL_TIME,</span>
+<span class="cmt">// ISO_LOCAL_DATE_TIME, RFC_1123_DATE_TIME...</span></pre>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── SECCIÓN 9: LOCALE ─── -->
+<div class="section-label">09 — Formato con idioma (Locale)</div>
+<div class="grid">
+
+  <div class="card wide">
+    <div class="card-header">
+      <span class="dot dot-purple"></span>
+      <h2 class="c-purple">DateTimeFormatter + Locale en español</h2>
+    </div>
+    <div class="card-body">
+<pre><span class="cls">LocalDateTime</span> ldt = <span class="cls">LocalDateTime</span>.<span class="mth">now</span>();
+
+<span class="cmt">// Locale español de España</span>
+<span class="cls">Locale</span> espana = <span class="kw">new</span> <span class="cls">Locale</span>(<span class="str">"es"</span>, <span class="str">"ES"</span>);
+
+<span class="cls">DateTimeFormatter</span> fmt = <span class="cls">DateTimeFormatter</span>
+    .<span class="mth">ofPattern</span>(<span class="str">"EEEE, dd 'de' MMMM 'de' yyyy 'a las' HH:mm:ss"</span>)
+    .<span class="mth">withLocale</span>(espana);
+
+<span class="cls">System</span>.out.<span class="mth">println</span>(ldt.<span class="mth">format</span>(fmt));
+<span class="cmt">// → lunes, 06 de julio de 2024 a las 08:40:15</span>
+
+<span class="cmt">// Usando FormatStyle (formato corto del sistema)</span>
+<span class="kw">String</span> idioma = <span class="cls">System</span>.<span class="mth">getProperty</span>(<span class="str">"user.language"</span>);
+<span class="kw">String</span> pais   = <span class="cls">System</span>.<span class="mth">getProperty</span>(<span class="str">"user.country"</span>);
+<span class="cls">Locale</span> loc = <span class="kw">new</span> <span class="cls">Locale</span>(idioma, pais);
+<span class="cls">DateTimeFormatter</span> auto = <span class="cls">DateTimeFormatter</span>
+    .<span class="mth">ofLocalizedDateTime</span>(<span class="cls">FormatStyle</span>.SHORT)
+    .<span class="mth">withLocale</span>(loc);
+<span class="cls">System</span>.out.<span class="mth">println</span>(ldt.<span class="mth">format</span>(auto));</pre>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── SECCIÓN 10: TABLA DE PATRONES ─── -->
+<div class="section-label">10 — Símbolos de formato (ofPattern)</div>
+<div class="grid">
+
+  <div class="card wide">
+    <div class="card-header">
+      <span class="dot dot-orange"></span>
+      <h2 class="c-orange">Tabla de patrones DateTimeFormatter</h2>
+    </div>
+    <div class="card-body">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Símbolo</th>
+            <th>Significado</th>
+            <th>Ejemplo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="c-green">yyyy</td><td>Año de 4 dígitos</td><td>2024</td></tr>
+          <tr><td class="c-green">yy</td><td>Año de 2 dígitos</td><td>24</td></tr>
+          <tr><td class="c-blue">MM</td><td>Mes numérico (01–12)</td><td>07</td></tr>
+          <tr><td class="c-blue">MMM</td><td>Mes abreviado</td><td>Jul / jul</td></tr>
+          <tr><td class="c-blue">MMMM</td><td>Nombre completo del mes</td><td>July / julio</td></tr>
+          <tr><td class="c-orange">dd</td><td>Día del mes (01–31)</td><td>06</td></tr>
+          <tr><td class="c-orange">d</td><td>Día del mes sin cero</td><td>6</td></tr>
+          <tr><td class="c-purple">EEE</td><td>Día de la semana abreviado</td><td>Mon / lun</td></tr>
+          <tr><td class="c-purple">EEEE</td><td>Día de la semana completo</td><td>Monday / lunes</td></tr>
+          <tr><td class="c-green">HH</td><td>Hora 24h (00–23)</td><td>08</td></tr>
+          <tr><td class="c-green">hh</td><td>Hora 12h (01–12)</td><td>08</td></tr>
+          <tr><td class="c-blue">mm</td><td>Minutos (00–59)</td><td>40</td></tr>
+          <tr><td class="c-orange">ss</td><td>Segundos (00–59)</td><td>15</td></tr>
+          <tr><td class="c-purple">a</td><td>AM/PM</td><td>AM</td></tr>
+          <tr><td class="c-green">'texto'</td><td>Texto literal (escapado)</td><td>'de', 'a las'</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── SECCIÓN 11: CLASES ANTIGUAS ─── -->
+<div class="section-label">11 — ¿Por qué NO usar las clases antiguas?</div>
+<div class="grid">
+  <div class="card wide">
+    <div class="card-header">
+      <span class="dot dot-orange"></span>
+      <h2 class="c-orange">java.util.Date vs java.time</h2>
+    </div>
+    <div class="card-body">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Característica</th>
+            <th>java.util.Date (antigua ⚠️)</th>
+            <th>java.time (Java 8+ ✅)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Mutabilidad</td><td class="c-orange">Mutable (no thread-safe)</td><td class="c-green">Inmutable (thread-safe)</td></tr>
+          <tr><td>Meses</td><td class="c-orange">0-indexado (enero = 0)</td><td class="c-green">1-indexado o enum Month</td></tr>
+          <tr><td>Años bisiestos</td><td class="c-orange">Manual</td><td class="c-green">Automático</td></tr>
+          <tr><td>Zonas horarias</td><td class="c-orange">Complicado</td><td class="c-green">ZonedDateTime nativo</td></tr>
+          <tr><td>Legibilidad</td><td class="c-orange">API confusa</td><td class="c-green">API fluida e intuitiva</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div style="max-width:1100px;margin:2rem auto 0;text-align:center;font-size:0.68rem;font-family:'JetBrains Mono',monospace;color:#3a3f55;padding-bottom:1rem;">
+  java.time · Java 8+ · IES Virgen del Carmen · Departamento de Informática
+</div>
+
+</body>
+</html>

@@ -34,6 +34,14 @@
             "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Mapas/Clave/Mapas.java"
           }
         ]
+      },
+      "Fechas": {
+        "Teoría": [
+          {
+            "name": "GuiaFechas.html",
+            "url": "DAM/Java/Fechas/fechas-java-guia.html"
+          }
+        ]
       }
     },
     "POO": {
