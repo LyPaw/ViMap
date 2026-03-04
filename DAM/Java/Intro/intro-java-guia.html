@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introducción a Java — Guía Completa</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Barlow+Condensed:wght@600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #1b1b1b;
+    --s1:      #222222;
+    --s2:      #2a2a2a;
+    --border:  #333333;
+    --text:    #e8e4dc;
+    --muted:   #787060;
+    --rule:    #444440;
+    --y:       #f5c842;   /* amarillo */
+    --r:       #e8503a;   /* rojo */
+    --g:       #52c87a;   /* verde */
+    --b:       #5ab4f5;   /* azul */
+    --p:       #c47af5;   /* morado */
+    --o:       #f5924a;   /* naranja */
+    --code-bg: #111111;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 0 0 6rem;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--y);
+    color: #111;
+    padding: 3rem 2.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: 'JAVA';
+    position: absolute;
+    right: -1rem;
+    top: -1.5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14rem;
+    color: rgba(0,0,0,.08);
+    line-height: 1;
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero-label {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 0.5rem;
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 9vw, 7rem);
+    line-height: 0.95;
+    letter-spacing: 1px;
+    color: #111;
+    white-space: nowrap;
+  }
+  .hero h1 em { color: var(--r); font-style: normal; }
+  .hero-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #444;
+    margin-top: 0.8rem;
+    letter-spacing: 0.5px;
+  }
+  .hero-tags {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+    margin-top: 1.2rem;
+  }
+  .hero-tag {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.62rem;
+    background: rgba(0,0,0,.12);
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+  }
+  .hero-brand {
+    position: absolute;
+    right: 0; bottom: 0;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: #111;
+    background: rgba(0,0,0,.1);
+    padding: 0.35rem 0.9rem;
+    letter-spacing: 1px;
+  }
+
+  /* ── WRAPPER ── */
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ── CHAPTER HEAD ── */
+  .chap {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 3rem 0 1rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.6rem;
+  }
+  .chap-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    line-height: 1;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .chap-label {
+    flex: 1;
+  }
+  .chap-label h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text);
+  }
+  .chap-label p {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-top: 0.15rem;
+  }
+  .chap-accent { width: 40px; height: 4px; border-radius: 2px; flex-shrink: 0; }
+
+  /* ── GRID ── */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
+  .grid.g2 { grid-template-columns: repeat(2, 1fr); }
+  .grid.g3 { grid-template-columns: repeat(3, 1fr); }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--s1);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .card.wide { grid-column: span 2; }
+  .card.full { grid-column: 1 / -1; }
+
+  .ct { height: 3px; }
+  .cy { background: var(--y); }
+  .cr { background: var(--r); }
+  .cg { background: var(--g); }
+  .cb { background: var(--b); }
+  .cp { background: var(--p); }
+  .co { background: var(--o); }
+
+  .ch {
+    padding: 0.7rem 1rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .ch h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text);
+  }
+  .tag {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.58rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    font-weight: 500;
+  }
+  .ty { background: rgba(245,200,66,.15); color: var(--y); }
+  .tr { background: rgba(232,80,58,.15);  color: var(--r); }
+  .tg { background: rgba(82,200,122,.15); color: var(--g); }
+  .tb { background: rgba(90,180,245,.15); color: var(--b); }
+  .tp { background: rgba(196,122,245,.15);color: var(--p); }
+  .to { background: rgba(245,146,74,.15); color: var(--o); }
+
+  .cb2 { padding: 1rem; }
+
+  /* ── CODE ── */
+  pre {
+    background: var(--code-bg);
+    border-radius: 3px;
+    padding: 0.85rem 1rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.7rem;
+    line-height: 1.8;
+    overflow-x: auto;
+    white-space: pre;
+    border: 1px solid #1e1e1e;
+  }
+  code {
+    font-family: 'Roboto Mono', monospace;
+    background: var(--s2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 0.1em 0.35em;
+    font-size: 0.82em;
+    color: var(--y);
+  }
+
+  /* ── SYNTAX ── */
+  .kw  { color: #c792ea; }
+  .cls { color: var(--b); }
+  .mth { color: var(--g); }
+  .str { color: var(--y); }
+  .cmt { color: #454540; font-style: italic; }
+  .num { color: var(--o); }
+  .ann { color: var(--o); }
+  .op  { color: var(--r); }
+
+  /* ── METHOD ROWS ── */
+  .mlist { display: flex; flex-direction: column; gap: 0.35rem; }
+  .mrow {
+    display: flex; gap: 0.6rem; align-items: flex-start;
+    padding: 0.4rem 0.65rem;
+    background: var(--s2);
+    border-radius: 2px;
+    border-left: 3px solid transparent;
+  }
+  .mrow.y { border-color: var(--y); }
+  .mrow.r { border-color: var(--r); }
+  .mrow.g { border-color: var(--g); }
+  .mrow.b { border-color: var(--b); }
+  .mrow.p { border-color: var(--p); }
+  .mrow.o { border-color: var(--o); }
+  .mn {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    min-width: 150px;
+    flex-shrink: 0;
+  }
+  .mn.y { color: var(--y); } .mn.r { color: var(--r); }
+  .mn.g { color: var(--g); } .mn.b { color: var(--b); }
+  .mn.p { color: var(--p); } .mn.o { color: var(--o); }
+  .md { font-size: 0.71rem; color: var(--muted); line-height: 1.4; }
+
+  /* ── CALLOUT / WARN ── */
+  .note {
+    border-radius: 2px;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.72rem;
+    margin-top: 0.7rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .note strong {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+  .note-y { background: rgba(245,200,66,.07); border: 1px solid rgba(245,200,66,.2); }
+  .note-y strong { color: var(--y); }
+  .note-r { background: rgba(232,80,58,.07); border: 1px solid rgba(232,80,58,.2); }
+  .note-r strong { color: var(--r); }
+  .note-g { background: rgba(82,200,122,.07); border: 1px solid rgba(82,200,122,.2); }
+  .note-g strong { color: var(--g); }
+  .note-b { background: rgba(90,180,245,.07); border: 1px solid rgba(90,180,245,.2); }
+  .note-b strong { color: var(--b); }
+
+  /* ── TYPE TABLE ── */
+  table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
+  th {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    color: var(--muted);
+  }
+  td {
+    padding: 0.45rem 0.6rem;
+    border-bottom: 1px solid var(--s2);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  td:first-child { font-family: 'Roboto Mono', monospace; color: var(--y); font-size: 0.7rem; }
+  tr:last-child td { border-bottom: none; }
+  .center { text-align: center; }
+
+  /* ── VISIBILITY PILLS ── */
+  .vis-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 0.3rem; }
+  .vis-card { background: var(--s2); border: 1px solid var(--border); border-radius: 3px; padding: 0.5rem 0.6rem; text-align: center; }
+  .vis-card .vc-name { font-family: 'Roboto Mono', monospace; font-size: 0.7rem; font-weight: 500; margin-bottom: 0.3rem; }
+  .vis-card .vc-row { font-size: 0.62rem; display: flex; justify-content: space-between; color: var(--muted); margin-top: 0.15rem; }
+  .ok { color: var(--g); } .no { color: var(--r); }
+
+  /* ── FOOTER ── */
+  footer {
+    max-width: 1100px;
+    margin: 3rem auto 0;
+    padding: 0.7rem 1.5rem;
+    border-top: 1px solid var(--border);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.63rem;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  @media(max-width:720px){
+    .card.wide,.card.full { grid-column: span 1; }
+    .grid.g2,.grid.g3 { grid-template-columns: 1fr; }
+    .vis-grid { grid-template-columns: repeat(2,1fr); }
+    .hero::after { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════ HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">Guía de referencia · Fundamentos</div>
+    <h1>INTRODUCCIÓN A <em>JAVA</em></h1>
+    <div class="hero-sub">Tipos · Variables · Operadores · Control de flujo · Métodos · POO · Herencia · Interfaces · Excepciones</div>
+
+    <div class="hero-brand">LyPaw · Vimap</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ════════════════════════════════════ CAP 1: TIPOS PRIMITIVOS -->
+<div class="chap">
+  <div class="chap-num">01</div>
+  <div class="chap-label">
+    <h2>Tipos primitivos y variables</h2>
+    <p>8 tipos base · sin objetos · almacenados en la pila</p>
+  </div>
+  <div class="chap-accent" style="background:var(--y)"></div>
+</div>
+<div class="grid">
+
+  <div class="card wide">
+    <div class="ct cy"></div>
+    <div class="ch"><h3>Los 8 tipos primitivos</h3><span class="tag ty">primitivos</span></div>
+    <div class="cb2">
+      <table>
+        <thead><tr><th>Tipo</th><th>Tamaño</th><th>Rango / Valores</th><th>Valor por defecto</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>byte</td><td>8 bits</td><td>-128 a 127</td><td>0</td><td><code>byte b = 100;</code></td></tr>
+          <tr><td>short</td><td>16 bits</td><td>-32.768 a 32.767</td><td>0</td><td><code>short s = 30000;</code></td></tr>
+          <tr><td>int</td><td>32 bits</td><td>-2.147M a 2.147M</td><td>0</td><td><code>int n = 42;</code></td></tr>
+          <tr><td>long</td><td>64 bits</td><td>-9.2·10¹⁸ a 9.2·10¹⁸</td><td>0L</td><td><code>long l = 100L;</code></td></tr>
+          <tr><td>float</td><td>32 bits</td><td>~7 dígitos decimales</td><td>0.0f</td><td><code>float f = 3.14f;</code></td></tr>
+          <tr><td>double</td><td>64 bits</td><td>~15 dígitos decimales</td><td>0.0d</td><td><code>double d = 3.14;</code></td></tr>
+          <tr><td>char</td><td>16 bits</td><td>'\u0000' a '\uffff'</td><td>'\u0000'</td><td><code>char c = 'A';</code></td></tr>
+          <tr><td>boolean</td><td>1 bit lógico</td><td>true / false</td><td>false</td><td><code>boolean ok = true;</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cy"></div>
+    <div class="ch"><h3>Declaración de variables</h3><span class="tag ty">variables</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// Sintaxis: tipo nombre = valor;</span>
+<span class="kw">int</span> edad = <span class="num">20</span>;
+<span class="kw">double</span> precio = <span class="num">9.99</span>;
+<span class="kw">boolean</span> activo = <span class="kw">true</span>;
+<span class="kw">char</span> letra = <span class="str">'J'</span>;
+
+<span class="cmt">// var — inferencia de tipo (Java 10+)</span>
+<span class="kw">var</span> nombre = <span class="str">"Java"</span>;   <span class="cmt">// → String</span>
+<span class="kw">var</span> n = <span class="num">42</span>;            <span class="cmt">// → int</span>
+
+<span class="cmt">// Constantes</span>
+<span class="kw">final double</span> PI = <span class="num">3.14159</span>;
+<span class="kw">static final int</span> MAX = <span class="num">100</span>;
+
+<span class="cmt">// Múltiples en una línea</span>
+<span class="kw">int</span> x = <span class="num">1</span>, y = <span class="num">2</span>, z = <span class="num">3</span>;</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct co"></div>
+    <div class="ch"><h3>Casting (conversión de tipos)</h3><span class="tag to">casting</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// Implícito (widening) — automático</span>
+<span class="kw">int</span> i = <span class="num">42</span>;
+<span class="kw">double</span> d = i;     <span class="cmt">// int → double ✅</span>
+<span class="kw">long</span> l = i;       <span class="cmt">// int → long ✅</span>
+
+<span class="cmt">// Explícito (narrowing) — puede perder datos</span>
+<span class="kw">double</span> pi = <span class="num">3.99</span>;
+<span class="kw">int</span> n = (<span class="kw">int</span>) pi;  <span class="cmt">// → 3 (trunca)</span>
+
+<span class="kw">long</span> grande = <span class="num">1234567890L</span>;
+<span class="kw">int</span> chico = (<span class="kw">int</span>) grande;  <span class="cmt">// ⚠ posible pérdida</span>
+
+<span class="cmt">// char ↔ int</span>
+<span class="kw">char</span> c = <span class="str">'A'</span>;
+<span class="kw">int</span> ascii = c;    <span class="cmt">// → 65</span>
+<span class="kw">char</span> c2 = (<span class="kw">char</span>) <span class="num">66</span>; <span class="cmt">// → 'B'</span></pre>
+      <div class="note note-r"><strong>⚠ Orden widening</strong>byte → short → int → long → float → double</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════ CAP 2: STRING -->
+<div class="chap">
+  <div class="chap-num">02</div>
+  <div class="chap-label">
+    <h2>String — Cadenas de texto</h2>
+    <p>Inmutable · objeto · java.lang.String</p>
+  </div>
+  <div class="chap-accent" style="background:var(--g)"></div>
+</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="ct cg"></div>
+    <div class="ch"><h3>Crear y concatenar</h3><span class="tag tg">String</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// Declaración</span>
+<span class="cls">String</span> s1 = <span class="str">"Hola"</span>;
+<span class="cls">String</span> s2 = <span class="kw">new</span> <span class="cls">String</span>(<span class="str">"Mundo"</span>);
+
+<span class="cmt">// Concatenación</span>
+<span class="cls">String</span> s3 = s1 + <span class="str">" "</span> + s2; <span class="cmt">// "Hola Mundo"</span>
+<span class="cls">String</span> s4 = s1.<span class="mth">concat</span>(<span class="str">" Java"</span>);
+
+<span class="cmt">// Text blocks (Java 15+)</span>
+<span class="cls">String</span> json = <span class="str">"""
+    {
+        "nombre": "Java",
+        "version": 21
+    }
+    """</span>;
+
+<span class="cmt">// Comparación (¡nunca con ==!)</span>
+s1.<span class="mth">equals</span>(<span class="str">"Hola"</span>);          <span class="cmt">// → true</span>
+s1.<span class="mth">equalsIgnoreCase</span>(<span class="str">"HOLA"</span>); <span class="cmt">// → true</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cg"></div>
+    <div class="ch"><h3>Métodos principales de String</h3><span class="tag tg">métodos</span></div>
+    <div class="cb2">
+      <div class="mlist">
+        <div class="mrow g"><span class="mn g">length()</span><span class="md">Longitud de la cadena</span></div>
+        <div class="mrow g"><span class="mn g">charAt(i)</span><span class="md">Carácter en posición i</span></div>
+        <div class="mrow g"><span class="mn g">substring(a, b)</span><span class="md">Subcadena desde a hasta b (excl.)</span></div>
+        <div class="mrow g"><span class="mn g">indexOf(s)</span><span class="md">Primera posición de s, o -1</span></div>
+        <div class="mrow g"><span class="mn g">contains(s)</span><span class="md">¿Contiene la subcadena s?</span></div>
+        <div class="mrow g"><span class="mn g">startsWith(s)</span><span class="md">¿Empieza por s?</span></div>
+        <div class="mrow g"><span class="mn g">endsWith(s)</span><span class="md">¿Termina por s?</span></div>
+        <div class="mrow g"><span class="mn g">toUpperCase()</span><span class="md">Todo en mayúsculas</span></div>
+        <div class="mrow g"><span class="mn g">toLowerCase()</span><span class="md">Todo en minúsculas</span></div>
+        <div class="mrow g"><span class="mn g">trim()</span><span class="md">Elimina espacios al inicio y final</span></div>
+        <div class="mrow g"><span class="mn g">replace(a, b)</span><span class="md">Reemplaza todas las ocurrencias de a por b</span></div>
+        <div class="mrow g"><span class="mn g">split(regex)</span><span class="md">Divide en array según separador</span></div>
+        <div class="mrow g"><span class="mn g">isEmpty()</span><span class="md">¿Longitud cero?</span></div>
+        <div class="mrow g"><span class="mn g">isBlank()</span><span class="md">¿Solo espacios? (Java 11+)</span></div>
+        <div class="mrow g"><span class="mn g">valueOf(n)</span><span class="md">Convierte número a String</span></div>
+        <div class="mrow g"><span class="mn g">Integer.parseInt(s)</span><span class="md">String → int</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cg"></div>
+    <div class="ch"><h3>StringBuilder</h3><span class="tag tg">mutable</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// Más eficiente que concatenar con +</span>
+<span class="cls">StringBuilder</span> sb = <span class="kw">new</span> <span class="cls">StringBuilder</span>();
+sb.<span class="mth">append</span>(<span class="str">"Hola"</span>);
+sb.<span class="mth">append</span>(<span class="str">" "</span>);
+sb.<span class="mth">append</span>(<span class="str">"Mundo"</span>);
+sb.<span class="mth">insert</span>(<span class="num">0</span>, <span class="str">"! "</span>);      <span class="cmt">// inserta al inicio</span>
+sb.<span class="mth">delete</span>(<span class="num">0</span>, <span class="num">2</span>);          <span class="cmt">// elimina chars</span>
+sb.<span class="mth">reverse</span>();              <span class="cmt">// invierte</span>
+sb.<span class="mth">replace</span>(<span class="num">0</span>,<span class="num">4</span>,<span class="str">"Bye"</span>);    <span class="cmt">// reemplaza rango</span>
+
+<span class="cls">String</span> resultado = sb.<span class="mth">toString</span>();
+
+<span class="cmt">// String.format — formato printf</span>
+<span class="cls">String</span> msg = <span class="cls">String</span>.<span class="mth">format</span>(
+    <span class="str">"Hola %s, tienes %d años"</span>, nombre, edad
+);</pre>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════ CAP 3: OPERADORES -->
+<div class="chap">
+  <div class="chap-num">03</div>
+  <div class="chap-label">
+    <h2>Operadores</h2>
+    <p>Aritméticos · relacionales · lógicos · bitwise · ternario</p>
+  </div>
+  <div class="chap-accent" style="background:var(--r)"></div>
+</div>
+<div class="grid g3">
+
+  <div class="card">
+    <div class="ct cr"></div>
+    <div class="ch"><h3>Aritméticos</h3><span class="tag tr">+ − * / %</span></div>
+    <div class="cb2">
+<pre><span class="kw">int</span> a = <span class="num">10</span>, b = <span class="num">3</span>;
+a + b  <span class="cmt">// → 13</span>
+a - b  <span class="cmt">// → 7</span>
+a * b  <span class="cmt">// → 30</span>
+a / b  <span class="cmt">// → 3  (entera)</span>
+a % b  <span class="cmt">// → 1  (módulo/resto)</span>
+
+<span class="cmt">// División real</span>
+(<span class="kw">double</span>) a / b  <span class="cmt">// → 3.333…</span>
+
+<span class="cmt">// Incremento / decremento</span>
+a++;   <span class="cmt">// post: usa luego incrementa</span>
+++a;   <span class="cmt">// pre: incrementa luego usa</span>
+a--;   b--;
+
+<span class="cmt">// Asignación compuesta</span>
+a += <span class="num">5</span>; a -= <span class="num">2</span>;
+a *= <span class="num">3</span>; a /= <span class="num">2</span>; a %= <span class="num">4</span>;</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cr"></div>
+    <div class="ch"><h3>Relacionales y lógicos</h3><span class="tag tr">== != > < && ||</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// Relacionales → boolean</span>
+<span class="num">5</span> == <span class="num">5</span>   <span class="cmt">// → true</span>
+<span class="num">5</span> != <span class="num">3</span>   <span class="cmt">// → true</span>
+<span class="num">7</span> > <span class="num">3</span>    <span class="cmt">// → true</span>
+<span class="num">4</span> <= <span class="num">4</span>   <span class="cmt">// → true</span>
+
+<span class="cmt">// Lógicos</span>
+<span class="kw">true</span> && <span class="kw">false</span>  <span class="cmt">// → false (AND)</span>
+<span class="kw">true</span> || <span class="kw">false</span>  <span class="cmt">// → true  (OR)</span>
+!<span class="kw">true</span>          <span class="cmt">// → false (NOT)</span>
+
+<span class="cmt">// Ternario — condición ? si : no</span>
+<span class="kw">int</span> max = (a > b) ? a : b;
+<span class="cls">String</span> msg = (edad >= <span class="num">18</span>)
+    ? <span class="str">"mayor"</span> : <span class="str">"menor"</span>;
+
+<span class="cmt">// instanceof</span>
+obj <span class="kw">instanceof</span> <span class="cls">String</span> <span class="cmt">// → true/false</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cr"></div>
+    <div class="ch"><h3>Precedencia de operadores</h3><span class="tag tr">orden</span></div>
+    <div class="cb2">
+      <div class="mlist">
+        <div class="mrow r"><span class="mn r" style="min-width:30px">1</span><span class="md"><code>() [] .</code> — paréntesis, acceso</span></div>
+        <div class="mrow r"><span class="mn r" style="min-width:30px">2</span><span class="md"><code>++ -- ! ~ (cast)</code> — unarios</span></div>
+        <div class="mrow r"><span class="mn r" style="min-width:30px">3</span><span class="md"><code>* / %</code> — multiplicación, división, módulo</span></div>
+        <div class="mrow r"><span class="mn r" style="min-width:30px">4</span><span class="md"><code>+ -</code> — suma y resta</span></div>
+        <div class="mrow r"><span class="mn r" style="min-width:30px">5</span><span class="md"><code>&lt; &gt; &lt;= &gt;=</code> — relacionales</span></div>
+        <div class="mrow r"><span class="mn r" style="min-width:30px">6</span><span class="md"><code>== !=</code> — igualdad</span></div>
+        <div class="mrow r"><span class="mn r" style="min-width:30px">7</span><span class="md"><code>&&</code> — AND lógico</span></div>
+        <div class="mrow r"><span class="mn r" style="min-width:30px">8</span><span class="md"><code>||</code> — OR lógico</span></div>
+        <div class="mrow r"><span class="mn r" style="min-width:30px">9</span><span class="md"><code>?:</code> — ternario</span></div>
+        <div class="mrow r"><span class="mn r" style="min-width:30px">10</span><span class="md"><code>= += -= *=</code> … — asignación</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════ CAP 4: CONTROL DE FLUJO -->
+<div class="chap">
+  <div class="chap-num">04</div>
+  <div class="chap-label">
+    <h2>Control de flujo</h2>
+    <p>if · switch · for · while · do-while · break · continue</p>
+  </div>
+  <div class="chap-accent" style="background:var(--b)"></div>
+</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="ct cb"></div>
+    <div class="ch"><h3>if / else if / else</h3><span class="tag tb">condicional</span></div>
+    <div class="cb2">
+<pre><span class="kw">int</span> nota = <span class="num">75</span>;
+
+<span class="kw">if</span> (nota >= <span class="num">90</span>) {
+    <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"Sobresaliente"</span>);
+} <span class="kw">else if</span> (nota >= <span class="num">70</span>) {
+    <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"Notable"</span>);
+} <span class="kw">else if</span> (nota >= <span class="num">50</span>) {
+    <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"Aprobado"</span>);
+} <span class="kw">else</span> {
+    <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"Suspenso"</span>);
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cb"></div>
+    <div class="ch"><h3>switch clásico y expresión</h3><span class="tag tb">switch</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// Switch clásico</span>
+<span class="kw">switch</span> (dia) {
+    <span class="kw">case</span> <span class="num">1</span>: <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"Lunes"</span>); <span class="kw">break</span>;
+    <span class="kw">case</span> <span class="num">2</span>: <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"Martes"</span>); <span class="kw">break</span>;
+    <span class="kw">default</span>: <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"Otro"</span>);
+}
+
+<span class="cmt">// Switch expresión (Java 14+)</span>
+<span class="cls">String</span> nombre = <span class="kw">switch</span> (dia) {
+    <span class="kw">case</span> <span class="num">1</span> -> <span class="str">"Lunes"</span>;
+    <span class="kw">case</span> <span class="num">2</span> -> <span class="str">"Martes"</span>;
+    <span class="kw">case</span> <span class="num">6</span>, <span class="num">7</span> -> <span class="str">"Fin de semana"</span>;
+    <span class="kw">default</span> -> <span class="str">"Otro"</span>;
+};</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cb"></div>
+    <div class="ch"><h3>for — bucles</h3><span class="tag tb">iteración</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// For estándar</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i < <span class="num">5</span>; i++) {
+    <span class="cls">System</span>.out.<span class="mth">println</span>(i);
+}
+
+<span class="cmt">// For-each (enhanced for)</span>
+<span class="kw">int</span>[] nums = {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>};
+<span class="kw">for</span> (<span class="kw">int</span> n : nums) {
+    <span class="cls">System</span>.out.<span class="mth">println</span>(n);
+}
+
+<span class="cmt">// Bucle con índice inverso</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = nums.length - <span class="num">1</span>; i >= <span class="num">0</span>; i--) {
+    <span class="cls">System</span>.out.<span class="mth">print</span>(nums[i] + <span class="str">" "</span>);
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cb"></div>
+    <div class="ch"><h3>while · do-while · break · continue</h3><span class="tag tb">bucles</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// while — condición al inicio</span>
+<span class="kw">int</span> i = <span class="num">0</span>;
+<span class="kw">while</span> (i < <span class="num">5</span>) {
+    <span class="cls">System</span>.out.<span class="mth">println</span>(i);
+    i++;
+}
+
+<span class="cmt">// do-while — ejecuta al menos 1 vez</span>
+<span class="kw">do</span> {
+    <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"al menos una vez"</span>);
+    i++;
+} <span class="kw">while</span> (i < <span class="num">3</span>);
+
+<span class="cmt">// break — sale del bucle</span>
+<span class="cmt">// continue — salta a la siguiente iteración</span>
+<span class="kw">for</span> (<span class="kw">int</span> j = <span class="num">0</span>; j < <span class="num">10</span>; j++) {
+    <span class="kw">if</span> (j == <span class="num">5</span>) <span class="kw">break</span>;
+    <span class="kw">if</span> (j % <span class="num">2</span> == <span class="num">0</span>) <span class="kw">continue</span>;
+    <span class="cls">System</span>.out.<span class="mth">print</span>(j + <span class="str">" "</span>); <span class="cmt">// 1 3</span>
+}</pre>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════ CAP 5: MÉTODOS -->
+<div class="chap">
+  <div class="chap-num">05</div>
+  <div class="chap-label">
+    <h2>Métodos</h2>
+    <p>Definición · parámetros · retorno · sobrecarga · recursividad</p>
+  </div>
+  <div class="chap-accent" style="background:var(--o)"></div>
+</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="ct co"></div>
+    <div class="ch"><h3>Estructura de un método</h3><span class="tag to">definición</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// visibilidad retorno nombre(parámetros)</span>
+<span class="kw">public static int</span> <span class="mth">suma</span>(<span class="kw">int</span> a, <span class="kw">int</span> b) {
+    <span class="kw">return</span> a + b;
+}
+
+<span class="cmt">// void — no devuelve nada</span>
+<span class="kw">public static void</span> <span class="mth">saludar</span>(<span class="cls">String</span> nombre) {
+    <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"Hola, "</span> + nombre);
+}
+
+<span class="cmt">// Varargs — número variable de argumentos</span>
+<span class="kw">public static int</span> <span class="mth">sumarTodos</span>(<span class="kw">int</span>... nums) {
+    <span class="kw">int</span> total = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> n : nums) total += n;
+    <span class="kw">return</span> total;
+}
+<span class="mth">sumarTodos</span>(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>); <span class="cmt">// → 10</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct co"></div>
+    <div class="ch"><h3>Sobrecarga y paso de parámetros</h3><span class="tag to">overloading</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// Sobrecarga — mismo nombre, distintos parámetros</span>
+<span class="kw">public static</span> <span class="kw">double</span> <span class="mth">area</span>(<span class="kw">double</span> radio) {
+    <span class="kw">return</span> Math.PI * radio * radio;
+}
+<span class="kw">public static</span> <span class="kw">double</span> <span class="mth">area</span>(<span class="kw">double</span> base, <span class="kw">double</span> h) {
+    <span class="kw">return</span> base * h / <span class="num">2</span>;
+}
+
+<span class="cmt">// Paso por VALOR (primitivos) — copia</span>
+<span class="kw">void</span> <span class="mth">doble</span>(<span class="kw">int</span> n) { n *= <span class="num">2</span>; } <span class="cmt">// NO modifica original</span>
+
+<span class="cmt">// Paso por REFERENCIA (objetos) — apunta al mismo</span>
+<span class="kw">void</span> <span class="mth">renombrar</span>(<span class="cls">Persona</span> p) {
+    p.<span class="mth">setNombre</span>(<span class="str">"Ana"</span>); <span class="cmt">// SÍ modifica el objeto</span>
+}</pre>
+      <div class="note note-y"><strong>Recursividad</strong>Un método que se llama a sí mismo. Necesita un caso base para terminar. Ej: factorial(n) = n * factorial(n-1), base: factorial(0) = 1</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════ CAP 6: POO -->
+<div class="chap">
+  <div class="chap-num">06</div>
+  <div class="chap-label">
+    <h2>Programación Orientada a Objetos</h2>
+    <p>Clases · objetos · constructores · encapsulación · this</p>
+  </div>
+  <div class="chap-accent" style="background:var(--p)"></div>
+</div>
+<div class="grid">
+
+  <div class="card wide">
+    <div class="ct cp"></div>
+    <div class="ch"><h3>Anatomía de una clase</h3><span class="tag tp">clase completa</span></div>
+    <div class="cb2" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+<pre><span class="kw">public class</span> <span class="cls">Persona</span> {
+
+  <span class="cmt">// Atributos (variables de instancia)</span>
+  <span class="kw">private</span> <span class="cls">String</span> nombre;
+  <span class="kw">private int</span> edad;
+  <span class="kw">private static int</span> contador = <span class="num">0</span>;
+
+  <span class="cmt">// Constructor por defecto</span>
+  <span class="kw">public</span> <span class="cls">Persona</span>() {
+      contador++;
+  }
+
+  <span class="cmt">// Constructor con parámetros</span>
+  <span class="kw">public</span> <span class="cls">Persona</span>(<span class="cls">String</span> nombre, <span class="kw">int</span> edad) {
+      <span class="kw">this</span>.nombre = nombre;
+      <span class="kw">this</span>.edad = edad;
+      contador++;
+  }
+
+  <span class="cmt">// Constructor encadenado con this()</span>
+  <span class="kw">public</span> <span class="cls">Persona</span>(<span class="cls">String</span> nombre) {
+      <span class="kw">this</span>(nombre, <span class="num">0</span>);
+  }
+}</pre>
+<pre>  <span class="cmt">// Getters (accesores)</span>
+  <span class="kw">public</span> <span class="cls">String</span> <span class="mth">getNombre</span>() {
+      <span class="kw">return</span> nombre;
+  }
+  <span class="kw">public int</span> <span class="mth">getEdad</span>() {
+      <span class="kw">return</span> edad;
+  }
+
+  <span class="cmt">// Setters (mutadores)</span>
+  <span class="kw">public void</span> <span class="mth">setNombre</span>(<span class="cls">String</span> nombre) {
+      <span class="kw">this</span>.nombre = nombre;
+  }
+
+  <span class="cmt">// Método estático</span>
+  <span class="kw">public static int</span> <span class="mth">getContador</span>() {
+      <span class="kw">return</span> contador;
+  }
+
+  <span class="cmt">// toString</span>
+  <span class="ann">@Override</span>
+  <span class="kw">public</span> <span class="cls">String</span> <span class="mth">toString</span>() {
+      <span class="kw">return</span> nombre + <span class="str">" ("</span> + edad + <span class="str">")"</span>;
+  }</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cp"></div>
+    <div class="ch"><h3>Crear y usar objetos</h3><span class="tag tp">instancias</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// Crear objetos con new</span>
+<span class="cls">Persona</span> p1 = <span class="kw">new</span> <span class="cls">Persona</span>(<span class="str">"Ana"</span>, <span class="num">25</span>);
+<span class="cls">Persona</span> p2 = <span class="kw">new</span> <span class="cls">Persona</span>(<span class="str">"Carlos"</span>);
+<span class="cls">Persona</span> p3 = <span class="kw">new</span> <span class="cls">Persona</span>();
+
+<span class="cmt">// Usar métodos</span>
+p1.<span class="mth">getNombre</span>();   <span class="cmt">// → "Ana"</span>
+p1.<span class="mth">setNombre</span>(<span class="str">"Andrea"</span>);
+<span class="cls">System</span>.out.<span class="mth">println</span>(p1); <span class="cmt">// llama toString()</span>
+
+<span class="cmt">// Miembro estático — con nombre de clase</span>
+<span class="cls">Persona</span>.<span class="mth">getContador</span>(); <span class="cmt">// → 3</span>
+
+<span class="cmt">// null — referencia vacía</span>
+<span class="cls">Persona</span> pNull = <span class="kw">null</span>;
+<span class="cmt">// pNull.getNombre(); → NullPointerException ❌</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cp"></div>
+    <div class="ch"><h3>Modificadores de acceso</h3><span class="tag tp">visibilidad</span></div>
+    <div class="cb2">
+      <div class="vis-grid">
+        <div class="vis-card">
+          <div class="vc-name" style="color:var(--g)">public</div>
+          <div class="vc-row"><span>Misma clase</span><span class="ok">✓</span></div>
+          <div class="vc-row"><span>Mismo paquete</span><span class="ok">✓</span></div>
+          <div class="vc-row"><span>Subclase</span><span class="ok">✓</span></div>
+          <div class="vc-row"><span>Cualquiera</span><span class="ok">✓</span></div>
+        </div>
+        <div class="vis-card">
+          <div class="vc-name" style="color:var(--b)">protected</div>
+          <div class="vc-row"><span>Misma clase</span><span class="ok">✓</span></div>
+          <div class="vc-row"><span>Mismo paquete</span><span class="ok">✓</span></div>
+          <div class="vc-row"><span>Subclase</span><span class="ok">✓</span></div>
+          <div class="vc-row"><span>Cualquiera</span><span class="no">✗</span></div>
+        </div>
+        <div class="vis-card">
+          <div class="vc-name" style="color:var(--y)">(default)</div>
+          <div class="vc-row"><span>Misma clase</span><span class="ok">✓</span></div>
+          <div class="vc-row"><span>Mismo paquete</span><span class="ok">✓</span></div>
+          <div class="vc-row"><span>Subclase</span><span class="no">✗</span></div>
+          <div class="vc-row"><span>Cualquiera</span><span class="no">✗</span></div>
+        </div>
+        <div class="vis-card">
+          <div class="vc-name" style="color:var(--r)">private</div>
+          <div class="vc-row"><span>Misma clase</span><span class="ok">✓</span></div>
+          <div class="vc-row"><span>Mismo paquete</span><span class="no">✗</span></div>
+          <div class="vc-row"><span>Subclase</span><span class="no">✗</span></div>
+          <div class="vc-row"><span>Cualquiera</span><span class="no">✗</span></div>
+        </div>
+      </div>
+      <div class="note note-b" style="margin-top:0.7rem"><strong>Encapsulación</strong>Atributos siempre <code>private</code>, acceso solo a través de getters/setters públicos.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════ CAP 7: HERENCIA -->
+<div class="chap">
+  <div class="chap-num">07</div>
+  <div class="chap-label">
+    <h2>Herencia y Polimorfismo</h2>
+    <p>extends · super · @Override · abstract · final</p>
+  </div>
+  <div class="chap-accent" style="background:var(--y)"></div>
+</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="ct cy"></div>
+    <div class="ch"><h3>extends y super</h3><span class="tag ty">herencia</span></div>
+    <div class="cb2">
+<pre><span class="kw">public class</span> <span class="cls">Animal</span> {
+    <span class="kw">protected</span> <span class="cls">String</span> nombre;
+
+    <span class="kw">public</span> <span class="cls">Animal</span>(<span class="cls">String</span> nombre) {
+        <span class="kw">this</span>.nombre = nombre;
+    }
+    <span class="kw">public void</span> <span class="mth">hablar</span>() {
+        <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"..."</span>);
+    }
+}
+
+<span class="kw">public class</span> <span class="cls">Perro</span> <span class="kw">extends</span> <span class="cls">Animal</span> {
+    <span class="kw">public</span> <span class="cls">Perro</span>(<span class="cls">String</span> nombre) {
+        <span class="kw">super</span>(nombre); <span class="cmt">// llama al padre</span>
+    }
+    <span class="ann">@Override</span>
+    <span class="kw">public void</span> <span class="mth">hablar</span>() {
+        <span class="cls">System</span>.out.<span class="mth">println</span>(nombre + <span class="str">": ¡Guau!"</span>);
+    }
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cy"></div>
+    <div class="ch"><h3>Clases abstractas</h3><span class="tag ty">abstract</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// No se puede instanciar directamente</span>
+<span class="kw">public abstract class</span> <span class="cls">Figura</span> {
+    <span class="kw">protected</span> <span class="cls">String</span> color;
+
+    <span class="cmt">// Método abstracto — sin implementación</span>
+    <span class="kw">public abstract double</span> <span class="mth">area</span>();
+
+    <span class="cmt">// Método concreto — con implementación</span>
+    <span class="kw">public void</span> <span class="mth">mostrarColor</span>() {
+        <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"Color: "</span> + color);
+    }
+}
+
+<span class="kw">public class</span> <span class="cls">Circulo</span> <span class="kw">extends</span> <span class="cls">Figura</span> {
+    <span class="kw">private double</span> radio;
+    <span class="ann">@Override</span>
+    <span class="kw">public double</span> <span class="mth">area</span>() {
+        <span class="kw">return</span> Math.PI * radio * radio;
+    }
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cy"></div>
+    <div class="ch"><h3>Polimorfismo</h3><span class="tag ty">polimorfismo</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// Variable de tipo padre → objeto hijo</span>
+<span class="cls">Animal</span> a = <span class="kw">new</span> <span class="cls">Perro</span>(<span class="str">"Rex"</span>);
+a.<span class="mth">hablar</span>(); <span class="cmt">// → "Rex: ¡Guau!" (del hijo)</span>
+
+<span class="cmt">// Array polimórfico</span>
+<span class="cls">Animal</span>[] animales = {
+    <span class="kw">new</span> <span class="cls">Perro</span>(<span class="str">"Rex"</span>),
+    <span class="kw">new</span> <span class="cls">Gato</span>(<span class="str">"Misu"</span>),
+    <span class="kw">new</span> <span class="cls">Pájaro</span>(<span class="str">"Pico"</span>)
+};
+<span class="kw">for</span> (<span class="cls">Animal</span> animal : animales) {
+    animal.<span class="mth">hablar</span>(); <span class="cmt">// cada uno habla a su manera</span>
+}
+
+<span class="cmt">// Casting de objetos</span>
+<span class="kw">if</span> (a <span class="kw">instanceof</span> <span class="cls">Perro</span> p) {
+    p.<span class="mth">buscarPalo</span>(); <span class="cmt">// Java 16+ pattern matching</span>
+}</pre>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════ CAP 8: INTERFACES -->
+<div class="chap">
+  <div class="chap-num">08</div>
+  <div class="chap-label">
+    <h2>Interfaces y Clases internas</h2>
+    <p>interface · implements · default · Enum · Record</p>
+  </div>
+  <div class="chap-accent" style="background:var(--g)"></div>
+</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="ct cg"></div>
+    <div class="ch"><h3>Interface</h3><span class="tag tg">contrato</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// Interface — contrato de métodos</span>
+<span class="kw">public interface</span> <span class="cls">Volador</span> {
+    <span class="kw">void</span> <span class="mth">volar</span>(); <span class="cmt">// abstracto por defecto</span>
+
+    <span class="cmt">// Método default (Java 8+)</span>
+    <span class="kw">default void</span> <span class="mth">aterrizar</span>() {
+        <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"Aterrizando..."</span>);
+    }
+}
+
+<span class="cmt">// Una clase puede implementar VARIAS interfaces</span>
+<span class="kw">public class</span> <span class="cls">Avion</span> <span class="kw">extends</span> <span class="cls">Vehiculo</span>
+                   <span class="kw">implements</span> <span class="cls">Volador</span>, <span class="cls">Transportable</span> {
+    <span class="ann">@Override</span>
+    <span class="kw">public void</span> <span class="mth">volar</span>() {
+        <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"¡Despegando!"</span>);
+    }
+}</pre>
+      <div class="note note-g"><strong>interface vs abstract</strong>Interface: solo contrato, múltiple. Abstract: puede tener estado, solo una herencia.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cg"></div>
+    <div class="ch"><h3>Enum · Record</h3><span class="tag tg">tipos especiales</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// Enum — constantes tipadas</span>
+<span class="kw">public enum</span> <span class="cls">DiaSemana</span> {
+    LUNES, MARTES, MIERCOLES,
+    JUEVES, VIERNES, SABADO, DOMINGO;
+
+    <span class="kw">public boolean</span> <span class="mth">esFinDeSemana</span>() {
+        <span class="kw">return this</span> == SABADO || <span class="kw">this</span> == DOMINGO;
+    }
+}
+<span class="cls">DiaSemana</span> d = <span class="cls">DiaSemana</span>.LUNES;
+d.<span class="mth">esFinDeSemana</span>(); <span class="cmt">// → false</span>
+d.<span class="mth">name</span>();          <span class="cmt">// → "LUNES"</span>
+d.<span class="mth">ordinal</span>();       <span class="cmt">// → 0</span>
+
+<span class="cmt">// Record (Java 16+) — clase de datos inmutable</span>
+<span class="kw">public record</span> <span class="cls">Punto</span>(<span class="kw">double</span> x, <span class="kw">double</span> y) {}
+<span class="cls">Punto</span> p = <span class="kw">new</span> <span class="cls">Punto</span>(<span class="num">3.0</span>, <span class="num">4.0</span>);
+p.<span class="mth">x</span>(); p.<span class="mth">y</span>(); <span class="cmt">// getters automáticos</span></pre>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════ CAP 9: EXCEPCIONES -->
+<div class="chap">
+  <div class="chap-num">09</div>
+  <div class="chap-label">
+    <h2>Excepciones</h2>
+    <p>try · catch · finally · throw · throws · checked vs unchecked</p>
+  </div>
+  <div class="chap-accent" style="background:var(--r)"></div>
+</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="ct cr"></div>
+    <div class="ch"><h3>try / catch / finally</h3><span class="tag tr">manejo</span></div>
+    <div class="cb2">
+<pre><span class="kw">try</span> {
+    <span class="kw">int</span> resultado = <span class="num">10</span> / <span class="num">0</span>;  <span class="cmt">// lanza excepción</span>
+} <span class="kw">catch</span> (<span class="cls">ArithmeticException</span> e) {
+    <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"División por cero: "</span> + e.<span class="mth">getMessage</span>());
+} <span class="kw">catch</span> (<span class="cls">NullPointerException</span> e) {
+    <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"Null: "</span> + e.<span class="mth">getMessage</span>());
+} <span class="kw">finally</span> {
+    <span class="cmt">// Siempre se ejecuta, haya o no excepción</span>
+    <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"fin del bloque"</span>);
+}
+
+<span class="cmt">// Multi-catch (Java 7+)</span>
+<span class="kw">catch</span> (<span class="cls">IOException</span> | <span class="cls">SQLException</span> e) { ... }
+
+<span class="cmt">// try-with-resources (cierre automático)</span>
+<span class="kw">try</span> (<span class="cls">FileReader</span> fr = <span class="kw">new</span> <span class="cls">FileReader</span>(<span class="str">"f.txt"</span>)) {
+    <span class="cmt">// fr se cierra automáticamente</span>
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cr"></div>
+    <div class="ch"><h3>throw · throws · excepciones propias</h3><span class="tag tr">lanzar</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// throw — lanzar una excepción</span>
+<span class="kw">public void</span> <span class="mth">setEdad</span>(<span class="kw">int</span> edad) {
+    <span class="kw">if</span> (edad < <span class="num">0</span>)
+        <span class="kw">throw new</span> <span class="cls">IllegalArgumentException</span>(
+            <span class="str">"Edad no puede ser negativa"</span>
+        );
+    <span class="kw">this</span>.edad = edad;
+}
+
+<span class="cmt">// throws — declara excepciones comprobadas</span>
+<span class="kw">public void</span> <span class="mth">leerArchivo</span>(<span class="cls">String</span> ruta)
+        <span class="kw">throws</span> <span class="cls">IOException</span> {
+    <span class="cmt">// puede lanzar IOException</span>
+}
+
+<span class="cmt">// Excepción personalizada</span>
+<span class="kw">public class</span> <span class="cls">SaldoInsuficienteException</span>
+        <span class="kw">extends</span> <span class="cls">Exception</span> {
+    <span class="kw">public</span> <span class="cls">SaldoInsuficienteException</span>(<span class="cls">String</span> msg) {
+        <span class="kw">super</span>(msg);
+    }
+}</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cr"></div>
+    <div class="ch"><h3>Excepciones comunes</h3><span class="tag tr">catálogo</span></div>
+    <div class="cb2">
+      <div class="mlist">
+        <div class="mrow r"><span class="mn r">NullPointerException</span><span class="md">Acceso a referencia null</span></div>
+        <div class="mrow r"><span class="mn r">ArrayIndexOutOfBoundsException</span><span class="md">Índice fuera de límites del array</span></div>
+        <div class="mrow r"><span class="mn r">ClassCastException</span><span class="md">Casting inválido entre tipos</span></div>
+        <div class="mrow r"><span class="mn r">ArithmeticException</span><span class="md">División por cero</span></div>
+        <div class="mrow r"><span class="mn r">NumberFormatException</span><span class="md">Parseo de String a número inválido</span></div>
+        <div class="mrow r"><span class="mn r">IllegalArgumentException</span><span class="md">Parámetro inválido</span></div>
+        <div class="mrow r"><span class="mn r">StackOverflowError</span><span class="md">Recursión infinita</span></div>
+        <div class="mrow r"><span class="mn r">IOException</span><span class="md">Error de entrada/salida (checked)</span></div>
+        <div class="mrow r"><span class="mn r">SQLException</span><span class="md">Error de base de datos (checked)</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════ CAP 10: CLASES ÚTILES -->
+<div class="chap">
+  <div class="chap-num">10</div>
+  <div class="chap-label">
+    <h2>Clases de utilidad esenciales</h2>
+    <p>Math · Scanner · Random · Wrappers</p>
+  </div>
+  <div class="chap-accent" style="background:var(--b)"></div>
+</div>
+<div class="grid">
+
+  <div class="card">
+    <div class="ct cb"></div>
+    <div class="ch"><h3>Math</h3><span class="tag tb">java.lang.Math</span></div>
+    <div class="cb2">
+      <div class="mlist">
+        <div class="mrow b"><span class="mn b">Math.abs(x)</span><span class="md">Valor absoluto</span></div>
+        <div class="mrow b"><span class="mn b">Math.max(a, b)</span><span class="md">Máximo de dos valores</span></div>
+        <div class="mrow b"><span class="mn b">Math.min(a, b)</span><span class="md">Mínimo de dos valores</span></div>
+        <div class="mrow b"><span class="mn b">Math.pow(base, exp)</span><span class="md">Potencia: base^exp</span></div>
+        <div class="mrow b"><span class="mn b">Math.sqrt(x)</span><span class="md">Raíz cuadrada</span></div>
+        <div class="mrow b"><span class="mn b">Math.round(x)</span><span class="md">Redondeo al entero más cercano</span></div>
+        <div class="mrow b"><span class="mn b">Math.floor(x)</span><span class="md">Redondeo hacia abajo</span></div>
+        <div class="mrow b"><span class="mn b">Math.ceil(x)</span><span class="md">Redondeo hacia arriba</span></div>
+        <div class="mrow b"><span class="mn b">Math.random()</span><span class="md">Número aleatorio [0.0, 1.0)</span></div>
+        <div class="mrow b"><span class="mn b">Math.PI</span><span class="md">Constante π = 3.14159…</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cb"></div>
+    <div class="ch"><h3>Scanner · Random</h3><span class="tag tb">entrada / azar</span></div>
+    <div class="cb2">
+<pre><span class="cmt">// Scanner — leer entrada del usuario</span>
+<span class="kw">import</span> java.util.Scanner;
+<span class="cls">Scanner</span> sc = <span class="kw">new</span> <span class="cls">Scanner</span>(<span class="cls">System</span>.in);
+
+<span class="cls">String</span> txt  = sc.<span class="mth">nextLine</span>();   <span class="cmt">// línea completa</span>
+<span class="cls">String</span> pal  = sc.<span class="mth">next</span>();       <span class="cmt">// palabra</span>
+<span class="kw">int</span>    n    = sc.<span class="mth">nextInt</span>();    <span class="cmt">// entero</span>
+<span class="kw">double</span> d    = sc.<span class="mth">nextDouble</span>(); <span class="cmt">// decimal</span>
+sc.<span class="mth">close</span>();
+
+<span class="cmt">// Random — números aleatorios</span>
+<span class="kw">import</span> java.util.Random;
+<span class="cls">Random</span> rand = <span class="kw">new</span> <span class="cls">Random</span>();
+
+rand.<span class="mth">nextInt</span>(<span class="num">10</span>);      <span class="cmt">// 0..9</span>
+rand.<span class="mth">nextInt</span>(<span class="num">6</span>) + <span class="num">1</span>;  <span class="cmt">// 1..6 (dado)</span>
+rand.<span class="mth">nextDouble</span>();     <span class="cmt">// 0.0..1.0</span>
+rand.<span class="mth">nextBoolean</span>();    <span class="cmt">// true/false</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct co"></div>
+    <div class="ch"><h3>Clases Wrapper</h3><span class="tag to">autoboxing</span></div>
+    <div class="cb2">
+      <table>
+        <thead><tr><th>Primitivo</th><th>Wrapper</th><th>Método útil</th></tr></thead>
+        <tbody>
+          <tr><td>int</td><td><code>Integer</code></td><td><code>Integer.parseInt(s)</code></td></tr>
+          <tr><td>double</td><td><code>Double</code></td><td><code>Double.parseDouble(s)</code></td></tr>
+          <tr><td>boolean</td><td><code>Boolean</code></td><td><code>Boolean.parseBoolean(s)</code></td></tr>
+          <tr><td>char</td><td><code>Character</code></td><td><code>Character.isDigit(c)</code></td></tr>
+          <tr><td>long</td><td><code>Long</code></td><td><code>Long.parseLong(s)</code></td></tr>
+        </tbody>
+      </table>
+<pre style="margin-top:0.7rem"><span class="cmt">// Autoboxing — primitivo ↔ wrapper automático</span>
+<span class="cls">Integer</span> x = <span class="num">42</span>;       <span class="cmt">// boxing automático</span>
+<span class="kw">int</span> n = x;            <span class="cmt">// unboxing automático</span>
+<span class="cls">Integer</span>.<span class="mth">MAX_VALUE</span>;     <span class="cmt">// → 2147483647</span>
+<span class="cls">Integer</span>.<span class="mth">MIN_VALUE</span>;     <span class="cmt">// → -2147483648</span></pre>
+    </div>
+  </div>
+
+</div>
+
+</div><!-- /wrap -->
+
+<footer>
+  <span>Introducción a Java · Tipos · POO · Herencia · Interfaces · Excepciones</span>
+  <span>LyPaw · Vimap</span>
+</footer>
+
+</body>
+</html>

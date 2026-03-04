@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaFX — Documentación ViMap</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Share+Tech+Mono&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0d13; --s1: #0f1420; --s2: #141b2d; --border: #1e2a40;
+    --text: #c8d4e8; --muted: #5a6880; --bright: #e0eaff;
+    --a: #00d2ff; --b: #ff6b6b; --c: #ffd93d; --d: #6bcb77;
+    --code-bg: #060810; --code-fg: #b8c8e8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding: 2rem 1.5rem 5rem; }
+
+  /* HEADER */
+  header { max-width: 1100px; margin: 0 auto 2.5rem; position: relative; overflow: hidden; }
+  .h-bg { background: var(--s1); border: 1px solid var(--border); border-radius: 8px; padding: 2rem 2rem 2rem; position: relative; }
+  .h-bg::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--a), var(--b), var(--c), var(--d)); }
+  .h-row { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
+  .h-logo { font-family: 'Chakra Petch', sans-serif; font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, var(--a), var(--d)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; }
+  .h-text h1 { font-family: 'Chakra Petch', sans-serif; font-size: clamp(1.4rem,3.5vw,2.2rem); font-weight: 700; color: var(--bright); }
+  .h-text p { font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; color: var(--muted); margin-top: 0.3rem; }
+  .h-meta { margin-left: auto; display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-end; }
+  .pill { font-family: 'Share Tech Mono', monospace; font-size: 0.62rem; padding: 0.2rem 0.6rem; border-radius: 20px; border: 1px solid; }
+  .pill-a { border-color: var(--a); color: var(--a); }
+  .pill-b { border-color: var(--b); color: var(--b); }
+  .pill-c { border-color: var(--c); color: var(--c); }
+  .h-chapters { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+  .ch-pill { font-family: 'Share Tech Mono', monospace; font-size: 0.62rem; padding: 0.25rem 0.7rem; background: var(--s2); border: 1px solid var(--border); border-radius: 3px; color: var(--muted); }
+  .ch-pill:first-child { color: var(--a); border-color: var(--a); }
+
+  /* SECTION BAR */
+  .sbar { max-width: 1100px; margin: 2.5rem auto 1rem; display: flex; align-items: center; gap: 0.8rem; }
+  .sbar .num { font-family: 'Chakra Petch', sans-serif; font-size: 0.7rem; font-weight: 700; color: var(--a); border: 1px solid var(--a); padding: 0.15rem 0.5rem; border-radius: 3px; }
+  .sbar h2 { font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); }
+  .sbar::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* GRID */
+  .grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
+  .card { background: var(--s1); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .card.wide { grid-column: span 2; }
+  .ct { height: 2px; }
+  .cta { background: var(--a); } .ctb { background: var(--b); } .ctc { background: var(--c); } .ctd { background: var(--d); }
+  .ch { padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .ch h3 { font-family: 'Chakra Petch', sans-serif; font-size: 0.75rem; font-weight: 600; color: var(--bright); letter-spacing: 1px; }
+  .tag { font-family: 'Share Tech Mono', monospace; font-size: 0.58rem; padding: 0.15rem 0.5rem; border-radius: 2px; }
+  .ta { background: rgba(0,210,255,.12); color: var(--a); border: 1px solid rgba(0,210,255,.2); }
+  .tb { background: rgba(255,107,107,.12); color: var(--b); border: 1px solid rgba(255,107,107,.2); }
+  .tc { background: rgba(255,217,61,.12); color: var(--c); border: 1px solid rgba(255,217,61,.2); }
+  .td { background: rgba(107,203,119,.12); color: var(--d); border: 1px solid rgba(107,203,119,.2); }
+  .cb { padding: 1rem; }
+  pre { background: var(--code-bg); color: var(--code-fg); border-radius: 4px; padding: 0.9rem 1rem; font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; line-height: 1.75; overflow-x: auto; white-space: pre; border: 1px solid var(--border); }
+  code { font-family: 'Share Tech Mono', monospace; background: var(--s2); border: 1px solid var(--border); border-radius: 3px; padding: 0.1em 0.35em; font-size: 0.8em; color: var(--a); }
+  .mlist { display: flex; flex-direction: column; gap: 0.3rem; }
+  .mrow { display: flex; gap: 0.6rem; align-items: flex-start; padding: 0.4rem 0.6rem; background: var(--s2); border-radius: 3px; border-left: 2px solid transparent; }
+  .mrow.a { border-color: var(--a); } .mrow.b { border-color: var(--b); } .mrow.c { border-color: var(--c); } .mrow.d { border-color: var(--d); }
+  .mn { font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; min-width: 180px; flex-shrink: 0; }
+  .mn.a { color: var(--a); } .mn.b { color: var(--b); } .mn.c { color: var(--c); } .mn.d { color: var(--d); }
+  .md { font-size: 0.7rem; color: var(--muted); line-height: 1.4; }
+  .warn { background: rgba(255,107,107,.08); border: 1px solid rgba(255,107,107,.2); border-radius: 4px; padding: 0.55rem 0.85rem; font-size: 0.72rem; margin-top: 0.7rem; line-height: 1.5; color: var(--text); }
+  .warn strong { color: var(--b); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 0.2rem; }
+  .tip { background: rgba(0,210,255,.06); border: 1px solid rgba(0,210,255,.15); border-radius: 4px; padding: 0.55rem 0.85rem; font-size: 0.72rem; margin-top: 0.7rem; line-height: 1.5; color: var(--text); }
+  .tip strong { color: var(--a); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 0.2rem; }
+  .checklist { display: flex; flex-direction: column; gap: 0.4rem; }
+  .check { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.73rem; }
+  .check .icon { color: var(--d); font-size: 0.8rem; flex-shrink: 0; margin-top: 0.05rem; }
+  .check .label { font-family: 'Share Tech Mono', monospace; color: var(--a); min-width: 140px; font-size: 0.68rem; }
+  .check .desc { color: var(--muted); line-height: 1.4; }
+  .layer-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; margin-top: 0.5rem; }
+  .layer-table th { font-family: 'Share Tech Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--border); text-align: left; color: var(--muted); }
+  .layer-table td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+  .layer-table td:first-child { font-family: 'Share Tech Mono', monospace; color: var(--c); font-size: 0.7rem; }
+  .layer-table tr:last-child td { border-bottom: none; }
+  .kw { color: #c792ea; } .cls { color: var(--a); } .mth { color: var(--d); } .str { color: var(--c); } .cmt { color: #2e3f5a; font-style: italic; } .num { color: var(--b); } .ann { color: #ffb86c; }
+  footer { max-width: 1100px; margin: 2.5rem auto 0; border-top: 1px solid var(--border); padding-top: 0.6rem; font-family: 'Share Tech Mono', monospace; font-size: 0.65rem; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.3rem; }
+  @media(max-width:700px){ .card.wide{grid-column:span 1;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-bg">
+    <div class="h-row">
+      <div class="h-logo">ViMap</div>
+      <div class="h-text">
+        <h1>Documentación JavaFX</h1>
+        <p>Arquitectura MVC · Layouts · CSS · Eventos · FXML · Animaciones · Base de datos</p>
+      </div>
+      <div class="h-meta">
+        <span class="pill pill-a">v1.0 · 2025</span>
+        <span class="pill pill-b">Uso interno</span>
+        <span class="pill pill-c">LyPaw · Vimap</span>
+      </div>
+    </div>
+    <div class="h-chapters">
+      <span class="ch-pill">Índice</span>
+      <span class="ch-pill">1. MVC + Ciclo de vida</span>
+      <span class="ch-pill">2. Layouts</span>
+      <span class="ch-pill">3. UI Components</span>
+      <span class="ch-pill">4. CSS</span>
+      <span class="ch-pill">5. Eventos + Bindings</span>
+      <span class="ch-pill">6. FXML</span>
+      <span class="ch-pill">7. Animaciones</span>
+      <span class="ch-pill">8. Base de datos</span>
+      <span class="ch-pill">9. Buenas prácticas</span>
+    </div>
+  </div>
+</header>
+
+<!-- CAP 1 -->
+<div class="sbar"><span class="num">CAP 1</span><h2>Ciclo de vida y arquitectura MVC</h2></div>
+<div class="grid">
+  <div class="card">
+    <div class="ct cta"></div>
+    <div class="ch"><h3>Ciclo de vida — Application</h3><span class="tag ta">JavaFX</span></div>
+    <div class="cb">
+<pre><span class="kw">public class</span> <span class="cls">ViMapApp</span> <span class="kw">extends</span> <span class="cls">Application</span> {
+  <span class="ann">@Override</span>
+  <span class="kw">public void</span> <span class="mth">init</span>() <span class="kw">throws</span> <span class="cls">Exception</span> {
+    <span class="cmt">// Antes de UI: configs, BD, servicios</span>
+    <span class="kw">super</span>.<span class="mth">init</span>();
+  }
+  <span class="ann">@Override</span>
+  <span class="kw">public void</span> <span class="mth">start</span>(<span class="cls">Stage</span> stage) {
+    <span class="cmt">// Punto de entrada de la UI</span>
+    <span class="kw">var</span> loader = <span class="kw">new</span> <span class="cls">FXMLLoader</span>(
+        getClass().<span class="mth">getResource</span>(<span class="str">"/fxml/main.fxml"</span>));
+    <span class="cls">Parent</span> root = loader.<span class="mth">load</span>();
+    <span class="cls">Scene</span> scene = <span class="kw">new</span> <span class="cls">Scene</span>(root, <span class="num">1280</span>, <span class="num">800</span>);
+    stage.<span class="mth">setScene</span>(scene);
+    stage.<span class="mth">show</span>();
+  }
+  <span class="ann">@Override</span>
+  <span class="kw">public void</span> <span class="mth">stop</span>() <span class="kw">throws</span> <span class="cls">Exception</span> {
+    <span class="cmt">// Limpieza: BD, estado</span>
+  }
+}</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct cta"></div>
+    <div class="ch"><h3>Capas MVC para ViMap</h3><span class="tag ta">arquitectura</span></div>
+    <div class="cb">
+      <table class="layer-table">
+        <thead><tr><th>Capa</th><th>Responsabilidad</th><th>Tecnología</th></tr></thead>
+        <tbody>
+          <tr><td>Modelo</td><td>Datos y reglas de negocio</td><td>POJO + JavaBeans Properties</td></tr>
+          <tr><td>Vista</td><td>Presentación visual</td><td>FXML + CSS</td></tr>
+          <tr><td>Controlador</td><td>Lógica de UI, eventos, bindings</td><td>Java Controller class</td></tr>
+          <tr><td>Servicio</td><td>Lógica de negocio sin UI</td><td>Service classes + interfaces</td></tr>
+        </tbody>
+      </table>
+      <div class="tip"><strong>✦ Estructura recomendada</strong>controller/ · model/ · service/ · repository/ · viewmodel/ · util/ · fxml/ · css/</div>
+    </div>
+  </div>
+</div>
+
+<!-- CAP 2 -->
+<div class="sbar"><span class="num">CAP 2</span><h2>Layouts y Scene Graph</h2></div>
+<div class="grid">
+  <div class="card">
+    <div class="ct ctb"></div>
+    <div class="ch"><h3>BorderPane — layout principal</h3><span class="tag tb">5 zonas</span></div>
+    <div class="cb">
+<pre><span class="cls">BorderPane</span> root = <span class="kw">new</span> <span class="cls">BorderPane</span>();
+root.<span class="mth">setTop</span>(buildMenuBar());    <span class="cmt">// Menú + toolbar</span>
+root.<span class="mth">setCenter</span>(mapView);        <span class="cmt">// Mapa principal</span>
+root.<span class="mth">setLeft</span>(layerPanel);       <span class="cmt">// Panel de capas</span>
+root.<span class="mth">setRight</span>(propsPanel);      <span class="cmt">// Propiedades</span>
+root.<span class="mth">setBottom</span>(statusBar);      <span class="cmt">// Barra estado</span></pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct ctb"></div>
+    <div class="ch"><h3>HBox · VBox · StackPane</h3><span class="tag tb">lineales y superposición</span></div>
+    <div class="cb">
+<pre><span class="cmt">// VBox — apila verticalmente</span>
+<span class="cls">VBox</span> sidebar = <span class="kw">new</span> <span class="cls">VBox</span>(<span class="num">8</span>);
+<span class="cls">VBox</span>.<span class="mth">setVgrow</span>(mapList, <span class="cls">Priority</span>.ALWAYS);
+
+<span class="cmt">// HBox — distribuye horizontalmente</span>
+<span class="cls">HBox</span> toolbar = <span class="kw">new</span> <span class="cls">HBox</span>(<span class="num">6</span>);
+<span class="cls">HBox</span>.<span class="mth">setHgrow</span>(spacer, <span class="cls">Priority</span>.ALWAYS);
+
+<span class="cmt">// StackPane — superposición (overlay)</span>
+<span class="cls">StackPane</span> mapContainer = <span class="kw">new</span> <span class="cls">StackPane</span>();
+mapContainer.<span class="mth">getChildren</span>().<span class="mth">addAll</span>(
+    map, spinner, noDataLabel
+);</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct ctb"></div>
+    <div class="ch"><h3>GridPane · SplitPane · AnchorPane</h3><span class="tag tb">cuadrículas</span></div>
+    <div class="cb">
+<pre><span class="cmt">// GridPane — formularios</span>
+<span class="cls">GridPane</span> grid = <span class="kw">new</span> <span class="cls">GridPane</span>();
+grid.<span class="mth">add</span>(<span class="kw">new</span> <span class="cls">Label</span>(<span class="str">"Nombre:"</span>), <span class="num">0</span>, <span class="num">0</span>);
+grid.<span class="mth">add</span>(nameField, <span class="num">1</span>, <span class="num">0</span>);
+<span class="cls">GridPane</span>.<span class="mth">setColumnSpan</span>(saveBtn, <span class="num">2</span>);
+
+<span class="cmt">// SplitPane — divisor arrastrable</span>
+<span class="cls">SplitPane</span> split = <span class="kw">new</span> <span class="cls">SplitPane</span>();
+split.<span class="mth">setDividerPositions</span>(<span class="num">0.2</span>, <span class="num">0.8</span>);
+
+<span class="cmt">// AnchorPane — botón flotante (FAB)</span>
+<span class="cls">AnchorPane</span>.<span class="mth">setBottomAnchor</span>(fab, <span class="num">24.0</span>);
+<span class="cls">AnchorPane</span>.<span class="mth">setRightAnchor</span>(fab, <span class="num">24.0</span>);</pre>
+    </div>
+  </div>
+</div>
+
+<!-- CAP 3 -->
+<div class="sbar"><span class="num">CAP 3</span><h2>Componentes UI</h2></div>
+<div class="grid">
+  <div class="card">
+    <div class="ct ctc"></div>
+    <div class="ch"><h3>Button y variantes</h3><span class="tag tc">botones</span></div>
+    <div class="cb">
+<pre><span class="cmt">// Button con icono</span>
+<span class="cls">Button</span> btn = <span class="kw">new</span> <span class="cls">Button</span>(<span class="str">"Añadir Punto"</span>);
+btn.<span class="mth">getStyleClass</span>().<span class="mth">add</span>(<span class="str">"btn-primary"</span>);
+btn.<span class="mth">setDefaultButton</span>(<span class="kw">true</span>); <span class="cmt">// responde a Enter</span>
+
+<span class="cmt">// ToggleButton — modo edición</span>
+<span class="cls">ToggleButton</span> edit = <span class="kw">new</span> <span class="cls">ToggleButton</span>(<span class="str">"Editar"</span>);
+edit.selectedProperty().<span class="mth">addListener</span>(...);
+
+<span class="cmt">// ToggleGroup — selección exclusiva</span>
+<span class="cls">ToggleGroup</span> group = <span class="kw">new</span> <span class="cls">ToggleGroup</span>();
+selectTool.<span class="mth">setToggleGroup</span>(group);
+drawTool.<span class="mth">setToggleGroup</span>(group);
+
+<span class="cmt">// SplitMenuButton — acción + submenú</span>
+<span class="cls">SplitMenuButton</span> exp = <span class="kw">new</span> <span class="cls">SplitMenuButton</span>();
+exp.<span class="mth">setText</span>(<span class="str">"Exportar KML"</span>);
+exp.<span class="mth">getItems</span>().<span class="mth">addAll</span>(<span class="kw">new</span> <span class="cls">MenuItem</span>(<span class="str">"GeoJSON"</span>)...);</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct ctc"></div>
+    <div class="ch"><h3>TableView + FilteredList</h3><span class="tag tc">tablas</span></div>
+    <div class="cb">
+<pre><span class="cls">TableView</span>&lt;<span class="cls">MapPoint</span>&gt; table = <span class="kw">new</span> <span class="cls">TableView</span>&lt;&gt;();
+
+<span class="cls">TableColumn</span>&lt;<span class="cls">MapPoint</span>, <span class="cls">String</span>&gt; col =
+    <span class="kw">new</span> <span class="cls">TableColumn</span>&lt;&gt;(<span class="str">"Nombre"</span>);
+col.<span class="mth">setCellValueFactory</span>(
+    <span class="kw">new</span> <span class="cls">PropertyValueFactory</span>&lt;&gt;(<span class="str">"name"</span>));
+
+<span class="cmt">// Filtrado reactivo</span>
+<span class="cls">FilteredList</span>&lt;<span class="cls">MapPoint</span>&gt; filtered =
+    <span class="kw">new</span> <span class="cls">FilteredList</span>&lt;&gt;(masterList, p -> <span class="kw">true</span>);
+searchField.textProperty().<span class="mth">addListener</span>((o,old,t) ->
+    filtered.<span class="mth">setPredicate</span>(p ->
+        t.isEmpty() || p.<span class="mth">getName</span>()
+         .toLowerCase().<span class="mth">contains</span>(t.toLowerCase()))
+);
+<span class="cls">SortedList</span>&lt;<span class="cls">MapPoint</span>&gt; sorted =
+    <span class="kw">new</span> <span class="cls">SortedList</span>&lt;&gt;(filtered);
+sorted.comparatorProperty().<span class="mth">bind</span>(table.comparatorProperty());
+table.<span class="mth">setItems</span>(sorted);</pre>
+    </div>
+  </div>
+</div>
+
+<!-- CAP 4 y 5 -->
+<div class="sbar"><span class="num">CAP 4–5</span><h2>CSS · Eventos · Bindings</h2></div>
+<div class="grid">
+  <div class="card">
+    <div class="ct ctd"></div>
+    <div class="ch"><h3>CSS en JavaFX</h3><span class="tag td">estilos</span></div>
+    <div class="cb">
+<pre><span class="cmt">/* vimap.css — prefijo -fx- obligatorio */</span>
+.btn-primary {
+  -fx-background-color: #1A1A2E;
+  -fx-text-fill: white;
+  -fx-background-radius: 6px;
+  -fx-padding: 8px 18px;
+  -fx-cursor: hand;
+}
+.btn-primary:hover {
+  -fx-background-color: derive(#1A1A2E, 20%);
+  -fx-effect: dropshadow(gaussian,
+      rgba(0,0,0,0.2), 8, 0, 0, 2);
+}
+.text-field:error { -fx-border-color: #DC3545; }
+.text-field:valid { -fx-border-color: #28A745; }</pre>
+      <div class="warn"><strong>⚠ Rendimiento</strong>Evita <code>setStyle()</code> inline en bucles. Usa <code>getStyleClass().add()</code> con clases predefinidas en tu .css.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct ctd"></div>
+    <div class="ch"><h3>PseudoClass + Bindings reactivos</h3><span class="tag td">Java 8+</span></div>
+    <div class="cb">
+<pre><span class="cmt">// PseudoClass — estados dinámicos</span>
+<span class="cls">PseudoClass</span> ERROR =
+    <span class="cls">PseudoClass</span>.<span class="mth">getPseudoClass</span>(<span class="str">"error"</span>);
+node.<span class="mth">pseudoClassStateChanged</span>(ERROR, <span class="kw">true</span>);
+
+<span class="cmt">// Binding unidireccional</span>
+zoomLabel.textProperty().<span class="mth">bind</span>(
+    <span class="cls">Bindings</span>.<span class="mth">createStringBinding</span>(
+        () -> <span class="str">"Zoom: "</span> + zoom.<span class="mth">get</span>() + <span class="str">"x"</span>, zoom)
+);
+
+<span class="cmt">// Binding para deshabilitar botón</span>
+<span class="cls">BooleanBinding</span> canSave =
+    nameField.textProperty().<span class="mth">isNotEmpty</span>()
+    .<span class="mth">and</span>(latField.textProperty().<span class="mth">isNotEmpty</span>());
+saveBtn.disableProperty().<span class="mth">bind</span>(canSave.<span class="mth">not</span>());
+
+<span class="cmt">// Binding bidireccional</span>
+slider.valueProperty().<span class="mth">bindBidirectional</span>(zoom);</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct cta"></div>
+    <div class="ch"><h3>Task — operaciones en segundo plano</h3><span class="tag ta">threading</span></div>
+    <div class="cb">
+<pre><span class="cls">Task</span>&lt;<span class="cls">List</span>&lt;<span class="cls">MapPoint</span>&gt;&gt; task = <span class="kw">new</span> <span class="cls">Task</span>&lt;&gt;() {
+  <span class="ann">@Override</span>
+  <span class="kw">protected</span> <span class="cls">List</span>&lt;<span class="cls">MapPoint</span>&gt; <span class="mth">call</span>() <span class="kw">throws</span> <span class="cls">Exception</span> {
+    <span class="mth">updateMessage</span>(<span class="str">"Cargando..."</span>);
+    <span class="mth">updateProgress</span>(i+<span class="num">1</span>, total);
+    <span class="kw">return</span> repo.<span class="mth">findAll</span>();
+  }
+};
+progressBar.progressProperty().<span class="mth">bind</span>(task.progressProperty());
+task.<span class="mth">setOnSucceeded</span>(e -> table.<span class="mth">setItems</span>(...));
+task.<span class="mth">setOnFailed</span>(e -> <span class="mth">showError</span>(...));
+<span class="kw">new</span> <span class="cls">Thread</span>(task).<span class="mth">start</span>();</pre>
+      <div class="warn"><strong>⚠ Regla de oro</strong>Nunca actualices nodos de UI desde otro hilo. Usa <code>Platform.runLater()</code>.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CAP 6 -->
+<div class="sbar"><span class="num">CAP 6</span><h2>FXML y SceneBuilder</h2></div>
+<div class="grid">
+  <div class="card wide">
+    <div class="ct ctb"></div>
+    <div class="ch"><h3>Controller vinculado a FXML</h3><span class="tag tb">patrón MVC</span></div>
+    <div class="cb" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <pre><span class="cmt">&lt;!-- main.fxml --&gt;</span>
+&lt;<span class="cls">BorderPane</span>
+  <span class="str">fx:controller</span>=<span class="str">"com.vimap.MainController"</span>
+  <span class="str">prefWidth</span>=<span class="str">"1280"</span> <span class="str">prefHeight</span>=<span class="str">"800"</span>&gt;
+  &lt;<span class="cls">top</span>&gt;
+    &lt;<span class="cls">ToolBar</span>&gt;
+      &lt;<span class="cls">Button</span> <span class="str">fx:id</span>=<span class="str">"addBtn"</span>
+        <span class="str">text</span>=<span class="str">"+ Punto"</span>
+        <span class="str">styleClass</span>=<span class="str">"btn-primary"</span>
+        <span class="str">onAction</span>=<span class="str">"#handleAddPoint"</span>/&gt;
+    &lt;/<span class="cls">ToolBar</span>&gt;
+  &lt;/<span class="cls">top</span>&gt;
+&lt;/<span class="cls">BorderPane</span>&gt;</pre>
+      <pre><span class="kw">public class</span> <span class="cls">MainController</span>
+    <span class="kw">implements</span> <span class="cls">Initializable</span> {
+
+  <span class="ann">@FXML</span> <span class="kw">private</span> <span class="cls">Button</span> addBtn;
+  <span class="ann">@FXML</span> <span class="kw">private</span> <span class="cls">TextField</span> searchField;
+
+  <span class="ann">@Override</span>
+  <span class="kw">public void</span> <span class="mth">initialize</span>(
+      <span class="cls">URL</span> url, <span class="cls">ResourceBundle</span> rb) {
+    <span class="cmt">// bindings tras @FXML inyectados</span>
+  }
+
+  <span class="ann">@FXML</span>
+  <span class="kw">private void</span> <span class="mth">handleAddPoint</span>(
+      <span class="cls">ActionEvent</span> e) {
+    viewModel.<span class="mth">startAddPointMode</span>();
+  }
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- CAP 7 -->
+<div class="sbar"><span class="num">CAP 7</span><h2>Animaciones y efectos</h2></div>
+<div class="grid">
+  <div class="card">
+    <div class="ct ctc"></div>
+    <div class="ch"><h3>Timeline + Transitions</h3><span class="tag tc">animaciones</span></div>
+    <div class="cb">
+<pre><span class="cmt">// Timeline — fotogramas clave</span>
+<span class="cls">Timeline</span> blink = <span class="kw">new</span> <span class="cls">Timeline</span>(
+  <span class="kw">new</span> <span class="cls">KeyFrame</span>(<span class="cls">Duration</span>.<span class="mth">ZERO</span>,
+    <span class="kw">new</span> <span class="cls">KeyValue</span>(marker.opacityProperty(), <span class="num">1.0</span>)),
+  <span class="kw">new</span> <span class="cls">KeyFrame</span>(<span class="cls">Duration</span>.<span class="mth">millis</span>(<span class="num">500</span>),
+    <span class="kw">new</span> <span class="cls">KeyValue</span>(marker.opacityProperty(), <span class="num">0.3</span>))
+);
+blink.<span class="mth">setCycleCount</span>(<span class="cls">Animation</span>.INDEFINITE);
+blink.<span class="mth">play</span>();
+
+<span class="cmt">// FadeTransition — entrada suave</span>
+<span class="cls">FadeTransition</span> ft =
+    <span class="kw">new</span> <span class="cls">FadeTransition</span>(<span class="cls">Duration</span>.<span class="mth">millis</span>(<span class="num">250</span>), node);
+ft.<span class="mth">setFromValue</span>(<span class="num">0.0</span>); ft.<span class="mth">setToValue</span>(<span class="num">1.0</span>);
+
+<span class="cmt">// TranslateTransition — deslizar panel</span>
+<span class="cls">TranslateTransition</span> slide =
+    <span class="kw">new</span> <span class="cls">TranslateTransition</span>(<span class="cls">Duration</span>.<span class="mth">millis</span>(<span class="num">300</span>), panel);
+slide.<span class="mth">setFromX</span>(-<span class="num">260</span>); slide.<span class="mth">setToX</span>(<span class="num">0</span>);
+slide.<span class="mth">play</span>();</pre>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct ctc"></div>
+    <div class="ch"><h3>Efectos visuales</h3><span class="tag tc">DropShadow / Blur / Glow</span></div>
+    <div class="cb">
+<pre><span class="cmt">// DropShadow en tarjetas</span>
+<span class="cls">DropShadow</span> shadow = <span class="kw">new</span> <span class="cls">DropShadow</span>();
+shadow.<span class="mth">setRadius</span>(<span class="num">12</span>); shadow.<span class="mth">setOffsetY</span>(<span class="num">4</span>);
+shadow.<span class="mth">setColor</span>(<span class="cls">Color</span>.<span class="mth">color</span>(<span class="num">0</span>,<span class="num">0</span>,<span class="num">0</span>,<span class="num">0.15</span>));
+card.<span class="mth">setEffect</span>(shadow);
+
+<span class="cmt">// GaussianBlur — fondo modal</span>
+<span class="cls">GaussianBlur</span> blur = <span class="kw">new</span> <span class="cls">GaussianBlur</span>(<span class="num">8</span>);
+mainContent.<span class="mth">setEffect</span>(blur);
+<span class="cmt">// Al cerrar: mainContent.setEffect(null)</span>
+
+<span class="cmt">// SequentialTransition — encadenar</span>
+<span class="cls">SequentialTransition</span> seq =
+    <span class="kw">new</span> <span class="cls">SequentialTransition</span>(fadeIn, scaleIn);
+seq.<span class="mth">play</span>();
+
+<span class="cmt">// ParallelTransition — simultáneas</span>
+<span class="kw">new</span> <span class="cls">ParallelTransition</span>(fadeIn, slide).<span class="mth">play</span>();</pre>
+    </div>
+  </div>
+</div>
+
+<!-- CAP 8 -->
+<div class="sbar"><span class="num">CAP 8</span><h2>Conexión con Base de Datos</h2></div>
+<div class="grid">
+  <div class="card">
+    <div class="ct ctb"></div>
+    <div class="ch"><h3>HikariCP — pool de conexiones</h3><span class="tag tb">JDBC</span></div>
+    <div class="cb">
+<pre><span class="cls">HikariConfig</span> config = <span class="kw">new</span> <span class="cls">HikariConfig</span>();
+config.<span class="mth">setJdbcUrl</span>(<span class="str">"jdbc:postgresql://localhost/vimap"</span>);
+config.<span class="mth">setUsername</span>(<span class="cls">System</span>.<span class="mth">getenv</span>(<span class="str">"DB_USER"</span>));
+config.<span class="mth">setPassword</span>(<span class="cls">System</span>.<span class="mth">getenv</span>(<span class="str">"DB_PASS"</span>));
+config.<span class="mth">setMaximumPoolSize</span>(<span class="num">10</span>);
+config.<span class="mth">setAutoCommit</span>(<span class="kw">false</span>);
+<span class="cls">HikariDataSource</span> ds = <span class="kw">new</span> <span class="cls">HikariDataSource</span>(config);</pre>
+      <div class="warn"><strong>⚠ Seguridad</strong>Nunca escribas credenciales en el código. Usa <code>System.getenv()</code> o un archivo <code>.env</code> en el .gitignore.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct ctb"></div>
+    <div class="ch"><h3>Repository + Service Layer</h3><span class="tag tb">patrón</span></div>
+    <div class="cb">
+<pre><span class="cmt">// Repository — acceso a datos</span>
+<span class="kw">public</span> <span class="cls">MapPoint</span> <span class="mth">save</span>(<span class="cls">MapPoint</span> p) <span class="kw">throws</span> <span class="cls">SQLException</span> {
+  <span class="kw">try</span> (<span class="cls">Connection</span> conn = <span class="cls">DatabaseConfig</span>.<span class="mth">getConnection</span>();
+       <span class="cls">PreparedStatement</span> ps = conn.<span class="mth">prepareStatement</span>(INSERT)) {
+    ps.<span class="mth">setString</span>(<span class="num">1</span>, p.<span class="mth">getName</span>());
+    ps.<span class="mth">setDouble</span>(<span class="num">2</span>, p.<span class="mth">getLatitude</span>());
+    conn.<span class="mth">commit</span>();
+  }
+}
+
+<span class="cmt">// Service — carga async en ObservableList</span>
+<span class="kw">public</span> <span class="cls">Task</span>&lt;<span class="cls">Void</span>&gt; <span class="mth">loadAllAsync</span>() {
+  <span class="kw">return new</span> <span class="cls">Task</span>&lt;&gt;() {
+    <span class="kw">protected</span> <span class="cls">Void</span> <span class="mth">call</span>() <span class="kw">throws</span> <span class="cls">Exception</span> {
+      <span class="cls">List</span>&lt;<span class="cls">MapPoint</span>&gt; pts = repo.<span class="mth">findAll</span>();
+      <span class="cls">Platform</span>.<span class="mth">runLater</span>(() -> points.<span class="mth">setAll</span>(pts));
+      <span class="kw">return null</span>;
+    }
+  };
+}</pre>
+    </div>
+  </div>
+</div>
+
+<!-- CAP 9 -->
+<div class="sbar"><span class="num">CAP 9</span><h2>Buenas prácticas — Checklist</h2></div>
+<div class="grid">
+  <div class="card wide">
+    <div class="ct ctd"></div>
+    <div class="ch"><h3>Checklist de calidad ViMap</h3><span class="tag td">producción</span></div>
+    <div class="cb">
+      <div class="checklist">
+        <div class="check"><span class="icon">✓</span><span class="label">UI en hilo correcto</span><span class="desc">Toda actualización de UI va en <code>Platform.runLater()</code> o callbacks de Task</span></div>
+        <div class="check"><span class="icon">✓</span><span class="label">Sin lógica en FXML</span><span class="desc">Los Controllers solo orquestan; la lógica va en Services</span></div>
+        <div class="check"><span class="icon">✓</span><span class="label">Bindings reactivos</span><span class="desc">Usar propiedades JavaFX en lugar de setters manuales</span></div>
+        <div class="check"><span class="icon">✓</span><span class="label">CSS externalizado</span><span class="desc">Ningún <code>setStyle()</code> inline en producción</span></div>
+        <div class="check"><span class="icon">✓</span><span class="label">Pool de conexiones</span><span class="desc">Usar HikariCP, nunca crear conexiones directas</span></div>
+        <div class="check"><span class="icon">✓</span><span class="label">Manejo de errores</span><span class="desc"><code>Task.setOnFailed()</code> siempre definido</span></div>
+        <div class="check"><span class="icon">✓</span><span class="label">Resources cerrados</span><span class="desc">try-with-resources en todo acceso JDBC</span></div>
+        <div class="check"><span class="icon">✓</span><span class="label">Tests unitarios</span><span class="desc">Services y Repositories testeados con JUnit 5</span></div>
+        <div class="check"><span class="icon">✗</span><span class="label">Memory leaks</span><span class="desc">Desregistrar listeners al destruir el controller o usar <code>WeakChangeListener</code></span></div>
+        <div class="check"><span class="icon">✗</span><span class="label">Bloquear hilo UI</span><span class="desc">Nunca usar <code>Thread.sleep()</code> o IO dentro de un EventHandler</span></div>
+        <div class="check"><span class="icon">✗</span><span class="label">Nodos UI en Task</span><span class="desc">Construir datos en Task, crear nodos en <code>Platform.runLater()</code></span></div>
+        <div class="check"><span class="icon">✗</span><span class="label">Credenciales en código</span><span class="desc">Usar variables de entorno o archivo externo en .gitignore</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer><span>JavaFX · MVC · FXML · CSS · Task · HikariCP · Proyecto ViMap v1.0 · 2025</span><span>LyPaw · Vimap</span></footer>
+</body>
+</html>

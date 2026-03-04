@@ -1,37 +1,39 @@
 {
   "Java": {
     "Fundamentos": {
-      "Array": {
-        "Teoría": [
+      "Introducción": {
+        "Guía": [
           {
-            "name": "Array_Teoría.md",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Array/Readme.md"
+            "name": "IntroJava.html",
+            "url": "DAM/Java/Intro/intro-java-guia.html"
           }
-        ],
-        "Ejercicios": [
+        ]
+      },
+      "Array": {
+        "Guía": [
           {
-            "name": "Ejercicios_Array.md",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Array/Ejercicios/Readme.md"
+            "name": "GuiaListas.html",
+            "url": "DAM/Java/Array/Guía/arrays-java-guia.html"
           }
         ]
       },
       "Colecciones": {
         "ArrayList": [
           {
-            "name": "ArrayList_Clave.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/ArrayList/Clave/Array_List.java"
+            "name": "ArrayList_Clave.html",
+            "url": "DAM/Java/ArrayList/Clave/arraylist-java-guia.html"
           }
         ],
         "Conjuntos": [
           {
-            "name": "Conjuntos_Clave.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Conjuntos/Clave/Conjuntos.java"
+            "name": "Conjuntos_Clave.html",
+            "url": "DAM/Java/Conjuntos/Clave/conjuntos-java-guia.html"
           }
         ],
         "Mapas": [
           {
-            "name": "Mapas_Clave.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Mapas/Clave/Mapas.java"
+            "name": "Mapas_Clave.html",
+            "url": "DAM/Java/Mapas/Clave/maps-java-guia.html"
           }
         ]
       },
@@ -221,8 +223,8 @@
     "JavaFX": {
       "Teoría": [
         {
-          "name": "Documentación_JavaFX.pdf",
-          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/JavaFX/ViMap_JavaFX_Documentacion.pdf"
+          "name": "Documentación_JavaFX.html",
+          "url": "DAM/Java/JavaFX/javafx-vimap-guia.html"
         }
       ]
     }

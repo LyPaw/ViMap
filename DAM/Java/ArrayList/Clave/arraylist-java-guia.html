@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArrayList en Java — Guía Completa</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Unbounded:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0ece3;
+    --ink: #1c1a17;
+    --ink2: #3d3a33;
+    --muted: #8a8070;
+    --rule: #c8bfae;
+    --surface: #e8e2d8;
+    --white: #faf8f4;
+    --a: #c44b1e;
+    --b: #1e6a9a;
+    --c: #2a7a4f;
+    --d: #7a3a9a;
+    --code-bg: #1c1a17;
+    --code-fg: #e8dcc8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'IBM Plex Sans', sans-serif; background: var(--bg); color: var(--ink); padding: 2rem 1.5rem 5rem; }
+
+  header {
+    max-width: 1100px; margin: 0 auto 2.5rem;
+    display: grid; grid-template-columns: auto 1fr auto;
+    align-items: center; gap: 1.5rem;
+    border-bottom: 3px solid var(--ink); padding-bottom: 1.2rem;
+  }
+  .header-num { font-family: 'Unbounded', sans-serif; font-size: 5rem; font-weight: 900; color: var(--rule); line-height: 1; }
+  .header-text h1 { font-family: 'Unbounded', sans-serif; font-size: clamp(1.4rem,3.5vw,2.4rem); font-weight: 900; line-height: 1.1; }
+  .header-text h1 span { color: var(--a); }
+  .header-text p { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--muted); margin-top: 0.4rem; }
+  .header-badge { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; background: var(--ink); color: var(--bg); padding: 0.4rem 0.8rem; border-radius: 3px; text-transform: uppercase; letter-spacing: 1px; writing-mode: vertical-lr; text-orientation: mixed; }
+
+  .section-bar { max-width: 1100px; margin: 2.5rem auto 1rem; display: flex; align-items: center; gap: 0.8rem; }
+  .section-bar .n { font-family: 'Unbounded', sans-serif; font-size: 0.65rem; font-weight: 700; background: var(--ink); color: var(--bg); padding: 0.25rem 0.6rem; border-radius: 2px; }
+  .section-bar h2 { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 2px; color: var(--ink2); }
+  .section-bar::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+
+  .grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
+  .grid.w2 { grid-template-columns: repeat(2, 1fr); }
+
+  .card { background: var(--white); border: 1px solid var(--rule); border-radius: 4px; overflow: hidden; }
+  .card.wide { grid-column: span 2; }
+  .ct { height: 3px; }
+  .ct-a { background: var(--a); } .ct-b { background: var(--b); }
+  .ct-c { background: var(--c); } .ct-d { background: var(--d); }
+  .ch { padding: 0.7rem 1rem 0.6rem; border-bottom: 1px solid var(--surface); display: flex; justify-content: space-between; align-items: center; }
+  .ch h3 { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
+  .tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; padding: 0.15rem 0.5rem; border-radius: 2px; }
+  .tag-a { background: #fae8e2; color: var(--a); } .tag-b { background: #e2eef6; color: var(--b); }
+  .tag-c { background: #e2f2ea; color: var(--c); } .tag-d { background: #f2e8f8; color: var(--d); }
+  .cb { padding: 1rem; }
+  pre { background: var(--code-bg); color: var(--code-fg); border-radius: 3px; padding: 0.85rem 1rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; line-height: 1.75; overflow-x: auto; white-space: pre; }
+  code { font-family: 'IBM Plex Mono', monospace; background: var(--surface); border: 1px solid var(--rule); border-radius: 2px; padding: 0.1em 0.35em; font-size: 0.8em; color: var(--a); }
+  .mlist { display: flex; flex-direction: column; gap: 0.35rem; }
+  .mrow { display: flex; gap: 0.5rem; align-items: flex-start; padding: 0.4rem 0.6rem; background: var(--surface); border-radius: 2px; border-left: 3px solid transparent; }
+  .mrow.a { border-color: var(--a); } .mrow.b { border-color: var(--b); }
+  .mrow.c { border-color: var(--c); } .mrow.d { border-color: var(--d); }
+  .mn { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; font-weight: 600; min-width: 180px; flex-shrink: 0; }
+  .mn.a { color: var(--a); } .mn.b { color: var(--b); } .mn.c { color: var(--c); } .mn.d { color: var(--d); }
+  .md { font-size: 0.71rem; color: var(--ink2); line-height: 1.4; }
+  .note { background: #fef9e7; border-left: 3px solid #d4a017; border-radius: 2px; padding: 0.55rem 0.8rem; font-size: 0.73rem; margin-top: 0.7rem; line-height: 1.5; color: var(--ink2); }
+  .note strong { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: #9a7010; display: block; margin-bottom: 0.2rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
+  th { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; padding: 0.4rem 0.6rem; border-bottom: 2px solid var(--ink); text-align: left; color: var(--ink2); }
+  td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--surface); vertical-align: top; line-height: 1.4; }
+  td:first-child { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--a); }
+  tr:last-child td { border-bottom: none; }
+  .kw { color: #e07b54; } .cls { color: #72b8d4; } .mth { color: #a8d8a8; } .str { color: #f0c070; } .cmt { color: #5a5248; font-style: italic; } .num { color: #d4a8e0; }
+  footer { max-width: 1100px; margin: 2.5rem auto 0; border-top: 1px solid var(--rule); padding-top: 0.6rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.3rem; }
+  @media(max-width:700px){ .card.wide{grid-column:span 1;} .grid.w2{grid-template-columns:1fr;} header{grid-template-columns:1fr; text-align:center;} .header-num,.header-badge{display:none;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-num">AL</div>
+  <div class="header-text">
+    <h1><span>ArrayList</span> en Java</h1>
+    <p>java.util.ArrayList · java.util.Collections · 27 métodos documentados</p>
+  </div>
+  <div class="header-badge">LyPaw · Vimap</div>
+</header>
+
+<!-- MÉTODOS BÁSICOS -->
+<div class="section-bar"><span class="n">01</span><h2>Métodos básicos de instancia</h2></div>
+<div class="grid">
+  <div class="card">
+    <div class="ct ct-a"></div>
+    <div class="ch"><h3>Añadir elementos</h3><span class="tag tag-a">add</span></div>
+    <div class="cb">
+<pre><span class="cls">ArrayList</span>&lt;<span class="cls">String</span>&gt; nombres = <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;();
+nombres.<span class="mth">add</span>(<span class="str">"Juanito"</span>);      <span class="cmt">// añade al final</span>
+nombres.<span class="mth">add</span>(<span class="str">"Pedro"</span>);
+nombres.<span class="mth">add</span>(<span class="num">5</span>, <span class="str">"Nicolas"</span>);  <span class="cmt">// inserta en [5]</span>
+
+<span class="cmt">// addAll — añadir otra colección</span>
+<span class="cls">ArrayList</span>&lt;<span class="cls">String</span>&gt; extra = <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;();
+extra.<span class="mth">add</span>(<span class="str">"Bilbao"</span>); extra.<span class="mth">add</span>(<span class="str">"Zaragoza"</span>);
+nombres.<span class="mth">addAll</span>(extra);        <span class="cmt">// al final</span>
+nombres.<span class="mth">addAll</span>(<span class="num">1</span>, extra);     <span class="cmt">// en posición 1</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ct-a"></div>
+    <div class="ch"><h3>Acceder y modificar</h3><span class="tag tag-a">get / set</span></div>
+    <div class="cb">
+<pre><span class="cls">ArrayList</span>&lt;<span class="cls">Integer</span>&gt; nums = <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;();
+nums.<span class="mth">add</span>(<span class="num">5</span>); nums.<span class="mth">add</span>(<span class="num">1</span>); nums.<span class="mth">add</span>(<span class="num">3</span>);
+
+<span class="cmt">// get — acceder por índice</span>
+<span class="kw">int</span> primero = nums.<span class="mth">get</span>(<span class="num">0</span>);  <span class="cmt">// → 5</span>
+<span class="kw">int</span> tercero = nums.<span class="mth">get</span>(<span class="num">2</span>);  <span class="cmt">// → 3</span>
+
+<span class="cmt">// set — reemplazar por posición</span>
+nums.<span class="mth">set</span>(<span class="num">2</span>, <span class="str">"Luis"</span>);  <span class="cmt">// reemplaza [2] por Luis</span>
+
+<span class="cmt">// size — número de elementos</span>
+<span class="kw">int</span> tam = nums.<span class="mth">size</span>();       <span class="cmt">// → 3</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ct-b"></div>
+    <div class="ch"><h3>Eliminar elementos</h3><span class="tag tag-b">remove</span></div>
+    <div class="cb">
+<pre><span class="cls">ArrayList</span>&lt;<span class="cls">String</span>&gt; lista = <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;();
+lista.<span class="mth">add</span>(<span class="str">"Manuel"</span>); lista.<span class="mth">add</span>(<span class="str">"Juanito"</span>);
+lista.<span class="mth">add</span>(<span class="str">"Pedro"</span>);  lista.<span class="mth">add</span>(<span class="str">"Manuel"</span>);
+
+<span class="cmt">// Por índice</span>
+lista.<span class="mth">remove</span>(<span class="num">0</span>);          <span class="cmt">// elimina [0]</span>
+
+<span class="cmt">// Por valor (1ª ocurrencia)</span>
+lista.<span class="mth">remove</span>(<span class="str">"Manuel"</span>);   <span class="cmt">// solo la primera</span>
+
+<span class="cmt">// removeAll — diferencia de conjuntos</span>
+lista.<span class="mth">removeAll</span>(<span class="cls">Arrays</span>.<span class="mth">asList</span>(<span class="str">"Pedro"</span>, <span class="str">"Ana"</span>));
+
+<span class="cmt">// clear — vaciar todo</span>
+lista.<span class="mth">clear</span>();</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ct-b"></div>
+    <div class="ch"><h3>Buscar e inspeccionar</h3><span class="tag tag-b">contains / indexOf</span></div>
+    <div class="cb">
+<pre><span class="cls">ArrayList</span>&lt;<span class="cls">String</span>&gt; rep = <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;();
+rep.<span class="mth">add</span>(<span class="str">"Juanito"</span>); rep.<span class="mth">add</span>(<span class="str">"Pedro"</span>);
+rep.<span class="mth">add</span>(<span class="str">"Juanito"</span>); rep.<span class="mth">add</span>(<span class="str">"Maria"</span>);
+
+<span class="cmt">// contains — ¿existe el elemento?</span>
+rep.<span class="mth">contains</span>(<span class="str">"Juanito"</span>);    <span class="cmt">// → true</span>
+rep.<span class="mth">contains</span>(<span class="str">"Luis"</span>);       <span class="cmt">// → false</span>
+
+<span class="cmt">// indexOf — primera posición</span>
+rep.<span class="mth">indexOf</span>(<span class="str">"Juanito"</span>);      <span class="cmt">// → 0</span>
+
+<span class="cmt">// lastIndexOf — última posición</span>
+rep.<span class="mth">lastIndexOf</span>(<span class="str">"Juanito"</span>);  <span class="cmt">// → 2</span>
+
+<span class="cmt">// isEmpty — ¿está vacía?</span>
+rep.<span class="mth">isEmpty</span>();               <span class="cmt">// → false</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ct-c"></div>
+    <div class="ch"><h3>Operaciones de conjuntos</h3><span class="tag tag-c">retainAll / removeAll</span></div>
+    <div class="cb">
+<pre><span class="cls">ArrayList</span>&lt;<span class="cls">String</span>&gt; A = <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;(
+  <span class="cls">Arrays</span>.<span class="mth">asList</span>(<span class="str">"Madrid"</span>,<span class="str">"Barcelona"</span>,<span class="str">"Valencia"</span>,<span class="str">"Sevilla"</span>)
+);
+<span class="cls">ArrayList</span>&lt;<span class="cls">String</span>&gt; B = <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;(
+  <span class="cls">Arrays</span>.<span class="mth">asList</span>(<span class="str">"Barcelona"</span>,<span class="str">"Sevilla"</span>,<span class="str">"Bilbao"</span>)
+);
+
+<span class="cmt">// Intersección: mantiene solo comunes</span>
+A.<span class="mth">retainAll</span>(B);  <span class="cmt">// → [Barcelona, Sevilla]</span>
+
+<span class="cmt">// Diferencia: elimina los de B de A</span>
+A.<span class="mth">removeAll</span>(B);  <span class="cmt">// → [Madrid, Valencia]</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ct-c"></div>
+    <div class="ch"><h3>Clonar e inmutables</h3><span class="tag tag-c">clone / List.of</span></div>
+    <div class="cb">
+<pre><span class="cmt">// Clonación (copia superficial)</span>
+<span class="cls">ArrayList</span>&lt;<span class="cls">String</span>&gt; original = <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;(
+  <span class="cls">Arrays</span>.<span class="mth">asList</span>(<span class="str">"Madrid"</span>, <span class="str">"Barcelona"</span>)
+);
+<span class="cls">ArrayList</span>&lt;<span class="cls">String</span>&gt; clon =
+  (<span class="cls">ArrayList</span>&lt;<span class="cls">String</span>&gt;) original.<span class="mth">clone</span>();
+
+<span class="cmt">// Lista inmutable (Java 9+)</span>
+<span class="cls">List</span>&lt;<span class="cls">String</span>&gt; fija = <span class="cls">List</span>.<span class="mth">of</span>(<span class="str">"Manuel"</span>, <span class="str">"Pedro"</span>);
+
+<span class="cmt">// Convertir a mutable</span>
+<span class="cls">List</span>&lt;<span class="cls">String</span>&gt; mutable = <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;(fija);
+mutable.<span class="mth">add</span>(<span class="str">"Ana"</span>); <span class="cmt">// ✅ permitido ahora</span></pre>
+    </div>
+  </div>
+</div>
+
+<!-- COLLECTIONS -->
+<div class="section-bar"><span class="n">02</span><h2>Métodos de java.util.Collections</h2></div>
+<div class="grid">
+  <div class="card">
+    <div class="ct ct-d"></div>
+    <div class="ch"><h3>Ordenamiento</h3><span class="tag tag-d">sort / reverse</span></div>
+    <div class="cb">
+<pre><span class="cls">ArrayList</span>&lt;<span class="cls">Integer</span>&gt; nums =
+  <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;(<span class="cls">Arrays</span>.<span class="mth">asList</span>(<span class="num">5</span>,<span class="num">3</span>,<span class="num">1</span>,<span class="num">4</span>,<span class="num">2</span>));
+
+<span class="cmt">// Orden ascendente</span>
+<span class="cls">Collections</span>.<span class="mth">sort</span>(nums);
+<span class="cmt">// → [1, 2, 3, 4, 5]</span>
+
+<span class="cmt">// Orden descendente</span>
+<span class="cls">Collections</span>.<span class="mth">sort</span>(nums, <span class="cls">Collections</span>.<span class="mth">reverseOrder</span>());
+<span class="cmt">// → [5, 4, 3, 2, 1]</span>
+
+<span class="cmt">// Invertir orden actual</span>
+<span class="cls">Collections</span>.<span class="mth">reverse</span>(nums);
+<span class="cmt">// → [1, 2, 3, 4, 5]</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ct-d"></div>
+    <div class="ch"><h3>Búsqueda y barajeo</h3><span class="tag tag-d">binarySearch / shuffle</span></div>
+    <div class="cb">
+<pre><span class="cmt">// binarySearch (lista DEBE estar ordenada)</span>
+<span class="cls">ArrayList</span>&lt;<span class="cls">Integer</span>&gt; ord =
+  <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;(<span class="cls">Arrays</span>.<span class="mth">asList</span>(<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>,<span class="num">5</span>));
+<span class="cls">Collections</span>.<span class="mth">binarySearch</span>(ord, <span class="num">3</span>); <span class="cmt">// → 2 (índice)</span>
+<span class="cls">Collections</span>.<span class="mth">binarySearch</span>(ord, <span class="num">6</span>); <span class="cmt">// → negativo (no existe)</span>
+
+<span class="cmt">// shuffle — barajeo aleatorio</span>
+<span class="cls">Collections</span>.<span class="mth">shuffle</span>(ord);
+
+<span class="cmt">// shuffle con semilla (reproducible)</span>
+<span class="cls">Collections</span>.<span class="mth">shuffle</span>(ord, <span class="kw">new</span> <span class="cls">Random</span>(<span class="num">42</span>));</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ct-a"></div>
+    <div class="ch"><h3>Utilidades de lista</h3><span class="tag tag-a">fill / copy / nCopies</span></div>
+    <div class="cb">
+<pre><span class="cmt">// fill — llenar con un valor</span>
+<span class="cls">ArrayList</span>&lt;<span class="cls">String</span>&gt; lista =
+  <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;(<span class="cls">Arrays</span>.<span class="mth">asList</span>(<span class="str">"1"</span>,<span class="str">"2"</span>,<span class="str">"3"</span>));
+<span class="cls">Collections</span>.<span class="mth">fill</span>(lista, <span class="str">"X"</span>); <span class="cmt">// → [X, X, X]</span>
+
+<span class="cmt">// copy (dest debe tener mismo tamaño)</span>
+<span class="cls">Collections</span>.<span class="mth">copy</span>(destino, origen);
+
+<span class="cmt">// nCopies — lista inmutable con copias</span>
+<span class="cls">List</span>&lt;<span class="cls">String</span>&gt; x5 =
+  <span class="cls">Collections</span>.<span class="mth">nCopies</span>(<span class="num">5</span>, <span class="str">"Hola"</span>);
+<span class="cmt">// → [Hola, Hola, Hola, Hola, Hola]</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ct-b"></div>
+    <div class="ch"><h3>Estadísticas y análisis</h3><span class="tag tag-b">max / min / frequency</span></div>
+    <div class="cb">
+<pre><span class="cls">ArrayList</span>&lt;<span class="cls">Integer</span>&gt; n =
+  <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;(<span class="cls">Arrays</span>.<span class="mth">asList</span>(<span class="num">5</span>,<span class="num">31</span>,<span class="num">4</span>,<span class="num">2</span>));
+
+<span class="cls">Collections</span>.<span class="mth">max</span>(n); <span class="cmt">// → 31</span>
+<span class="cls">Collections</span>.<span class="mth">min</span>(n); <span class="cmt">// → 2</span>
+
+<span class="cmt">// frequency — contar ocurrencias</span>
+<span class="cls">ArrayList</span>&lt;<span class="cls">String</span>&gt; f =
+  <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;(<span class="cls">Arrays</span>.<span class="mth">asList</span>(<span class="str">"A"</span>,<span class="str">"B"</span>,<span class="str">"A"</span>,<span class="str">"C"</span>,<span class="str">"A"</span>));
+<span class="cls">Collections</span>.<span class="mth">frequency</span>(f, <span class="str">"A"</span>); <span class="cmt">// → 3</span>
+
+<span class="cmt">// disjoint — ¿no tienen elementos comunes?</span>
+<span class="cls">Collections</span>.<span class="mth">disjoint</span>(lista1, lista2); <span class="cmt">// → true/false</span></pre>
+    </div>
+  </div>
+</div>
+
+<!-- RESUMEN TOTAL -->
+<div class="section-bar"><span class="n">03</span><h2>Resumen de los 27 métodos</h2></div>
+<div class="grid w2">
+  <div class="card wide">
+    <div class="ct ct-c"></div>
+    <div class="ch"><h3>Referencia completa</h3><span class="tag tag-c">todos los métodos</span></div>
+    <div class="cb">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.35rem;">
+        <div class="mlist">
+          <div class="mrow a"><span class="mn a">add(elem)</span><span class="md">Añade al final</span></div>
+          <div class="mrow a"><span class="mn a">add(i, elem)</span><span class="md">Inserta en posición i</span></div>
+          <div class="mrow a"><span class="mn a">addAll(col)</span><span class="md">Añade colección al final</span></div>
+          <div class="mrow a"><span class="mn a">addAll(i, col)</span><span class="md">Inserta colección en posición</span></div>
+          <div class="mrow a"><span class="mn a">get(i)</span><span class="md">Devuelve elemento del índice i</span></div>
+          <div class="mrow a"><span class="mn a">set(i, elem)</span><span class="md">Reemplaza elemento en posición i</span></div>
+          <div class="mrow b"><span class="mn b">remove(i)</span><span class="md">Elimina por índice</span></div>
+          <div class="mrow b"><span class="mn b">remove(obj)</span><span class="md">Elimina primera ocurrencia</span></div>
+          <div class="mrow b"><span class="mn b">removeAll(col)</span><span class="md">Diferencia de conjuntos</span></div>
+          <div class="mrow b"><span class="mn b">retainAll(col)</span><span class="md">Intersección de conjuntos</span></div>
+          <div class="mrow b"><span class="mn b">clear()</span><span class="md">Vacía la lista</span></div>
+          <div class="mrow b"><span class="mn b">contains(obj)</span><span class="md">¿Existe el elemento?</span></div>
+          <div class="mrow b"><span class="mn b">indexOf(obj)</span><span class="md">Primera posición del elemento</span></div>
+          <div class="mrow b"><span class="mn b">lastIndexOf(obj)</span><span class="md">Última posición del elemento</span></div>
+        </div>
+        <div class="mlist">
+          <div class="mrow c"><span class="mn c">size()</span><span class="md">Número de elementos</span></div>
+          <div class="mrow c"><span class="mn c">isEmpty()</span><span class="md">¿Está vacía?</span></div>
+          <div class="mrow c"><span class="mn c">clone()</span><span class="md">Copia superficial de la lista</span></div>
+          <div class="mrow c"><span class="mn c">List.of(...)</span><span class="md">Lista inmutable (Java 9+)</span></div>
+          <div class="mrow d"><span class="mn d">Collections.sort()</span><span class="md">Orden ascendente</span></div>
+          <div class="mrow d"><span class="mn d">Collections.sort(reverseOrder)</span><span class="md">Orden descendente</span></div>
+          <div class="mrow d"><span class="mn d">Collections.reverse()</span><span class="md">Invierte el orden</span></div>
+          <div class="mrow d"><span class="mn d">Collections.shuffle()</span><span class="md">Barajeo aleatorio</span></div>
+          <div class="mrow d"><span class="mn d">Collections.binarySearch()</span><span class="md">Búsqueda binaria (lista ordenada)</span></div>
+          <div class="mrow d"><span class="mn d">Collections.fill()</span><span class="md">Rellena con un valor</span></div>
+          <div class="mrow d"><span class="mn d">Collections.copy()</span><span class="md">Copia entre listas</span></div>
+          <div class="mrow d"><span class="mn d">Collections.nCopies()</span><span class="md">Lista inmutable con n copias</span></div>
+          <div class="mrow d"><span class="mn d">Collections.max/min()</span><span class="md">Máximo / mínimo</span></div>
+          <div class="mrow d"><span class="mn d">Collections.frequency()</span><span class="md">Cuenta ocurrencias</span></div>
+          <div class="mrow d"><span class="mn d">Collections.disjoint()</span><span class="md">¿Sin elementos comunes?</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer><span>ArrayList · java.util.Collections · Java 8+</span><span>LyPaw · Vimap</span></footer>
+</body>
+</html>

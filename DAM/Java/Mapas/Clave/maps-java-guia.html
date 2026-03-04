@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maps en Java — Guía Completa</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117; --s1: #161b26; --s2: #1c2232; --border: #2a3048;
+    --text: #dde3f0; --muted: #6b7494;
+    --a: #38d9a9; --b: #74b9ff; --c: #fd79a8; --d: #fdcb6e;
+    --code-bg: #090c14; --code-fg: #c8d0e8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); padding: 2rem 1.5rem 5rem; }
+
+  header { max-width: 1100px; margin: 0 auto 2.5rem; padding: 2rem; background: var(--s1); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+  .hicon { width: 70px; height: 70px; border-radius: 12px; background: linear-gradient(135deg, #38d9a9, #74b9ff); display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0; }
+  header h1 { font-size: clamp(1.6rem,4vw,2.8rem); font-weight: 900; }
+  header h1 span { color: var(--a); }
+  header p { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--muted); margin-top: 0.3rem; }
+  .hbadge { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--muted); border: 1px solid var(--border); padding: 0.4rem 0.8rem; border-radius: 4px; }
+
+  .sbar { max-width: 1100px; margin: 2.5rem auto 1rem; display: flex; align-items: center; gap: 0.8rem; }
+  .sbar .num { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; background: var(--a); color: #000; padding: 0.2rem 0.55rem; border-radius: 3px; font-weight: 600; }
+  .sbar h2 { font-size: 0.72rem; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); }
+  .sbar::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
+  .card { background: var(--s1); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .card.wide { grid-column: span 2; }
+  .ct { height: 3px; }
+  .cta { background: var(--a); } .ctb { background: var(--b); } .ctc { background: var(--c); } .ctd { background: var(--d); }
+  .ch { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .ch h3 { font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); }
+  .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; padding: 0.15rem 0.5rem; border-radius: 20px; font-weight: 600; }
+  .ta { background: rgba(56,217,169,.15); color: var(--a); } .tb { background: rgba(116,185,255,.15); color: var(--b); }
+  .tc { background: rgba(253,121,168,.15); color: var(--c); } .td { background: rgba(253,203,110,.15); color: var(--d); }
+  .cb { padding: 1rem; }
+  pre { background: var(--code-bg); color: var(--code-fg); border-radius: 6px; padding: 0.9rem 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; line-height: 1.75; overflow-x: auto; white-space: pre; border: 1px solid var(--border); }
+  code { font-family: 'JetBrains Mono', monospace; background: var(--s2); border: 1px solid var(--border); border-radius: 3px; padding: 0.1em 0.35em; font-size: 0.8em; color: var(--a); }
+  .mlist { display: flex; flex-direction: column; gap: 0.35rem; }
+  .mrow { display: flex; gap: 0.6rem; align-items: flex-start; padding: 0.45rem 0.6rem; background: var(--s2); border-radius: 4px; border-left: 3px solid transparent; }
+  .mrow.a { border-color: var(--a); } .mrow.b { border-color: var(--b); } .mrow.c { border-color: var(--c); } .mrow.d { border-color: var(--d); }
+  .mn { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 600; min-width: 200px; flex-shrink: 0; }
+  .mn.a { color: var(--a); } .mn.b { color: var(--b); } .mn.c { color: var(--c); } .mn.d { color: var(--d); }
+  .md { font-size: 0.72rem; color: var(--muted); line-height: 1.4; }
+  .note { background: rgba(253,203,110,.08); border: 1px solid rgba(253,203,110,.2); border-radius: 6px; padding: 0.6rem 0.9rem; font-size: 0.73rem; margin-top: 0.7rem; line-height: 1.5; color: var(--text); }
+  .note strong { color: var(--d); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 0.2rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
+  th { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; padding: 0.45rem 0.7rem; border-bottom: 1px solid var(--border); text-align: left; color: var(--muted); }
+  td { padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; font-size: 0.73rem; }
+  td:first-child { font-family: 'JetBrains Mono', monospace; color: var(--b); }
+  tr:last-child td { border-bottom: none; }
+  .kw { color: #c792ea; } .cls { color: var(--b); } .mth { color: var(--a); } .str { color: var(--d); } .cmt { color: #4a5268; font-style: italic; } .num { color: var(--c); }
+  footer { max-width: 1100px; margin: 2.5rem auto 0; border-top: 1px solid var(--border); padding-top: 0.6rem; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.3rem; }
+  @media(max-width:700px){ .card.wide{grid-column:span 1;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hicon">🗺️</div>
+  <div>
+    <h1><span>Map</span> en Java</h1>
+    <p>java.util.HashMap · LinkedHashMap · TreeMap · Map.of · Java 8/9+</p>
+  </div>
+  <div class="hbadge">LyPaw · Vimap</div>
+</header>
+
+<div class="sbar"><span class="num">01</span><h2>Métodos básicos — HashMap</h2></div>
+<div class="grid">
+  <div class="card">
+    <div class="ct cta"></div>
+    <div class="ch"><h3>Crear y añadir</h3><span class="tag ta">put / get</span></div>
+    <div class="cb">
+<pre><span class="cls">Map</span>&lt;<span class="cls">Integer</span>, <span class="cls">String</span>&gt; mapa = <span class="kw">new</span> <span class="cls">HashMap</span>&lt;&gt;();
+
+<span class="cmt">// put — añade o reemplaza</span>
+mapa.<span class="mth">put</span>(<span class="num">1</span>, <span class="str">"Ana"</span>);
+mapa.<span class="mth">put</span>(<span class="num">2</span>, <span class="str">"Carlos"</span>);
+mapa.<span class="mth">put</span>(<span class="num">3</span>, <span class="str">"Beatriz"</span>);
+mapa.<span class="mth">put</span>(<span class="num">1</span>, <span class="str">"Andrea"</span>);  <span class="cmt">// reemplaza clave 1</span>
+
+<span class="cmt">// get — obtener por clave</span>
+mapa.<span class="mth">get</span>(<span class="num">2</span>);          <span class="cmt">// → "Carlos"</span>
+mapa.<span class="mth">get</span>(<span class="num">99</span>);         <span class="cmt">// → null</span>
+
+<span class="cmt">// size / isEmpty</span>
+mapa.<span class="mth">size</span>();          <span class="cmt">// → 3</span>
+mapa.<span class="mth">isEmpty</span>();       <span class="cmt">// → false</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ctb"></div>
+    <div class="ch"><h3>Verificar y eliminar</h3><span class="tag tb">contains / remove</span></div>
+    <div class="cb">
+<pre><span class="cmt">// containsKey / containsValue</span>
+mapa.<span class="mth">containsKey</span>(<span class="num">3</span>);         <span class="cmt">// → true</span>
+mapa.<span class="mth">containsValue</span>(<span class="str">"Ana"</span>);  <span class="cmt">// → true</span>
+
+<span class="cmt">// remove — elimina por clave</span>
+mapa.<span class="mth">remove</span>(<span class="num">2</span>);
+
+<span class="cmt">// clear — vacía todo</span>
+<span class="cls">Map</span>&lt;<span class="cls">Integer</span>, <span class="cls">String</span>&gt; temp =
+    <span class="kw">new</span> <span class="cls">HashMap</span>&lt;&gt;(mapa);
+temp.<span class="mth">clear</span>();
+temp.<span class="mth">isEmpty</span>();  <span class="cmt">// → true</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct cta"></div>
+    <div class="ch"><h3>Vistas del mapa</h3><span class="tag ta">keySet / values / entrySet</span></div>
+    <div class="cb">
+<pre><span class="cmt">// keySet() — conjunto de claves</span>
+mapa.<span class="mth">keySet</span>();     <span class="cmt">// → {1, 3, 4, 5}</span>
+
+<span class="cmt">// values() — colección de valores</span>
+mapa.<span class="mth">values</span>();     <span class="cmt">// → [Andrea, Beatriz, David…]</span>
+
+<span class="cmt">// entrySet() — recorrer pares</span>
+<span class="kw">for</span> (<span class="cls">Map</span>.<span class="cls">Entry</span>&lt;<span class="cls">Integer</span>, <span class="cls">String</span>&gt; e
+        : mapa.<span class="mth">entrySet</span>()) {
+    <span class="cls">System</span>.out.<span class="mth">println</span>(
+        e.<span class="mth">getKey</span>() + <span class="str">" → "</span> + e.<span class="mth">getValue</span>()
+    );
+}</pre>
+    </div>
+  </div>
+</div>
+
+<div class="sbar"><span class="num">02</span><h2>Métodos modernos — Java 8+</h2></div>
+<div class="grid">
+  <div class="card">
+    <div class="ct ctc"></div>
+    <div class="ch"><h3>putIfAbsent / getOrDefault</h3><span class="tag tc">Java 8+</span></div>
+    <div class="cb">
+<pre><span class="cmt">// putIfAbsent — solo añade si NO existe</span>
+mapa.<span class="mth">putIfAbsent</span>(<span class="num">6</span>, <span class="str">"Fernando"</span>);
+mapa.<span class="mth">putIfAbsent</span>(<span class="num">1</span>, <span class="str">"NUEVO"</span>); <span class="cmt">// ignorado, ya existe</span>
+mapa.<span class="mth">get</span>(<span class="num">1</span>);  <span class="cmt">// sigue siendo "Andrea"</span>
+
+<span class="cmt">// getOrDefault — valor por defecto si no existe</span>
+mapa.<span class="mth">getOrDefault</span>(<span class="num">7</span>, <span class="str">"Desconocido"</span>); <span class="cmt">// → "Desconocido"</span>
+mapa.<span class="mth">getOrDefault</span>(<span class="num">3</span>, <span class="str">"Desconocido"</span>); <span class="cmt">// → "Beatriz"</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ctc"></div>
+    <div class="ch"><h3>replace / forEach</h3><span class="tag tc">Java 8+</span></div>
+    <div class="cb">
+<pre><span class="cmt">// replace — solo si la clave existe</span>
+mapa.<span class="mth">replace</span>(<span class="num">3</span>, <span class="str">"Beatriz_Mod"</span>);
+
+<span class="cmt">// replace con verificación de valor antiguo</span>
+<span class="kw">boolean</span> ok = mapa.<span class="mth">replace</span>(<span class="num">3</span>,
+    <span class="str">"Beatriz_Mod"</span>, <span class="str">"Beatriz_Final"</span>
+); <span class="cmt">// → true si coincide valor anterior</span>
+
+<span class="cmt">// forEach — iteración funcional</span>
+mapa.<span class="mth">forEach</span>((clave, valor) ->
+    <span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"["</span> + clave + <span class="str">"] = "</span> + valor)
+);</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ctd"></div>
+    <div class="ch"><h3>compute / merge</h3><span class="tag td">Java 8+ avanzado</span></div>
+    <div class="cb">
+<pre><span class="cls">Map</span>&lt;<span class="cls">String</span>, <span class="cls">Integer</span>&gt; cnt = <span class="kw">new</span> <span class="cls">HashMap</span>&lt;&gt;();
+
+<span class="cmt">// computeIfAbsent — calcula si no existe</span>
+cnt.<span class="mth">computeIfAbsent</span>(<span class="str">"manzana"</span>, k -> <span class="num">0</span>);
+
+<span class="cmt">// compute — actualiza con función</span>
+cnt.<span class="mth">compute</span>(<span class="str">"manzana"</span>,
+    (k, v) -> (v == <span class="kw">null</span>) ? <span class="num">1</span> : v + <span class="num">1</span>
+);
+
+<span class="cmt">// merge — combina valores</span>
+cnt.<span class="mth">merge</span>(<span class="str">"naranja"</span>, <span class="num">1</span>, <span class="cls">Integer</span>::sum); <span class="cmt">// 1ª vez → 1</span>
+cnt.<span class="mth">merge</span>(<span class="str">"naranja"</span>, <span class="num">2</span>, <span class="cls">Integer</span>::sum); <span class="cmt">// 2ª vez → 3</span></pre>
+    </div>
+  </div>
+</div>
+
+<div class="sbar"><span class="num">03</span><h2>Tipos de Map y mapas inmutables</h2></div>
+<div class="grid">
+  <div class="card">
+    <div class="ct cta"></div>
+    <div class="ch"><h3>HashMap / LinkedHashMap / TreeMap</h3><span class="tag ta">tipos</span></div>
+    <div class="cb">
+<pre><span class="cmt">// HashMap — sin orden garantizado</span>
+<span class="cls">Map</span>&lt;<span class="cls">Integer</span>, <span class="cls">String</span>&gt; hm = <span class="kw">new</span> <span class="cls">HashMap</span>&lt;&gt;();
+
+<span class="cmt">// LinkedHashMap — orden de inserción</span>
+<span class="cls">Map</span>&lt;<span class="cls">Integer</span>, <span class="cls">String</span>&gt; lhm = <span class="kw">new</span> <span class="cls">LinkedHashMap</span>&lt;&gt;();
+lhm.<span class="mth">put</span>(<span class="num">3</span>,<span class="str">"Tres"</span>); lhm.<span class="mth">put</span>(<span class="num">1</span>,<span class="str">"Uno"</span>); lhm.<span class="mth">put</span>(<span class="num">2</span>,<span class="str">"Dos"</span>);
+<span class="cmt">// → {3=Tres, 1=Uno, 2=Dos}</span>
+
+<span class="cmt">// TreeMap — orden natural de claves</span>
+<span class="cls">Map</span>&lt;<span class="cls">Integer</span>, <span class="cls">String</span>&gt; tm = <span class="kw">new</span> <span class="cls">TreeMap</span>&lt;&gt;();
+<span class="cmt">// → {1=Uno, 2=Dos, 3=Tres}</span>
+
+<span class="cmt">// TreeMap con orden inverso</span>
+<span class="cls">Map</span>&lt;<span class="cls">Integer</span>, <span class="cls">String</span>&gt; tmd =
+    <span class="kw">new</span> <span class="cls">TreeMap</span>&lt;&gt;(<span class="cls">Collections</span>.<span class="mth">reverseOrder</span>());
+<span class="cmt">// → {3=Tres, 2=Dos, 1=Uno}</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ctb"></div>
+    <div class="ch"><h3>Mapas inmutables — Java 9+</h3><span class="tag tb">Map.of</span></div>
+    <div class="cb">
+<pre><span class="cmt">// Map.of — hasta 10 pares</span>
+<span class="cls">Map</span>&lt;<span class="cls">String</span>, <span class="cls">Integer</span>&gt; fijo = <span class="cls">Map</span>.<span class="mth">of</span>(
+    <span class="str">"Ana"</span>, <span class="num">25</span>,
+    <span class="str">"Carlos"</span>, <span class="num">30</span>,
+    <span class="str">"Beatriz"</span>, <span class="num">28</span>
+);
+
+<span class="cmt">// Map.ofEntries — más de 10 pares</span>
+<span class="cls">Map</span>&lt;<span class="cls">String</span>, <span class="cls">Integer</span>&gt; grande = <span class="cls">Map</span>.<span class="mth">ofEntries</span>(
+    <span class="cls">Map</span>.<span class="mth">entry</span>(<span class="str">"Ana"</span>, <span class="num">25</span>),
+    <span class="cls">Map</span>.<span class="mth">entry</span>(<span class="str">"Carlos"</span>, <span class="num">30</span>)
+    <span class="cmt">// más entradas...</span>
+);
+
+<span class="cmt">// Convertir a mutable</span>
+<span class="cls">Map</span>&lt;<span class="cls">String</span>, <span class="cls">Integer</span>&gt; mutable =
+    <span class="kw">new</span> <span class="cls">HashMap</span>&lt;&gt;(fijo);
+mutable.<span class="mth">put</span>(<span class="str">"Elena"</span>, <span class="num">22</span>); <span class="cmt">// ✅</span></pre>
+    </div>
+  </div>
+
+  <div class="card wide">
+    <div class="ct ctd"></div>
+    <div class="ch"><h3>Comparativa de tipos de Map</h3><span class="tag td">referencia</span></div>
+    <div class="cb">
+      <table>
+        <thead><tr><th>Tipo</th><th>Orden</th><th>null keys</th><th>Thread-safe</th><th>Cuándo usar</th></tr></thead>
+        <tbody>
+          <tr><td>HashMap</td><td>Sin orden</td><td>✅ 1 null key</td><td>❌</td><td>Uso general, máximo rendimiento</td></tr>
+          <tr><td>LinkedHashMap</td><td>Inserción</td><td>✅</td><td>❌</td><td>Cuando importa el orden de inserción</td></tr>
+          <tr><td>TreeMap</td><td>Natural/Comparator</td><td>❌</td><td>❌</td><td>Cuando necesitas claves ordenadas</td></tr>
+          <tr><td>Map.of()</td><td>Sin orden</td><td>❌</td><td>✅</td><td>Mapas constantes, configuración</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="sbar"><span class="num">04</span><h2>Resumen de métodos</h2></div>
+<div class="grid">
+  <div class="card wide">
+    <div class="ct cta"></div>
+    <div class="ch"><h3>Todos los métodos</h3><span class="tag ta">referencia completa</span></div>
+    <div class="cb">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.35rem;">
+        <div class="mlist">
+          <div class="mrow a"><span class="mn a">put(k, v)</span><span class="md">Añade o reemplaza par clave-valor</span></div>
+          <div class="mrow a"><span class="mn a">get(k)</span><span class="md">Obtiene valor por clave</span></div>
+          <div class="mrow a"><span class="mn a">remove(k)</span><span class="md">Elimina entrada por clave</span></div>
+          <div class="mrow a"><span class="mn a">containsKey(k)</span><span class="md">¿Existe la clave?</span></div>
+          <div class="mrow a"><span class="mn a">containsValue(v)</span><span class="md">¿Existe el valor?</span></div>
+          <div class="mrow a"><span class="mn a">size()</span><span class="md">Número de entradas</span></div>
+          <div class="mrow a"><span class="mn a">isEmpty()</span><span class="md">¿Está vacío?</span></div>
+          <div class="mrow a"><span class="mn a">clear()</span><span class="md">Elimina todas las entradas</span></div>
+          <div class="mrow b"><span class="mn b">keySet()</span><span class="md">Conjunto de claves</span></div>
+          <div class="mrow b"><span class="mn b">values()</span><span class="md">Colección de valores</span></div>
+          <div class="mrow b"><span class="mn b">entrySet()</span><span class="md">Conjunto de pares clave-valor</span></div>
+        </div>
+        <div class="mlist">
+          <div class="mrow c"><span class="mn c">putIfAbsent(k, v)</span><span class="md">Añade solo si no existe (Java 8+)</span></div>
+          <div class="mrow c"><span class="mn c">getOrDefault(k, def)</span><span class="md">Valor o por defecto (Java 8+)</span></div>
+          <div class="mrow c"><span class="mn c">replace(k, v)</span><span class="md">Reemplaza si existe (Java 8+)</span></div>
+          <div class="mrow c"><span class="mn c">replace(k, old, new)</span><span class="md">Reemplaza con verificación</span></div>
+          <div class="mrow c"><span class="mn c">forEach((k,v)->…)</span><span class="md">Iteración funcional (Java 8+)</span></div>
+          <div class="mrow d"><span class="mn d">computeIfAbsent(k, f)</span><span class="md">Calcula valor si no existe</span></div>
+          <div class="mrow d"><span class="mn d">compute(k, bif)</span><span class="md">Actualiza valor con función</span></div>
+          <div class="mrow d"><span class="mn d">merge(k, v, bif)</span><span class="md">Combina valores</span></div>
+          <div class="mrow d"><span class="mn d">Map.of(…)</span><span class="md">Mapa inmutable hasta 10 pares (Java 9+)</span></div>
+          <div class="mrow d"><span class="mn d">Map.ofEntries(…)</span><span class="md">Mapa inmutable sin límite de pares</span></div>
+          <div class="mrow d"><span class="mn d">Map.entry(k, v)</span><span class="md">Crea entrada para ofEntries</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer><span>Map · HashMap · LinkedHashMap · TreeMap · Java 8/9+</span><span>LyPaw · Vimap</span></footer>
+</body>
+</html>
