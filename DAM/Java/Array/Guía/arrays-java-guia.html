@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arrays y Colecciones en Java</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:    #f5f0e8;
+    --warm:     #ede7d9;
+    --paper:    #faf7f2;
+    --ink:      #1a1612;
+    --ink2:     #3d3530;
+    --muted:    #8c7b6e;
+    --red:      #c0392b;
+    --blue:     #1a5276;
+    --teal:     #0e6655;
+    --amber:    #b7770d;
+    --rule:     #c9b99a;
+    --code-bg:  #1a1612;
+    --code-fg:  #e8dcc8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2.5rem 1.5rem 5rem;
+  }
+
+  /* MASTHEAD */
+  .masthead {
+    max-width: 1080px;
+    margin: 0 auto 0.5rem;
+    border-top: 3px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.2rem 0 1rem;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .masthead h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+  .masthead h1 em { font-style: italic; color: var(--red); }
+  .masthead .sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .kicker {
+    max-width: 1080px;
+    margin: 0.4rem auto 2.5rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.6rem;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .kicker span::before { content: '◆ '; font-size: 0.55rem; vertical-align: middle; }
+
+  /* SECTION HEADER */
+  .section-head {
+    max-width: 1080px;
+    margin: 2.5rem auto 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .section-head .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--rule);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .section-head .label {
+    border-top: 2px solid var(--ink);
+    padding-top: 0.3rem;
+  }
+  .section-head .label h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+  .section-head .label p {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    margin-top: 0.1rem;
+  }
+
+  /* GRID */
+  .grid {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 1rem;
+  }
+  .grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+
+  /* CARD */
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .card.wide  { grid-column: span 2; }
+  .card.tall  { grid-row: span 2; }
+  .card-stripe {
+    height: 4px;
+  }
+  .stripe-red   { background: var(--red); }
+  .stripe-blue  { background: var(--blue); }
+  .stripe-teal  { background: var(--teal); }
+  .stripe-amber { background: var(--amber); }
+
+  .card-head {
+    padding: 0.8rem 1rem 0.6rem;
+    border-bottom: 1px solid var(--warm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .card-head h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--ink2);
+  }
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .tag-red   { background: #fde8e6; color: var(--red);   border: 1px solid #f5c6c2; }
+  .tag-blue  { background: #e6eef7; color: var(--blue);  border: 1px solid #c2d5eb; }
+  .tag-teal  { background: #e6f4f0; color: var(--teal);  border: 1px solid #c2e4db; }
+  .tag-amber { background: #fdf4e3; color: var(--amber); border: 1px solid #f0d9a0; }
+
+  .card-body { padding: 1rem; }
+
+  /* CODE BLOCK */
+  pre {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    border-radius: 3px;
+    padding: 0.85rem 1rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    line-height: 1.75;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  code {
+    font-family: 'DM Mono', monospace;
+    background: var(--warm);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 0.1em 0.35em;
+    font-size: 0.82em;
+    color: var(--red);
+  }
+
+  /* METHOD ROWS */
+  .mlist { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.2rem; }
+  .mrow {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    padding: 0.45rem 0.6rem;
+    background: var(--warm);
+    border-radius: 2px;
+    border-left: 3px solid transparent;
+  }
+  .mrow.r  { border-color: var(--red);   }
+  .mrow.b  { border-color: var(--blue);  }
+  .mrow.t  { border-color: var(--teal);  }
+  .mrow.a  { border-color: var(--amber); }
+  .mrow .mn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+  .mrow .md { font-size: 0.72rem; color: var(--ink2); line-height: 1.4; }
+
+  .mn.r { color: var(--red);   }
+  .mn.b { color: var(--blue);  }
+  .mn.t { color: var(--teal);  }
+  .mn.a { color: var(--amber); }
+
+  /* SYNTAX */
+  .kw  { color: #e07b54; }
+  .cls { color: #72b8d4; }
+  .mth { color: #a8d8a8; }
+  .str { color: #f0c070; }
+  .cmt { color: #5a5248; font-style: italic; }
+  .num { color: #d4a8e0; }
+
+  /* COMPARISON TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 0.74rem; }
+  th {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 2px solid var(--ink);
+    text-align: left;
+    color: var(--ink2);
+  }
+  td {
+    padding: 0.5rem 0.6rem;
+    border-bottom: 1px solid var(--warm);
+    vertical-align: top;
+    line-height: 1.4;
+  }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { font-family: 'DM Mono', monospace; font-size: 0.72rem; }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--warm);
+    border-left: 3px solid var(--amber);
+    border-radius: 2px;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.75rem;
+    color: var(--ink2);
+    margin-top: 0.7rem;
+    line-height: 1.5;
+  }
+  .callout strong { color: var(--amber); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 0.2rem; }
+
+  /* EXERCISE BADGE */
+  .ex-badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 0.15rem 0.55rem;
+    border-radius: 2px;
+    margin-bottom: 0.5rem;
+  }
+  .ex-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .ex-goal {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+    font-family: 'DM Mono', monospace;
+  }
+  .ex-result {
+    margin-top: 0.6rem;
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.3rem;
+  }
+
+  /* FOOTNOTE */
+  .footnote {
+    max-width: 1080px;
+    margin: 2.5rem auto 0;
+    border-top: 1px solid var(--rule);
+    padding-top: 0.6rem;
+    font-size: 0.67rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  @media (max-width: 700px) {
+    .card.wide { grid-column: span 1; }
+    .grid.cols-2 { grid-template-columns: 1fr; }
+    .mrow .mn { min-width: 110px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <h1>Arrays &amp; <em>Colecciones</em><br>en Java</h1>
+  <div class="sub">
+    java.util.ArrayList · Arrays unidim. · Matrices<br>
+    LyPaw · Vimap
+  </div>
+</div>
+<div class="kicker">
+  <span>Array unidimensional</span>
+  <span>Array bidimensional</span>
+  <span>ArrayList dinámico</span>
+  <span>Ejercicios resueltos</span>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     BLOQUE I — ARRAYS UNIDIMENSIONALES
+══════════════════════════════════════════════ -->
+<div class="section-head">
+  <div class="num">I</div>
+  <div class="label">
+    <h2>Arrays Unidimensionales (Vectores)</h2>
+    <p>Colección de tamaño fijo · mismo tipo · índice desde 0</p>
+  </div>
+</div>
+
+<div class="grid">
+
+  <!-- Declaración y creación -->
+  <div class="card">
+    <div class="card-stripe stripe-red"></div>
+    <div class="card-head"><h3>Declaración y Creación</h3><span class="tag tag-red">paso 1</span></div>
+    <div class="card-body">
+<pre><span class="cmt">// Solo referencia (pila)</span>
+<span class="kw">double</span>[] numeros;
+
+<span class="cmt">// Reserva memoria (montículo)</span>
+numeros = <span class="kw">new double</span>[<span class="num">10</span>];
+
+<span class="cmt">// Forma concisa (ambos juntos)</span>
+<span class="kw">double</span>[] numeros = <span class="kw">new double</span>[<span class="num">10</span>];</pre>
+      <div class="callout">
+        <strong>⚠ Nota</strong>
+        La declaración crea solo la referencia en la <strong>pila</strong>. El <code>new</code> reserva el espacio en el <strong>montículo</strong>.
+      </div>
+    </div>
+  </div>
+
+  <!-- Inicialización -->
+  <div class="card">
+    <div class="card-stripe stripe-red"></div>
+    <div class="card-head"><h3>Inicialización</h3><span class="tag tag-red">paso 2</span></div>
+    <div class="card-body">
+<pre><span class="cmt">// Por índice (relleno manual)</span>
+<span class="kw">double</span>[] miLista = <span class="kw">new double</span>[<span class="num">3</span>];
+miLista[<span class="num">0</span>] = <span class="num">1.2</span>;
+miLista[<span class="num">1</span>] = <span class="num">2.2</span>;
+miLista[<span class="num">2</span>] = <span class="num">3.2</span>;
+
+<span class="cmt">// Directa (declaración + valores)</span>
+<span class="kw">double</span>[] miLista = {<span class="num">1.2</span>, <span class="num">1.3</span>, <span class="num">1.4</span>};
+
+<span class="cmt">// Otra forma válida</span>
+<span class="kw">int</span>[] valores = <span class="kw">new int</span>[] {<span class="num">1</span>, <span class="num">2</span>, <span class="num">4</span>};</pre>
+    </div>
+  </div>
+
+  <!-- Recorrido -->
+  <div class="card">
+    <div class="card-stripe stripe-red"></div>
+    <div class="card-head"><h3>Recorrido</h3><span class="tag tag-red">paso 3</span></div>
+    <div class="card-body">
+<pre><span class="cmt">// For estándar (con índice)</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; miLista.length; i++) {
+  <span class="cls">System</span>.out.<span class="mth">println</span>(miLista[i]);
+}
+
+<span class="cmt">// For-each (sin índice, más limpio)</span>
+<span class="kw">for</span> (<span class="kw">double</span> u : miLista) {
+  <span class="cls">System</span>.out.<span class="mth">println</span>(u);
+}
+
+<span class="cmt">// Impresión rápida (depuración)</span>
+<span class="cls">System</span>.out.<span class="mth">println</span>(
+  <span class="cls">Arrays</span>.<span class="mth">toString</span>(miLista)
+);</pre>
+    </div>
+  </div>
+
+</div><!-- /grid -->
+
+
+<!-- ══════════════════════════════════════════════
+     BLOQUE II — MATRICES
+══════════════════════════════════════════════ -->
+<div class="section-head">
+  <div class="num">II</div>
+  <div class="label">
+    <h2>Arrays Bidimensionales (Matrices)</h2>
+    <p>Tabla de filas y columnas · doble índice [fila][columna]</p>
+  </div>
+</div>
+
+<div class="grid">
+
+  <div class="card">
+    <div class="card-stripe stripe-blue"></div>
+    <div class="card-head"><h3>Declaración y Creación</h3><span class="tag tag-blue">paso 1</span></div>
+    <div class="card-body">
+<pre><span class="cmt">// 8 filas × 8 columnas</span>
+<span class="kw">int</span>[][] distancia = <span class="kw">new int</span>[<span class="num">8</span>][<span class="num">8</span>];
+
+<span class="cmt">// Longitud de un array [3][4]:</span>
+x.length        <span class="cmt">// → 3 (filas)</span>
+x[<span class="num">0</span>].length     <span class="cmt">// → 4 (columnas)</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-stripe stripe-blue"></div>
+    <div class="card-head"><h3>Inicialización</h3><span class="tag tag-blue">paso 2</span></div>
+    <div class="card-body">
+<pre><span class="cmt">// Por índice</span>
+distancia[<span class="num">0</span>][<span class="num">0</span>] = <span class="num">0</span>;
+distancia[<span class="num">0</span>][<span class="num">1</span>] = <span class="num">615</span>;
+
+<span class="cmt">// Directa (llaves anidadas)</span>
+<span class="kw">int</span>[][] array = {
+  {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>},    <span class="cmt">// Fila 0</span>
+  {<span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>},    <span class="cmt">// Fila 1</span>
+  {<span class="num">7</span>, <span class="num">8</span>, <span class="num">9</span>}     <span class="cmt">// Fila 2</span>
+};</pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-stripe stripe-blue"></div>
+    <div class="card-head"><h3>Recorrido con bucles anidados</h3><span class="tag tag-blue">paso 3</span></div>
+    <div class="card-body">
+<pre><span class="kw">for</span> (<span class="kw">int</span> fila = <span class="num">0</span>; fila &lt; matriz.length; fila++) {
+  <span class="kw">for</span> (<span class="kw">int</span> col = <span class="num">0</span>;
+       col &lt; matriz[fila].length; col++) {
+    <span class="cls">System</span>.out.<span class="mth">print</span>(
+      matriz[fila][col] + <span class="str">" "</span>
+    );
+  }
+  <span class="cmt">// Salto de línea por fila</span>
+  <span class="cls">System</span>.out.<span class="mth">println</span>();
+}</pre>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     BLOQUE III — ARRAYLIST
+══════════════════════════════════════════════ -->
+<div class="section-head">
+  <div class="num">III</div>
+  <div class="label">
+    <h2>ArrayList — Colecciones Dinámicas</h2>
+    <p>import java.util.ArrayList · crece y se reduce · solo objetos</p>
+  </div>
+</div>
+
+<div class="grid">
+
+  <div class="card">
+    <div class="card-stripe stripe-teal"></div>
+    <div class="card-head"><h3>Declaración</h3><span class="tag tag-teal">creación</span></div>
+    <div class="card-body">
+<pre><span class="cmt">// Sin genéricos (genera warning ⚠)</span>
+<span class="cls">ArrayList</span> lista = <span class="kw">new</span> <span class="cls">ArrayList</span>();
+
+<span class="cmt">// Con genéricos ✅ (recomendado)</span>
+<span class="cls">ArrayList</span>&lt;<span class="cls">String</span>&gt; lista =
+    <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;();
+
+<span class="cmt">// Usando interfaz padre (mejor)</span>
+<span class="cls">List</span>&lt;<span class="cls">String</span>&gt; lista =
+    <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;();</pre>
+      <div class="callout">
+        <strong>💡 Genéricos</strong>
+        Aseguran que solo se agreguen datos del tipo especificado y eliminan la necesidad de castings.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-stripe stripe-teal"></div>
+    <div class="card-head"><h3>Métodos principales</h3><span class="tag tag-teal">operaciones</span></div>
+    <div class="card-body">
+      <div class="mlist">
+        <div class="mrow t"><span class="mn t">add(elem)</span><span class="md">Añade al final de la lista</span></div>
+        <div class="mrow t"><span class="mn t">add(i, elem)</span><span class="md">Inserta en el índice <code>i</code></span></div>
+        <div class="mrow t"><span class="mn t">get(i)</span><span class="md">Devuelve el elemento del índice <code>i</code></span></div>
+        <div class="mrow t"><span class="mn t">size()</span><span class="md">Número de elementos actuales</span></div>
+        <div class="mrow t"><span class="mn t">remove(i)</span><span class="md">Elimina el elemento en índice <code>i</code></span></div>
+        <div class="mrow t"><span class="mn t">contains(o)</span><span class="md">¿Existe ese elemento? → boolean</span></div>
+        <div class="mrow t"><span class="mn t">toString()</span><span class="md">Imprime toda la lista como texto</span></div>
+        <div class="mrow t"><span class="mn t">clear()</span><span class="md">Vacía la lista completamente</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-stripe stripe-teal"></div>
+    <div class="card-head"><h3>Relleno y Recorrido</h3><span class="tag tag-teal">uso</span></div>
+    <div class="card-body">
+<pre><span class="cls">ArrayList</span>&lt;<span class="cls">String</span>&gt; cities =
+    <span class="kw">new</span> <span class="cls">ArrayList</span>&lt;&gt;();
+
+cities.<span class="mth">add</span>(<span class="str">"Londres"</span>);
+cities.<span class="mth">add</span>(<span class="str">"Madrid"</span>);
+cities.<span class="mth">add</span>(<span class="num">2</span>, <span class="str">"Roma"</span>); <span class="cmt">// inserta en [2]</span>
+
+<span class="cmt">// For normal (con índice)</span>
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; cities.<span class="mth">size</span>(); i++) {
+  <span class="cls">System</span>.out.<span class="mth">println</span>(cities.<span class="mth">get</span>(i));
+}
+<span class="cmt">// For-each</span>
+<span class="kw">for</span> (<span class="cls">String</span> c : cities) {
+  <span class="cls">System</span>.out.<span class="mth">println</span>(c);
+}
+<span class="cmt">// Impresión rápida</span>
+<span class="cls">System</span>.out.<span class="mth">println</span>(cities.<span class="mth">toString</span>());</pre>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     COMPARATIVA
+══════════════════════════════════════════════ -->
+<div class="section-head">
+  <div class="num">IV</div>
+  <div class="label">
+    <h2>Comparativa: Array vs ArrayList</h2>
+    <p>¿Cuándo usar cada uno?</p>
+  </div>
+</div>
+
+<div class="grid cols-2">
+  <div class="card wide">
+    <div class="card-stripe stripe-amber"></div>
+    <div class="card-head"><h3>Array vs ArrayList</h3><span class="tag tag-amber">referencia</span></div>
+    <div class="card-body">
+      <table>
+        <thead>
+          <tr>
+            <th>Característica</th>
+            <th>Array  [ ]</th>
+            <th>ArrayList</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Tamaño</td><td>Fijo al crearlo</td><td>Dinámico (crece/reduce)</td></tr>
+          <tr><td>Tipo de datos</td><td>Primitivos y objetos</td><td>Solo objetos (no int, double…)</td></tr>
+          <tr><td>Acceso</td><td><code>array[i]</code></td><td><code>list.get(i)</code></td></tr>
+          <tr><td>Longitud / tamaño</td><td><code>array.length</code></td><td><code>list.size()</code></td></tr>
+          <tr><td>Rendimiento</td><td>Más rápido</td><td>Algo más lento</td></tr>
+          <tr><td>Añadir / Borrar</td><td>Manual (difícil)</td><td><code>add()</code> / <code>remove()</code></td></tr>
+          <tr><td>Cuándo usarlo</td><td>Tamaño conocido y fijo</td><td>Tamaño variable o desconocido</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     EJERCICIOS RESUELTOS
+══════════════════════════════════════════════ -->
+<div class="section-head">
+  <div class="num">V</div>
+  <div class="label">
+    <h2>Ejercicios Resueltos</h2>
+    <p>Arrays unidimensionales y bidimensionales</p>
+  </div>
+</div>
+
+<div class="grid">
+
+  <!-- Ejercicio 1 -->
+  <div class="card">
+    <div class="card-stripe stripe-red"></div>
+    <div class="card-head"><h3>Ejercicio 1 · Suma y Media</h3><span class="tag tag-red">1D</span></div>
+    <div class="card-body">
+      <div class="ex-badge">Array double · for estándar</div>
+      <div class="ex-goal">Crear array de precios y calcular suma y media.</div>
+<pre><span class="kw">double</span>[] precios = <span class="kw">new double</span>[<span class="num">5</span>];
+precios[<span class="num">0</span>] = <span class="num">15.50</span>; precios[<span class="num">1</span>] = <span class="num">20.00</span>;
+precios[<span class="num">2</span>] =  <span class="num">5.25</span>; precios[<span class="num">3</span>] = <span class="num">12.00</span>;
+precios[<span class="num">4</span>] =  <span class="num">8.75</span>;
+<span class="kw">double</span> suma = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; precios.length; i++) {
+  suma += precios[i];
+}
+<span class="kw">double</span> media = suma / precios.length;
+<span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"Suma: "</span>  + suma);
+<span class="cls">System</span>.out.<span class="mth">println</span>(<span class="str">"Media: "</span> + media);</pre>
+      <div class="ex-result">Resultado esperado</div>
+<pre>Suma total: 61.5
+Valor medio: 12.3</pre>
+    </div>
+  </div>
+
+  <!-- Ejercicio 2 -->
+  <div class="card">
+    <div class="card-stripe stripe-red"></div>
+    <div class="card-head"><h3>Ejercicio 2 · Conteo</h3><span class="tag tag-red">1D</span></div>
+    <div class="card-body">
+      <div class="ex-badge">Array int · for-each · condicional</div>
+      <div class="ex-goal">Contar calificaciones ≥ 90 con for-each.</div>
+<pre><span class="kw">int</span>[] cal = {<span class="num">85</span>,<span class="num">92</span>,<span class="num">78</span>,<span class="num">95</span>,<span class="num">88</span>,<span class="num">91</span>,<span class="num">75</span>,<span class="num">99</span>};
+<span class="kw">int</span> sobres = <span class="num">0</span>;
+<span class="kw">for</span> (<span class="kw">int</span> c : cal) {
+  <span class="kw">if</span> (c &gt;= <span class="num">90</span>) sobres++;
+}
+<span class="cls">System</span>.out.<span class="mth">println</span>(
+  <span class="str">"Hay "</span> + sobres + <span class="str">" sobresalientes"</span>
+);</pre>
+      <div class="ex-result">Resultado esperado</div>
+<pre>Total: 8
+Hay 4 alumnos con sobresaliente</pre>
+    </div>
+  </div>
+
+  <!-- Ejercicio 3 -->
+  <div class="card">
+    <div class="card-stripe stripe-red"></div>
+    <div class="card-head"><h3>Ejercicio 3 · Arrays.toString()</h3><span class="tag tag-red">1D</span></div>
+    <div class="card-body">
+      <div class="ex-badge">Array String · utilidad Arrays</div>
+      <div class="ex-goal">Imprimir array completo en una sola línea.</div>
+<pre><span class="kw">import</span> java.util.Arrays;
+
+<span class="cls">String</span>[] dias = {
+  <span class="str">"Lunes"</span>, <span class="str">"Martes"</span>, <span class="str">"Miércoles"</span>,
+  <span class="str">"Jueves"</span>, <span class="str">"Viernes"</span>,
+  <span class="str">"Sábado"</span>, <span class="str">"Domingo"</span>
+};
+<span class="cls">System</span>.out.<span class="mth">println</span>(
+  <span class="cls">Arrays</span>.<span class="mth">toString</span>(dias)
+);</pre>
+      <div class="ex-result">Resultado esperado</div>
+<pre>[Lunes, Martes, Miércoles,
+ Jueves, Viernes, Sábado, Domingo]</pre>
+    </div>
+  </div>
+
+  <!-- Ejercicio 4 -->
+  <div class="card">
+    <div class="card-stripe stripe-blue"></div>
+    <div class="card-head"><h3>Ejercicio 4 · Matriz Identidad</h3><span class="tag tag-blue">2D</span></div>
+    <div class="card-body">
+      <div class="ex-badge">Matriz 3×3 · acceso por índice</div>
+      <div class="ex-goal">Declarar matriz identidad y acceder a posición central.</div>
+<pre><span class="kw">int</span>[][] m = {
+  {<span class="num">1</span>, <span class="num">0</span>, <span class="num">0</span>},
+  {<span class="num">0</span>, <span class="num">1</span>, <span class="num">0</span>},
+  {<span class="num">0</span>, <span class="num">0</span>, <span class="num">1</span>}
+};
+<span class="cls">System</span>.out.<span class="mth">println</span>(m[<span class="num">1</span>][<span class="num">1</span>]);     <span class="cmt">// 1</span>
+<span class="cls">System</span>.out.<span class="mth">println</span>(m.length);    <span class="cmt">// 3 filas</span>
+<span class="cls">System</span>.out.<span class="mth">println</span>(m[<span class="num">0</span>].length); <span class="cmt">// 3 cols</span></pre>
+      <div class="ex-result">Resultado esperado</div>
+<pre>Valor [1][1]: 1
+Filas: 3 · Columnas: 3</pre>
+    </div>
+  </div>
+
+  <!-- Ejercicio 5 -->
+  <div class="card">
+    <div class="card-stripe stripe-blue"></div>
+    <div class="card-head"><h3>Ejercicio 5 · Suma por Fila</h3><span class="tag tag-blue">2D</span></div>
+    <div class="card-body">
+      <div class="ex-badge">Matriz 4×5 · bucles anidados</div>
+      <div class="ex-goal">Calcular suma de elementos por cada fila.</div>
+<pre><span class="kw">int</span>[][] datos = {
+  {<span class="num">10</span>,<span class="num">2</span>,<span class="num">5</span>,<span class="num">8</span>,<span class="num">1</span>},
+  {<span class="num">3</span>,<span class="num">15</span>,<span class="num">7</span>,<span class="num">6</span>,<span class="num">9</span>},
+  {<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>,<span class="num">5</span>},
+  {<span class="num">10</span>,<span class="num">10</span>,<span class="num">10</span>,<span class="num">10</span>,<span class="num">10</span>}
+};
+<span class="kw">for</span> (<span class="kw">int</span> f=<span class="num">0</span>; f&lt;datos.length; f++) {
+  <span class="kw">int</span> suma = <span class="num">0</span>;
+  <span class="kw">for</span> (<span class="kw">int</span> c=<span class="num">0</span>; c&lt;datos[f].length; c++) {
+    suma += datos[f][c];
+  }
+  <span class="cls">System</span>.out.<span class="mth">println</span>(
+    <span class="str">"Fila "</span>+f+<span class="str">": "</span>+suma
+  );
+}</pre>
+      <div class="ex-result">Resultado esperado</div>
+<pre>Fila 0: 26  · Fila 1: 40
+Fila 2: 15  · Fila 3: 50</pre>
+    </div>
+  </div>
+
+</div><!-- /grid ejercicios -->
+
+<div class="footnote">
+  <span>Arrays y Colecciones en Java · java.util.ArrayList · java.util.Arrays</span>
+  <span>LyPaw · Vimap</span>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conjuntos (Set) en Java — Guía Completa</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fdfaf5; --s1: #f5f0e8; --s2: #ede8df; --border: #d8d0c0;
+    --ink: #1a1612; --ink2: #3d3830; --muted: #8a7f6e;
+    --a: #d14c00; --b: #0057a8; --c: #1a7a40; --d: #6e1a7a;
+    --code-bg: #1a1612; --code-fg: #e8dcc8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Space Grotesk', sans-serif; background: var(--bg); color: var(--ink); padding: 2rem 1.5rem 5rem; }
+
+  header { max-width: 1100px; margin: 0 auto 2rem; display: flex; align-items: stretch; border: 2px solid var(--ink); border-radius: 4px; overflow: hidden; }
+  .h-accent { width: 8px; background: repeating-linear-gradient(45deg, var(--c) 0, var(--c) 10px, transparent 10px, transparent 20px); flex-shrink: 0; }
+  .h-main { padding: 1.5rem 2rem; flex: 1; }
+  .h-main h1 { font-size: clamp(1.6rem,4vw,2.6rem); font-weight: 700; }
+  .h-main h1 span { color: var(--c); }
+  .h-main p { font-family: 'Fira Code', monospace; font-size: 0.7rem; color: var(--muted); margin-top: 0.4rem; }
+  .h-side { background: var(--ink); color: var(--bg); padding: 1.5rem 1.2rem; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; gap: 1rem; min-width: 120px; }
+  .h-side .brand { font-family: 'Fira Code', monospace; font-size: 0.62rem; writing-mode: vertical-lr; text-orientation: mixed; letter-spacing: 2px; }
+  .h-side .version { font-family: 'Fira Code', monospace; font-size: 0.6rem; color: var(--c); }
+
+  .sbar { max-width: 1100px; margin: 2.5rem auto 1rem; display: flex; align-items: center; gap: 1rem; }
+  .sbar::before { content: ''; width: 20px; height: 2px; background: var(--ink); }
+  .sbar h2 { font-size: 0.7rem; font-family: 'Fira Code', monospace; text-transform: uppercase; letter-spacing: 2px; }
+  .sbar .num { font-family: 'Fira Code', monospace; font-size: 0.62rem; color: var(--muted); }
+  .sbar::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
+  .card { background: var(--s1); border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
+  .card.wide { grid-column: span 2; }
+  .ct { height: 4px; }
+  .cta { background: var(--a); } .ctb { background: var(--b); } .ctc { background: var(--c); } .ctd { background: var(--d); }
+  .ch { padding: 0.7rem 1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .ch h3 { font-size: 0.7rem; font-family: 'Fira Code', monospace; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ink2); }
+  .tag { font-family: 'Fira Code', monospace; font-size: 0.6rem; padding: 0.15rem 0.55rem; border-radius: 2px; }
+  .ta { background: #fce8df; color: var(--a); } .tb { background: #dce8f5; color: var(--b); }
+  .tc { background: #daf0e5; color: var(--c); } .td { background: #f0dcf5; color: var(--d); }
+  .cb { padding: 1rem; }
+  pre { background: var(--code-bg); color: var(--code-fg); border-radius: 3px; padding: 0.9rem 1rem; font-family: 'Fira Code', monospace; font-size: 0.72rem; line-height: 1.75; overflow-x: auto; white-space: pre; }
+  code { font-family: 'Fira Code', monospace; background: var(--s2); border: 1px solid var(--border); border-radius: 2px; padding: 0.1em 0.35em; font-size: 0.8em; color: var(--a); }
+  .mlist { display: flex; flex-direction: column; gap: 0.35rem; }
+  .mrow { display: flex; gap: 0.6rem; align-items: flex-start; padding: 0.45rem 0.7rem; background: var(--s2); border-radius: 2px; border-left: 3px solid transparent; }
+  .mrow.a { border-color: var(--a); } .mrow.b { border-color: var(--b); } .mrow.c { border-color: var(--c); } .mrow.d { border-color: var(--d); }
+  .mn { font-family: 'Fira Code', monospace; font-size: 0.7rem; font-weight: 600; min-width: 160px; flex-shrink: 0; }
+  .mn.a { color: var(--a); } .mn.b { color: var(--b); } .mn.c { color: var(--c); } .mn.d { color: var(--d); }
+  .md { font-size: 0.72rem; color: var(--ink2); line-height: 1.4; }
+  .callout { background: #fff8e6; border: 1px solid #f0d060; border-radius: 3px; padding: 0.6rem 0.85rem; font-size: 0.72rem; margin-top: 0.7rem; line-height: 1.5; color: var(--ink2); }
+  .callout strong { color: #8a6800; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 0.2rem; }
+  .math-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+  .op-card { background: var(--s2); border: 1px solid var(--border); border-radius: 3px; padding: 0.5rem 0.8rem; text-align: center; flex: 1; min-width: 80px; }
+  .op-card .sym { font-size: 1.2rem; margin-bottom: 0.2rem; }
+  .op-card .opname { font-family: 'Fira Code', monospace; font-size: 0.65rem; color: var(--muted); }
+  .op-card .method { font-family: 'Fira Code', monospace; font-size: 0.62rem; color: var(--c); margin-top: 0.1rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
+  th { font-family: 'Fira Code', monospace; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1px; padding: 0.45rem 0.6rem; border-bottom: 2px solid var(--ink); text-align: left; color: var(--muted); }
+  td { padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+  td:first-child { font-family: 'Fira Code', monospace; font-size: 0.7rem; color: var(--b); }
+  tr:last-child td { border-bottom: none; }
+  .kw { color: #e07b54; } .cls { color: #72b8d4; } .mth { color: #a8d8a8; } .str { color: #f0c070; } .cmt { color: #5a5248; font-style: italic; } .num { color: #d4a8e0; }
+  footer { max-width: 1100px; margin: 2.5rem auto 0; border-top: 1px solid var(--border); padding-top: 0.6rem; font-family: 'Fira Code', monospace; font-size: 0.65rem; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.3rem; }
+  @media(max-width:700px){ .card.wide{grid-column:span 1;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-accent"></div>
+  <div class="h-main">
+    <h1>Conjuntos <span>(Set)</span> en Java</h1>
+    <p>java.util.HashSet · LinkedHashSet · TreeSet · Set.of · Operaciones de teoría de conjuntos</p>
+  </div>
+  <div class="h-side">
+    <span class="brand">LyPaw · Vimap</span>
+    <span class="version">Java 8/9+</span>
+  </div>
+</header>
+
+<div class="sbar"><h2>Tipos de Set</h2><span class="num">01</span></div>
+<div class="grid">
+  <div class="card">
+    <div class="ct cta"></div>
+    <div class="ch"><h3>HashSet — sin orden</h3><span class="tag ta">máximo rendimiento</span></div>
+    <div class="cb">
+<pre><span class="cls">Set</span>&lt;<span class="cls">String</span>&gt; hashSet = <span class="kw">new</span> <span class="cls">HashSet</span>&lt;&gt;();
+hashSet.<span class="mth">add</span>(<span class="str">"Manzana"</span>);
+hashSet.<span class="mth">add</span>(<span class="str">"Banana"</span>);
+hashSet.<span class="mth">add</span>(<span class="str">"Naranja"</span>);
+hashSet.<span class="mth">add</span>(<span class="str">"Manzana"</span>); <span class="cmt">// duplicado ignorado</span>
+
+hashSet.<span class="mth">size</span>();                    <span class="cmt">// → 3</span>
+hashSet.<span class="mth">contains</span>(<span class="str">"Banana"</span>);       <span class="cmt">// → true</span>
+hashSet.<span class="mth">isEmpty</span>();                 <span class="cmt">// → false</span></pre>
+      <div class="callout"><strong>⚠ Orden</strong>El HashSet no garantiza el orden de los elementos. Usar solo cuando el orden no importa.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ctb"></div>
+    <div class="ch"><h3>LinkedHashSet — orden inserción</h3><span class="tag tb">mantiene orden</span></div>
+    <div class="cb">
+<pre><span class="cls">Set</span>&lt;<span class="cls">String</span>&gt; lhs = <span class="kw">new</span> <span class="cls">LinkedHashSet</span>&lt;&gt;();
+lhs.<span class="mth">add</span>(<span class="str">"Z"</span>);
+lhs.<span class="mth">add</span>(<span class="str">"A"</span>);
+lhs.<span class="mth">add</span>(<span class="str">"M"</span>);
+lhs.<span class="mth">add</span>(<span class="str">"A"</span>); <span class="cmt">// duplicado ignorado</span>
+<span class="cmt">// → [Z, A, M]  (orden de inserción)</span>
+
+<span class="cmt">// Caso práctico: eliminar duplicados</span>
+<span class="cmt">// manteniendo la primera aparición</span>
+<span class="cls">List</span>&lt;<span class="cls">String</span>&gt; lista = <span class="cls">Arrays</span>.<span class="mth">asList</span>(
+    <span class="str">"Ana"</span>,<span class="str">"Carlos"</span>,<span class="str">"Ana"</span>,<span class="str">"Beatriz"</span>
+);
+<span class="cls">Set</span>&lt;<span class="cls">String</span>&gt; sinDup = <span class="kw">new</span> <span class="cls">LinkedHashSet</span>&lt;&gt;(lista);
+<span class="cmt">// → [Ana, Carlos, Beatriz]</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ctc"></div>
+    <div class="ch"><h3>TreeSet — orden automático</h3><span class="tag tc">orden natural</span></div>
+    <div class="cb">
+<pre><span class="cls">Set</span>&lt;<span class="cls">String</span>&gt; ts = <span class="kw">new</span> <span class="cls">TreeSet</span>&lt;&gt;();
+ts.<span class="mth">add</span>(<span class="str">"Zanahoria"</span>);
+ts.<span class="mth">add</span>(<span class="str">"Manzana"</span>);
+ts.<span class="mth">add</span>(<span class="str">"Banana"</span>);
+<span class="cmt">// → [Banana, Manzana, Zanahoria] ← alfabético</span>
+
+<span class="cls">TreeSet</span>&lt;<span class="cls">String</span>&gt; cast = (<span class="cls">TreeSet</span>&lt;<span class="cls">String</span>&gt;) ts;
+cast.<span class="mth">first</span>();             <span class="cmt">// → "Banana"</span>
+cast.<span class="mth">last</span>();              <span class="cmt">// → "Zanahoria"</span>
+cast.<span class="mth">headSet</span>(<span class="str">"N"</span>);        <span class="cmt">// elementos &lt; "N"</span>
+cast.<span class="mth">tailSet</span>(<span class="str">"M"</span>);        <span class="cmt">// elementos &gt;= "M"</span>
+
+<span class="cmt">// Comparator personalizado (por longitud)</span>
+<span class="cls">Set</span>&lt;<span class="cls">String</span>&gt; porLong = <span class="kw">new</span> <span class="cls">TreeSet</span>&lt;&gt;(
+    <span class="cls">Comparator</span>.<span class="mth">comparingInt</span>(<span class="cls">String</span>::length)
+);
+porLong.<span class="mth">add</span>(<span class="str">"A"</span>); porLong.<span class="mth">add</span>(<span class="str">"Elefante"</span>); porLong.<span class="mth">add</span>(<span class="str">"Gato"</span>);
+<span class="cmt">// → [A, Gato, Elefante]</span></pre>
+    </div>
+  </div>
+</div>
+
+<div class="sbar"><h2>Operaciones de teoría de conjuntos</h2><span class="num">02</span></div>
+<div class="grid">
+  <div class="card wide">
+    <div class="ct ctd"></div>
+    <div class="ch"><h3>Unión · Intersección · Diferencia · Diferencia simétrica</h3><span class="tag td">set theory</span></div>
+    <div class="cb">
+      <div class="math-row">
+        <div class="op-card"><div class="sym">∪</div><div class="opname">Unión</div><div class="method">addAll()</div></div>
+        <div class="op-card"><div class="sym">∩</div><div class="opname">Intersección</div><div class="method">retainAll()</div></div>
+        <div class="op-card"><div class="sym">−</div><div class="opname">Diferencia</div><div class="method">removeAll()</div></div>
+        <div class="op-card"><div class="sym">△</div><div class="opname">Dif. simétrica</div><div class="method">addAll+removeAll</div></div>
+        <div class="op-card"><div class="sym">⊆</div><div class="opname">Subconjunto</div><div class="method">containsAll()</div></div>
+      </div>
+      <div style="margin-top:0.8rem;">
+<pre><span class="cls">Set</span>&lt;<span class="cls">Integer</span>&gt; A = <span class="kw">new</span> <span class="cls">HashSet</span>&lt;&gt;(<span class="cls">Arrays</span>.<span class="mth">asList</span>(<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>,<span class="num">5</span>));
+<span class="cls">Set</span>&lt;<span class="cls">Integer</span>&gt; B = <span class="kw">new</span> <span class="cls">HashSet</span>&lt;&gt;(<span class="cls">Arrays</span>.<span class="mth">asList</span>(<span class="num">4</span>,<span class="num">5</span>,<span class="num">6</span>,<span class="num">7</span>,<span class="num">8</span>));
+
+<span class="cls">Set</span>&lt;<span class="cls">Integer</span>&gt; union = <span class="kw">new</span> <span class="cls">HashSet</span>&lt;&gt;(A); union.<span class="mth">addAll</span>(B);
+<span class="cmt">// A ∪ B → {1,2,3,4,5,6,7,8}</span>
+
+<span class="cls">Set</span>&lt;<span class="cls">Integer</span>&gt; inter = <span class="kw">new</span> <span class="cls">HashSet</span>&lt;&gt;(A); inter.<span class="mth">retainAll</span>(B);
+<span class="cmt">// A ∩ B → {4,5}</span>
+
+<span class="cls">Set</span>&lt;<span class="cls">Integer</span>&gt; dif = <span class="kw">new</span> <span class="cls">HashSet</span>&lt;&gt;(A); dif.<span class="mth">removeAll</span>(B);
+<span class="cmt">// A − B → {1,2,3}</span>
+
+<span class="cls">Set</span>&lt;<span class="cls">Integer</span>&gt; sim = <span class="kw">new</span> <span class="cls">HashSet</span>&lt;&gt;(A); sim.<span class="mth">addAll</span>(B);
+<span class="cls">Set</span>&lt;<span class="cls">Integer</span>&gt; tmp = <span class="kw">new</span> <span class="cls">HashSet</span>&lt;&gt;(A); tmp.<span class="mth">retainAll</span>(B);
+sim.<span class="mth">removeAll</span>(tmp);
+<span class="cmt">// A △ B → {1,2,3,6,7,8}</span>
+
+<span class="cls">Set</span>&lt;<span class="cls">Integer</span>&gt; sub = <span class="kw">new</span> <span class="cls">HashSet</span>&lt;&gt;(<span class="cls">Arrays</span>.<span class="mth">asList</span>(<span class="num">2</span>,<span class="num">3</span>));
+A.<span class="mth">containsAll</span>(sub); <span class="cmt">// A ⊇ {2,3} → true</span></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sbar"><h2>Métodos de instancia y conjuntos inmutables</h2><span class="num">03</span></div>
+<div class="grid">
+  <div class="card">
+    <div class="ct cta"></div>
+    <div class="ch"><h3>Eliminar y modificar</h3><span class="tag ta">remove / clear</span></div>
+    <div class="cb">
+<pre><span class="cls">Set</span>&lt;<span class="cls">String</span>&gt; frutas = <span class="kw">new</span> <span class="cls">HashSet</span>&lt;&gt;(
+    <span class="cls">Arrays</span>.<span class="mth">asList</span>(<span class="str">"Manzana"</span>,<span class="str">"Banana"</span>,<span class="str">"Naranja"</span>)
+);
+
+<span class="cmt">// remove — elimina elemento específico</span>
+frutas.<span class="mth">remove</span>(<span class="str">"Banana"</span>);
+
+<span class="cmt">// removeAll — elimina múltiples</span>
+frutas.<span class="mth">removeAll</span>(<span class="cls">Arrays</span>.<span class="mth">asList</span>(<span class="str">"Manzana"</span>,<span class="str">"Pera"</span>));
+<span class="cmt">// "Pera" no existe → se ignora</span>
+
+<span class="cmt">// retainAll — mantiene solo los indicados</span>
+<span class="cls">Set</span>&lt;<span class="cls">String</span>&gt; mantener = <span class="cls">Set</span>.<span class="mth">of</span>(<span class="str">"Naranja"</span>,<span class="str">"Uva"</span>);
+frutas.<span class="mth">retainAll</span>(mantener);
+
+<span class="cmt">// clear — vacía el conjunto</span>
+frutas.<span class="mth">clear</span>();
+frutas.<span class="mth">isEmpty</span>(); <span class="cmt">// → true</span></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct ctb"></div>
+    <div class="ch"><h3>Conjuntos inmutables + iteración</h3><span class="tag tb">Java 9+ / Java 8+</span></div>
+    <div class="cb">
+<pre><span class="cmt">// Set.of — inmutable (Java 9+)</span>
+<span class="cls">Set</span>&lt;<span class="cls">String</span>&gt; inm = <span class="cls">Set</span>.<span class="mth">of</span>(<span class="str">"Rojo"</span>, <span class="str">"Verde"</span>, <span class="str">"Azul"</span>);
+<span class="cmt">// inm.add("X") → UnsupportedOperationException ❌</span>
+
+<span class="cmt">// Convertir a mutable</span>
+<span class="cls">Set</span>&lt;<span class="cls">String</span>&gt; mut = <span class="kw">new</span> <span class="cls">HashSet</span>&lt;&gt;(inm);
+mut.<span class="mth">add</span>(<span class="str">"Amarillo"</span>); <span class="cmt">// ✅</span>
+
+<span class="cmt">// Iteración for-each</span>
+<span class="kw">for</span> (<span class="cls">String</span> c : mut) <span class="cls">System</span>.out.<span class="mth">print</span>(c + <span class="str">" "</span>);
+
+<span class="cmt">// forEach con lambda (Java 8+)</span>
+mut.<span class="mth">forEach</span>(c -> <span class="cls">System</span>.out.<span class="mth">print</span>(c + <span class="str">" "</span>));
+
+<span class="cmt">// Stream — filtrar y operar</span>
+mut.<span class="mth">stream</span>().<span class="mth">filter</span>(c -> c.length() > <span class="num">4</span>)
+           .<span class="mth">forEach</span>(<span class="cls">System</span>.out::println);</pre>
+    </div>
+  </div>
+</div>
+
+<div class="sbar"><h2>Comparativa de tipos y referencia completa</h2><span class="num">04</span></div>
+<div class="grid">
+  <div class="card wide">
+    <div class="ct ctc"></div>
+    <div class="ch"><h3>HashSet vs LinkedHashSet vs TreeSet</h3><span class="tag tc">cuándo usar cada uno</span></div>
+    <div class="cb">
+      <table>
+        <thead><tr><th>Tipo</th><th>Orden</th><th>Duplicados</th><th>null</th><th>Rendimiento</th><th>Cuándo usar</th></tr></thead>
+        <tbody>
+          <tr><td>HashSet</td><td>Sin orden</td><td>❌</td><td>✅</td><td>O(1)</td><td>Uso general, sin importar orden</td></tr>
+          <tr><td>LinkedHashSet</td><td>Inserción</td><td>❌</td><td>✅</td><td>O(1)+</td><td>Eliminar duplicados manteniendo orden</td></tr>
+          <tr><td>TreeSet</td><td>Natural/Comparator</td><td>❌</td><td>❌</td><td>O(log n)</td><td>Elementos ordenados o subconjuntos</td></tr>
+          <tr><td>Set.of()</td><td>Sin orden</td><td>❌</td><td>❌</td><td>O(1)</td><td>Conjuntos constantes</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:1rem;display:grid;grid-template-columns:1fr 1fr;gap:0.35rem;">
+        <div class="mlist">
+          <div class="mrow a"><span class="mn a">add(elem)</span><span class="md">Añade (ignora duplicados)</span></div>
+          <div class="mrow a"><span class="mn a">remove(elem)</span><span class="md">Elimina elemento</span></div>
+          <div class="mrow a"><span class="mn a">contains(elem)</span><span class="md">¿Existe el elemento?</span></div>
+          <div class="mrow a"><span class="mn a">size()</span><span class="md">Número de elementos únicos</span></div>
+          <div class="mrow a"><span class="mn a">isEmpty()</span><span class="md">¿Está vacío?</span></div>
+          <div class="mrow a"><span class="mn a">clear()</span><span class="md">Elimina todos los elementos</span></div>
+          <div class="mrow b"><span class="mn b">addAll(col)</span><span class="md">Unión de conjuntos</span></div>
+          <div class="mrow b"><span class="mn b">removeAll(col)</span><span class="md">Diferencia de conjuntos</span></div>
+          <div class="mrow b"><span class="mn b">retainAll(col)</span><span class="md">Intersección de conjuntos</span></div>
+          <div class="mrow b"><span class="mn b">containsAll(col)</span><span class="md">¿Contiene todos? (⊆)</span></div>
+        </div>
+        <div class="mlist">
+          <div class="mrow c"><span class="mn c">Set.of(...)</span><span class="md">Conjunto inmutable (Java 9+)</span></div>
+          <div class="mrow c"><span class="mn c">forEach(lambda)</span><span class="md">Iteración funcional (Java 8+)</span></div>
+          <div class="mrow c"><span class="mn c">stream()</span><span class="md">Stream API para operaciones avanzadas</span></div>
+          <div class="mrow d"><span class="mn d">first()</span><span class="md">Primer elemento (TreeSet)</span></div>
+          <div class="mrow d"><span class="mn d">last()</span><span class="md">Último elemento (TreeSet)</span></div>
+          <div class="mrow d"><span class="mn d">headSet(e)</span><span class="md">Elementos menores que e (TreeSet)</span></div>
+          <div class="mrow d"><span class="mn d">tailSet(e)</span><span class="md">Elementos ≥ e (TreeSet)</span></div>
+          <div class="mrow d"><span class="mn d">Comparator.comparingInt()</span><span class="md">Orden personalizado en TreeSet</span></div>
+          <div class="mrow d"><span class="mn d">new LinkedHashSet(list)</span><span class="md">Eliminar duplicados con orden</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer><span>Set · HashSet · LinkedHashSet · TreeSet · java.util · Java 8/9+</span><span>LyPaw · Vimap</span></footer>
+</body>
+</html>
