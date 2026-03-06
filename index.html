@@ -542,37 +542,44 @@ pre.code-block {
   <div class="s-item s-right" id="status-file">ViMap v2.0</div>
 </div>
 
+<!-- Counter.dev tracking -->
+<script src="https://cdn.counter.dev/script.js" data-id="44cc4ad0-a6bc-4937-853e-05d23d821625" data-utcoffset="1"></script>
+
 <script>
 /* ═══════════════════════════════════════════════════════════
-   VISIT COUNTER  — localStorage, sutil fade-in
+   VISIT COUNTER  — counter.dev API, sutil fade-in
 ═══════════════════════════════════════════════════════════ */
 (function() {
-  try {
-    const KEY = 'vimap_visits';
-    const SESSION_KEY = 'vimap_session';
+  const COUNTER_ID = '44cc4ad0-a6bc-4937-853e-05d23d821625';
 
-    // Solo contar una vez por sesión del navegador
-    let count = parseInt(localStorage.getItem(KEY) || '0', 10);
-    const alreadyCounted = sessionStorage.getItem(SESSION_KEY);
+  window.addEventListener('DOMContentLoaded', function() {
+    const el      = document.getElementById('visit-count');
+    const wrapper = document.getElementById('status-visits');
+    if (!el || !wrapper) return;
 
-    if (!alreadyCounted) {
-      count += 1;
-      localStorage.setItem(KEY, count);
-      sessionStorage.setItem(SESSION_KEY, '1');
-    }
-
-    // Mostrar con fade-in sutil al cargar
-    window.addEventListener('DOMContentLoaded', function() {
-      const el = document.getElementById('visit-count');
-      const wrapper = document.getElementById('status-visits');
-      if (el && wrapper) {
-        el.textContent = count.toLocaleString('es');
-        setTimeout(function() { wrapper.classList.add('visible'); }, 800);
-      }
-    });
-  } catch(e) {
-    // Si localStorage no está disponible, simplemente no se muestra
-  }
+    // Llamada a la API pública de counter.dev para obtener el total
+    fetch('https://api.counter.dev/counts?id=' + COUNTER_ID)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        // La API devuelve { total: N, ... }
+        const total = data.total || data.count || data.visits || null;
+        if (total !== null) {
+          el.textContent = parseInt(total).toLocaleString('es');
+        } else {
+          // Si la estructura cambia, intentar sumar todos los valores
+          const sum = Object.values(data).reduce(function(acc, v) {
+            return acc + (typeof v === 'number' ? v : 0);
+          }, 0);
+          el.textContent = sum > 0 ? sum.toLocaleString('es') : '—';
+        }
+        setTimeout(function() { wrapper.classList.add('visible'); }, 400);
+      })
+      .catch(function() {
+        // Si la API falla, mostrar guión sutil sin romper nada
+        el.textContent = '—';
+        setTimeout(function() { wrapper.classList.add('visible'); }, 400);
+      });
+  });
 })();
 
 /* ═══════════════════════════════════════════════════════════
