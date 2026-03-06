@@ -542,40 +542,48 @@ pre.code-block {
   <div class="s-item s-right" id="status-file">ViMap v2.0</div>
 </div>
 
-<!-- Counter.dev tracking -->
-<script src="https://cdn.counter.dev/script.js" data-id="44cc4ad0-a6bc-4937-853e-05d23d821625" data-utcoffset="1"></script>
-
 <script>
 /* ═══════════════════════════════════════════════════════════
-   VISIT COUNTER  — counter.dev API, sutil fade-in
+   VISIT COUNTER  — Supabase, sutil fade-in
 ═══════════════════════════════════════════════════════════ */
 (function() {
-  const COUNTER_ID = '44cc4ad0-a6bc-4937-853e-05d23d821625';
+  const SUPABASE_URL = 'https://wwxrxfleeqbtftxdryiu.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_QLmiGMyrqofnNkl4JTH1zA_iM3aokL5';
+  const headers = {
+    'apikey': SUPABASE_KEY,
+    'Authorization': 'Bearer ' + SUPABASE_KEY,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation'
+  };
 
   window.addEventListener('DOMContentLoaded', function() {
     const el      = document.getElementById('visit-count');
     const wrapper = document.getElementById('status-visits');
     if (!el || !wrapper) return;
 
-    // Llamada a la API pública de counter.dev para obtener el total
-    fetch('https://api.counter.dev/counts?id=' + COUNTER_ID)
+    // 1. Sumar +1 a la visita
+    fetch(SUPABASE_URL + '/rest/v1/rpc/increment_visits', {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({})
+    }).catch(function() {
+      // Si falla el incremento, intentar de todas formas leer el valor
+    });
+
+    // 2. Leer el conteo actual y mostrarlo
+    fetch(SUPABASE_URL + '/rest/v1/visits?id=eq.1&select=count', {
+      headers: headers
+    })
       .then(function(r) { return r.json(); })
       .then(function(data) {
-        // La API devuelve { total: N, ... }
-        const total = data.total || data.count || data.visits || null;
-        if (total !== null) {
-          el.textContent = parseInt(total).toLocaleString('es');
+        if (data && data[0] && data[0].count !== undefined) {
+          el.textContent = parseInt(data[0].count).toLocaleString('es');
         } else {
-          // Si la estructura cambia, intentar sumar todos los valores
-          const sum = Object.values(data).reduce(function(acc, v) {
-            return acc + (typeof v === 'number' ? v : 0);
-          }, 0);
-          el.textContent = sum > 0 ? sum.toLocaleString('es') : '—';
+          el.textContent = '—';
         }
         setTimeout(function() { wrapper.classList.add('visible'); }, 400);
       })
       .catch(function() {
-        // Si la API falla, mostrar guión sutil sin romper nada
         el.textContent = '—';
         setTimeout(function() { wrapper.classList.add('visible'); }, 400);
       });
