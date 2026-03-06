@@ -561,14 +561,17 @@ pre.code-block {
     const wrapper = document.getElementById('status-visits');
     if (!el || !wrapper) return;
 
-    // 1. Sumar +1 a la visita
-    fetch(SUPABASE_URL + '/rest/v1/rpc/increment_visits', {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify({})
-    }).catch(function() {
-      // Si falla el incremento, intentar de todas formas leer el valor
-    });
+    // 1. Sumar +1 solo si es una sesión nueva (no cuenta recargas)
+    if (!sessionStorage.getItem('vimap_counted')) {
+      sessionStorage.setItem('vimap_counted', '1');
+      fetch(SUPABASE_URL + '/rest/v1/rpc/increment_visits', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({})
+      }).catch(function() {
+        // Si falla el incremento, intentar de todas formas leer el valor
+      });
+    }
 
     // 2. Leer el conteo actual y mostrarlo
     fetch(SUPABASE_URL + '/rest/v1/visits?id=eq.1&select=count', {
