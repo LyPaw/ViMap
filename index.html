@@ -444,6 +444,19 @@ pre.code-block {
 .statusbar .s-sep  { color: rgba(255,255,255,0.3); }
 .statusbar .s-right { margin-left: auto; }
 
+/* Visitor counter — sutil, integrado en statusbar */
+#status-visits {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+#status-visits.visible { opacity: 1; }
+#visit-count {
+  font-variant-numeric: tabular-nums;
+}
+
 /* Sidebar resize handle */
 .resize-handle {
   width: 4px;
@@ -520,10 +533,48 @@ pre.code-block {
   <div class="s-item">◉ <span id="status-lang">listo</span></div>
   <div class="s-sep">│</div>
   <div class="s-item" id="status-lines">—</div>
+  <div class="s-sep">│</div>
+  <div class="s-item" id="status-visits">
+    <span style="opacity:0.6">◈</span>
+    <span id="visit-count">—</span>
+    <span style="opacity:0.6">visitas</span>
+  </div>
   <div class="s-item s-right" id="status-file">ViMap v2.0</div>
 </div>
 
 <script>
+/* ═══════════════════════════════════════════════════════════
+   VISIT COUNTER  — localStorage, sutil fade-in
+═══════════════════════════════════════════════════════════ */
+(function() {
+  try {
+    const KEY = 'vimap_visits';
+    const SESSION_KEY = 'vimap_session';
+
+    // Solo contar una vez por sesión del navegador
+    let count = parseInt(localStorage.getItem(KEY) || '0', 10);
+    const alreadyCounted = sessionStorage.getItem(SESSION_KEY);
+
+    if (!alreadyCounted) {
+      count += 1;
+      localStorage.setItem(KEY, count);
+      sessionStorage.setItem(SESSION_KEY, '1');
+    }
+
+    // Mostrar con fade-in sutil al cargar
+    window.addEventListener('DOMContentLoaded', function() {
+      const el = document.getElementById('visit-count');
+      const wrapper = document.getElementById('status-visits');
+      if (el && wrapper) {
+        el.textContent = count.toLocaleString('es');
+        setTimeout(function() { wrapper.classList.add('visible'); }, 800);
+      }
+    });
+  } catch(e) {
+    // Si localStorage no está disponible, simplemente no se muestra
+  }
+})();
+
 /* ═══════════════════════════════════════════════════════════
    FILE TREE  — cargado desde data.json (no tocar este archivo)
    Para añadir archivos edita únicamente: data.json
@@ -583,7 +634,6 @@ function buildTree(data, container, depth = 0, pathParts = []) {
     row.style.paddingLeft = (8 + depth * 14) + 'px';
 
     if (isFiles) {
-      // ── Leaf folder: contains file entries ──────────────
       row.innerHTML = `
         <span class="tree-arrow">▶</span>
         <span class="tree-icon">📂</span>
@@ -595,7 +645,6 @@ function buildTree(data, container, depth = 0, pathParts = []) {
       children.className = 'tree-children';
 
       if (val.length === 0) {
-        // Empty folder placeholder
         const empty = document.createElement('div');
         empty.className = 'tree-row';
         empty.style.paddingLeft = (8 + (depth + 1) * 14) + 'px';
@@ -624,7 +673,6 @@ function buildTree(data, container, depth = 0, pathParts = []) {
           openFile(file);
           document.querySelectorAll('.tree-row').forEach(r => r.classList.remove('active'));
           fRow.classList.add('active');
-          // Full breadcrumb path
           const crumbHtml = currentPath
             .map((p, i) => i < currentPath.length - 1
               ? `<span>${p}</span><span class="sep">›</span>`
@@ -642,8 +690,6 @@ function buildTree(data, container, depth = 0, pathParts = []) {
       item.appendChild(children);
 
     } else {
-      // ── Branch folder: contains more folders ────────────
-      // Detect depth-0 (root subject) vs deeper folders
       const isRoot = depth === 0;
       row.innerHTML = `
         <span class="tree-arrow">▶</span>
@@ -667,14 +713,12 @@ function buildTree(data, container, depth = 0, pathParts = []) {
 
 /* ═══════════════════════════════════════════════════════════
    TABS  —  single slot architecture
-   contentPane es el único contenedor; guardamos el DOM node
-   de cada pestaña en entry.node para poder intercambiarlo.
 ═══════════════════════════════════════════════════════════ */
 const tabBar      = document.getElementById('tab-bar');
 const contentPane = document.getElementById('content-pane');
 const welcome     = document.getElementById('welcome-screen');
 
-let tabs = [];        // { file, tabEl, node: HTMLElement|null, loaded: bool }
+let tabs = [];
 let activeTab = null;
 
 function openFile(file) {
@@ -708,11 +752,9 @@ function activateTab(entry) {
   welcome.style.display = 'none';
 
   if (entry.loaded && entry.node) {
-    // Swap node into contentPane
     contentPane.innerHTML = '';
     contentPane.appendChild(entry.node);
   } else {
-    // Show spinner, then load
     const node = document.createElement('div');
     node.style.cssText = 'display:flex;flex:1;flex-direction:column;overflow:hidden;min-height:0;';
     node.innerHTML = '<div class="loading"><div class="spinner"></div>cargando...</div>';
@@ -746,7 +788,7 @@ function closeTab(entry) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   LOAD CONTENT  — escribe dentro de entry.node
+   LOAD CONTENT
 ═══════════════════════════════════════════════════════════ */
 function loadContent(entry) {
   const file = entry.file;
@@ -827,20 +869,17 @@ function escapeHTML(s) {
 }
 
 function highlightJava(raw) {
-  // Process line by line to avoid regex collisions on HTML-escaped content
   return raw.split('\n').map(function(line) {
     return highlightLine(line);
   }).join('\n');
 }
 
 function highlightLine(line) {
-  // We work on the RAW line (not yet HTML-escaped), token by token
   var out = '';
   var i = 0;
   var len = line.length;
 
   while (i < len) {
-    // Block comment start (shouldn't span lines after split, but handle /*)
     if (line[i] === '/' && line[i+1] === '*') {
       var end = line.indexOf('*/', i + 2);
       if (end === -1) end = len - 2;
@@ -849,12 +888,10 @@ function highlightLine(line) {
       i = end + 2;
       continue;
     }
-    // Line comment
     if (line[i] === '/' && line[i+1] === '/') {
       out += '<span class="cmt">' + esc(line.slice(i)) + '</span>';
       break;
     }
-    // String literal "..."
     if (line[i] === '"') {
       var j = i + 1;
       while (j < len && !(line[j] === '"' && line[j-1] !== '\\')) j++;
@@ -863,7 +900,6 @@ function highlightLine(line) {
       i = j + 1;
       continue;
     }
-    // Char literal '.'
     if (line[i] === "'" && i + 2 < len) {
       var j = i + 1;
       while (j < len && !(line[j] === "'" && line[j-1] !== '\\')) j++;
@@ -872,7 +908,6 @@ function highlightLine(line) {
       i = j + 1;
       continue;
     }
-    // Annotation @Xxx
     if (line[i] === '@' && i + 1 < len && /[A-Za-z]/.test(line[i+1])) {
       var j = i + 1;
       while (j < len && /[A-Za-z0-9_]/.test(line[j])) j++;
@@ -880,7 +915,6 @@ function highlightLine(line) {
       i = j;
       continue;
     }
-    // Word token (keyword, class name, identifier, number)
     if (/[A-Za-z_$0-9]/.test(line[i])) {
       var j = i;
       while (j < len && /[A-Za-z_$0-9]/.test(line[j])) j++;
@@ -890,7 +924,6 @@ function highlightLine(line) {
       i = j;
       continue;
     }
-    // Everything else: escape and emit
     out += esc(line[i]);
     i++;
   }
@@ -945,4 +978,3 @@ document.addEventListener('mouseup', () => {
 </script>
 </body>
 </html>
-
