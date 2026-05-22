@@ -3,14 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="author" content="LyPaw(Manuel Fuentes Cruz)">
+<meta name="author" content="Manuel Fuentes Cruz">
 <title>ViMap</title>
-<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/LyPaw/ViMap/841576487e7cfcab6c0b5030f3e2b62e64a93995/Logo/icon.png">
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="Logo/icon.png">
 <style>
-/* ── RESET & BASE ─────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -35,20 +31,18 @@
 html, body { height: 100%; overflow: hidden; }
 
 body {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Segoe UI', 'Consolas', monospace;
   background: var(--bg);
   color: var(--text);
   display: flex;
   flex-direction: column;
 }
 
-/* ── SCROLLBAR ────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-/* ── HEADER ───────────────────────────────────────────────── */
 header {
   height: var(--header-h);
   background: var(--surface);
@@ -63,7 +57,6 @@ header {
 }
 
 .logo-mark {
-  font-family: 'Syne', sans-serif;
   font-weight: 800;
   font-size: 1.1rem;
   letter-spacing: -0.5px;
@@ -92,14 +85,12 @@ header {
   box-shadow: 0 0 6px var(--green);
 }
 
-/* ── MAIN LAYOUT ──────────────────────────────────────────── */
 .app {
   display: flex;
   flex: 1;
   overflow: hidden;
 }
 
-/* ── SIDEBAR ──────────────────────────────────────────────── */
 .sidebar {
   width: var(--sidebar-w);
   background: var(--surface);
@@ -116,9 +107,7 @@ header {
   flex-shrink: 0;
 }
 
-.search-box {
-  position: relative;
-}
+.search-box { position: relative; }
 
 .search-box input {
   width: 100%;
@@ -127,7 +116,7 @@ header {
   border-radius: 6px;
   padding: 6px 10px 6px 30px;
   color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Segoe UI', 'Consolas', monospace;
   font-size: 0.7rem;
   outline: none;
   transition: border-color 0.2s;
@@ -150,10 +139,7 @@ header {
   padding: 8px 6px 16px;
 }
 
-/* ── TREE NODES ───────────────────────────────────────────── */
-.tree-item {
-  position: relative;
-}
+.tree-item { position: relative; }
 
 .tree-row {
   display: flex;
@@ -199,7 +185,6 @@ header {
 }
 .tree-item.open > .tree-children { display: block; }
 
-/* File badges */
 .file-ext {
   margin-left: auto;
   font-size: 0.58rem;
@@ -211,9 +196,7 @@ header {
 .ext-java  { background: rgba(239,68,68,0.15);   color: #f87171; }
 .ext-md    { background: rgba(99,102,241,0.15);   color: #a5b4fc; }
 .ext-pdf   { background: rgba(245,158,11,0.15);   color: #fbbf24; }
-.ext-html  { background: rgba(34,211,238,0.15);   color: #67e8f9; }
 
-/* ── VIEWER ───────────────────────────────────────────────── */
 .viewer {
   flex: 1;
   display: flex;
@@ -222,7 +205,6 @@ header {
   background: var(--bg);
 }
 
-/* Tab bar */
 .tab-bar {
   height: 38px;
   background: var(--surface);
@@ -268,7 +250,6 @@ header {
 }
 .tab-close:hover { background: rgba(239,68,68,0.2); color: var(--red); }
 
-/* Welcome / empty state */
 .welcome {
   flex: 1;
   display: flex;
@@ -278,19 +259,10 @@ header {
   gap: 16px;
   color: var(--text3);
 }
-.welcome-glyph {
-  font-size: 3rem;
-  opacity: 0.3;
-}
-.welcome h2 {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.1rem;
-  color: var(--text3);
-  font-weight: 600;
-}
+.welcome-glyph { font-size: 3rem; opacity: 0.3; }
+.welcome h2 { font-size: 1.1rem; color: var(--text3); font-weight: 600; }
 .welcome p { font-size: 0.72rem; color: var(--text3); }
 
-/* Content pane — single slot that fills the viewer */
 .content-pane {
   flex: 1;
   min-height: 0;
@@ -298,7 +270,6 @@ header {
   display: flex;
   flex-direction: column;
 }
-/* Every direct child of content-pane should fill it */
 .content-pane > div {
   flex: 1;
   min-height: 0;
@@ -307,7 +278,6 @@ header {
   overflow: hidden;
 }
 
-/* Code view */
 .code-wrap {
   flex: 1;
   overflow: auto;
@@ -324,12 +294,7 @@ header {
   flex-shrink: 0;
 }
 
-.code-filename {
-  font-family: 'Syne', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text);
-}
+.code-filename { font-size: 0.8rem; font-weight: 600; color: var(--text); }
 
 .code-meta { font-size: 0.65rem; color: var(--text3); display: flex; gap: 12px; }
 .code-meta span { display: flex; align-items: center; gap: 4px; }
@@ -337,7 +302,7 @@ header {
 pre.code-block {
   background: transparent;
   padding: 20px 24px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Consolas', monospace;
   font-size: 0.78rem;
   line-height: 1.7;
   overflow-x: auto;
@@ -345,11 +310,7 @@ pre.code-block {
   counter-reset: line;
 }
 
-/* Line numbers */
-.line {
-  display: flex;
-  gap: 16px;
-}
+.line { display: flex; gap: 16px; }
 .ln {
   color: var(--text3);
   font-size: 0.68rem;
@@ -361,7 +322,6 @@ pre.code-block {
 }
 .lc { flex: 1; }
 
-/* Syntax colors */
 .kw  { color: #60a5fa; font-weight: 500; }
 .cls { color: #34d399; }
 .str { color: #fb923c; }
@@ -369,7 +329,6 @@ pre.code-block {
 .num { color: #a78bfa; }
 .ann { color: #f472b6; }
 
-/* Markdown */
 .md-wrap {
   flex: 1;
   min-height: 0;
@@ -380,9 +339,9 @@ pre.code-block {
   width: 100%;
 }
 
-.md-wrap h1 { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--text); margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-.md-wrap h2 { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 600; color: var(--accent3); margin: 28px 0 12px; }
-.md-wrap h3 { font-family: 'Syne', sans-serif; font-size: 1rem; color: var(--accent); margin: 20px 0 8px; }
+.md-wrap h1 { font-size: 1.8rem; font-weight: 800; color: var(--text); margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.md-wrap h2 { font-size: 1.2rem; font-weight: 600; color: var(--accent3); margin: 28px 0 12px; }
+.md-wrap h3 { font-size: 1rem; color: var(--accent); margin: 20px 0 8px; }
 .md-wrap p  { color: var(--text2); line-height: 1.75; margin-bottom: 14px; font-size: 0.85rem; }
 .md-wrap ul, .md-wrap ol { color: var(--text2); padding-left: 20px; margin-bottom: 14px; font-size: 0.83rem; }
 .md-wrap li { line-height: 1.7; margin-bottom: 4px; }
@@ -395,21 +354,6 @@ pre.code-block {
 .md-wrap td { padding: 7px 12px; border: 1px solid var(--border); color: var(--text2); }
 .md-wrap tr:hover td { background: rgba(255,255,255,0.02); }
 
-/* PDF / HTML iframes */
-.frame-wrap {
-  flex: 1;
-  background: var(--bg);
-  display: flex;
-  flex-direction: column;
-}
-.frame-wrap iframe {
-  flex: 1;
-  border: none;
-  width: 100%;
-  height: 100%;
-}
-
-/* Loading spinner */
 .loading {
   flex: 1;
   display: flex;
@@ -428,7 +372,6 @@ pre.code-block {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Status bar */
 .statusbar {
   height: 24px;
   background: var(--accent);
@@ -444,20 +387,6 @@ pre.code-block {
 .statusbar .s-sep  { color: rgba(255,255,255,0.3); }
 .statusbar .s-right { margin-left: auto; }
 
-/* Visitor counter — sutil, integrado en statusbar */
-#status-visits {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  opacity: 0;
-  transition: opacity 0.6s ease;
-}
-#status-visits.visible { opacity: 1; }
-#visit-count {
-  font-variant-numeric: tabular-nums;
-}
-
-/* Sidebar resize handle */
 .resize-handle {
   width: 4px;
   background: transparent;
@@ -467,7 +396,6 @@ pre.code-block {
 }
 .resize-handle:hover { background: var(--accent); }
 
-/* Sidebar logo footer */
 .sidebar-logo {
   flex-shrink: 0;
   padding: 14px 16px;
@@ -484,12 +412,10 @@ pre.code-block {
   transition: opacity 0.2s;
 }
 .sidebar-logo img:hover { opacity: 1; }
-
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
   <div class="header-sep"></div>
   <div class="breadcrumb" id="breadcrumb">
@@ -498,28 +424,22 @@ pre.code-block {
   <div class="header-dot"></div>
 </header>
 
-<!-- APP -->
 <div class="app">
 
-  <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar-panel">
     <div class="sidebar-tree" id="tree-root"></div>
     <div class="sidebar-logo">
-      <img src="https://raw.githubusercontent.com/LyPaw/ViMap/main/Logo/logo.png" alt="ViMap logo">
+      <img src="Logo/logo.png" alt="ViMap logo">
     </div>
   </div>
 
   <div class="resize-handle" id="resize-handle"></div>
 
-  <!-- VIEWER -->
   <div class="viewer">
-    <!-- Tab bar -->
     <div class="tab-bar" id="tab-bar"></div>
-
-    <!-- Content -->
     <div class="content-pane" id="content-pane">
       <div class="welcome" id="welcome-screen">
-        <div class="welcome-glyph">⌥</div>
+        <div class="welcome-glyph">V</div>
         <h2>ViMap</h2>
         <p>Selecciona un archivo de la barra lateral</p>
       </div>
@@ -528,174 +448,97 @@ pre.code-block {
 
 </div>
 
-<!-- STATUS BAR -->
 <div class="statusbar">
-  <div class="s-item">◉ <span id="status-lang">listo</span></div>
-  <div class="s-sep">│</div>
-  <div class="s-item" id="status-lines">—</div>
-  <div class="s-sep">│</div>
-  <div class="s-item" id="status-visits">
-    <span style="opacity:0.6">◈</span>
-    <span id="visit-count">—</span>
-    <span style="opacity:0.6">visitas</span>
-  </div>
+  <div class="s-item"><span id="status-lang">listo</span></div>
+  <div class="s-sep">|</div>
+  <div class="s-item" id="status-lines">--</div>
   <div class="s-item s-right" id="status-file">ViMap v2.0</div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════════════
-   VISIT COUNTER  — Supabase, sutil fade-in
-═══════════════════════════════════════════════════════════ */
-(function() {
-  const SUPABASE_URL = 'https://wwxrxfleeqbtftxdryiu.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_QLmiGMyrqofnNkl4JTH1zA_iM3aokL5';
-  const headers = {
-    'apikey': SUPABASE_KEY,
-    'Authorization': 'Bearer ' + SUPABASE_KEY,
-    'Content-Type': 'application/json',
-    'Prefer': 'return=representation'
-  };
-
-  window.addEventListener('DOMContentLoaded', function() {
-    const el      = document.getElementById('visit-count');
-    const wrapper = document.getElementById('status-visits');
-    if (!el || !wrapper) return;
-
-    // 1. Sumar +1 solo si es una sesión nueva (no cuenta recargas)
-    if (!sessionStorage.getItem('vimap_counted')) {
-      sessionStorage.setItem('vimap_counted', '1');
-      fetch(SUPABASE_URL + '/rest/v1/rpc/increment_visits', {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify({})
-      }).catch(function() {
-        // Si falla el incremento, intentar de todas formas leer el valor
-      });
-    }
-
-    // 2. Leer el conteo actual y mostrarlo
-    fetch(SUPABASE_URL + '/rest/v1/visits?id=eq.1&select=count', {
-      headers: headers
-    })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        if (data && data[0] && data[0].count !== undefined) {
-          el.textContent = parseInt(data[0].count).toLocaleString('es');
-        } else {
-          el.textContent = '—';
-        }
-        setTimeout(function() { wrapper.classList.add('visible'); }, 400);
-      })
-      .catch(function() {
-        el.textContent = '—';
-        setTimeout(function() { wrapper.classList.add('visible'); }, 400);
-      });
-  });
-})();
-
-/* ═══════════════════════════════════════════════════════════
-   FILE TREE  — cargado desde data.json (no tocar este archivo)
-   Para añadir archivos edita únicamente: data.json
-═══════════════════════════════════════════════════════════ */
-
-/* ═══════════════════════════════════════════════════════════
-   HELPERS
-═══════════════════════════════════════════════════════════ */
 function extOf(name) {
   return name.split('.').pop().toLowerCase();
 }
 
 function extBadge(name) {
-  const e = extOf(name);
-  const map = { java:'ext-java', md:'ext-md', pdf:'ext-pdf', html:'ext-html' };
-  const cls = map[e] || '';
-  return cls ? `<span class="file-ext ${cls}">.${e}</span>` : '';
+  var e = extOf(name);
+  var map = { java:'ext-java', md:'ext-md', pdf:'ext-pdf' };
+  var cls = map[e] || '';
+  return cls ? '<span class="file-ext ' + cls + '">.' + e + '</span>' : '';
 }
 
 function langIcon(name) {
-  const e = extOf(name);
-  const icons = { java:'☕', md:'📝', pdf:'📄', html:'🌐' };
-  return icons[e] || '📄';
+  var e = extOf(name);
+  var icons = { java:'J', md:'M', pdf:'P' };
+  return icons[e] || '?';
 }
 
-/* ═══════════════════════════════════════════════════════════
-   BUILD SIDEBAR TREE
-═══════════════════════════════════════════════════════════ */
-const treeRoot = document.getElementById('tree-root');
+var treeRoot = document.getElementById('tree-root');
 
-/* Carga data.json y arranca la UI */
 fetch('data.json')
-  .then(r => {
-    if (!r.ok) throw new Error('No se pudo cargar data.json — ' + r.status);
+  .then(function(r) {
+    if (!r.ok) throw new Error('No se pudo cargar data.json');
     return r.json();
   })
-  .then(fileTree => {
+  .then(function(fileTree) {
     buildTree(fileTree, treeRoot);
   })
-  .catch(err => {
-    treeRoot.innerHTML =
-      '<div style="padding:16px;color:#ef4444;font-size:0.72rem;">⚠ ' + err.message +
-      '<br><br>Asegúrate de que <strong>data.json</strong> está en la misma carpeta que index.html y de que usas un servidor local (no file://).</div>';
+  .catch(function(err) {
+    treeRoot.innerHTML = '<div style="padding:16px;color:#ef4444;font-size:0.72rem;">Error: ' + err.message + '</div>';
   });
 
-function buildTree(data, container, depth = 0, pathParts = []) {
-  for (const key in data) {
-    const val = data[key];
-    const isFiles = Array.isArray(val);
-    const currentPath = [...pathParts, key];
+function buildTree(data, container, depth, pathParts) {
+  if (depth === undefined) depth = 0;
+  if (pathParts === undefined) pathParts = [];
+  for (var key in data) {
+    var val = data[key];
+    var isFiles = Array.isArray(val);
+    var currentPath = pathParts.concat([key]);
 
-    const item = document.createElement('div');
+    var item = document.createElement('div');
     item.className = 'tree-item';
 
-    const row = document.createElement('div');
+    var row = document.createElement('div');
     row.className = 'tree-row';
     row.style.paddingLeft = (8 + depth * 14) + 'px';
 
     if (isFiles) {
-      row.innerHTML = `
-        <span class="tree-arrow">▶</span>
-        <span class="tree-icon">📂</span>
-        <span class="tree-label">${key}</span>
-        ${val.length ? `<span style="margin-left:auto;font-size:0.58rem;color:var(--text3)">${val.length}</span>` : ''}
-      `;
+      row.innerHTML = '<span class="tree-arrow">&#9656;</span><span class="tree-icon">&#128194;</span><span class="tree-label">' + key + '</span>' + (val.length ? '<span style="margin-left:auto;font-size:0.58rem;color:var(--text3)">' + val.length + '</span>' : '');
 
-      const children = document.createElement('div');
+      var children = document.createElement('div');
       children.className = 'tree-children';
 
       if (val.length === 0) {
-        const empty = document.createElement('div');
+        var empty = document.createElement('div');
         empty.className = 'tree-row';
         empty.style.paddingLeft = (8 + (depth + 1) * 14) + 'px';
         empty.style.color = 'var(--text3)';
         empty.style.fontStyle = 'italic';
         empty.style.fontSize = '0.68rem';
-        empty.innerHTML = `<span class="tree-arrow" style="visibility:hidden">▶</span><span>vacío</span>`;
+        empty.innerHTML = '<span class="tree-arrow" style="visibility:hidden">&#9656;</span><span>vacio</span>';
         children.appendChild(empty);
       }
 
-      val.forEach(file => {
-        const fItem = document.createElement('div');
+      val.forEach(function(file) {
+        var fItem = document.createElement('div');
         fItem.className = 'tree-item';
 
-        const fRow = document.createElement('div');
+        var fRow = document.createElement('div');
         fRow.className = 'tree-row';
         fRow.style.paddingLeft = (8 + (depth + 1) * 14) + 'px';
-        fRow.innerHTML = `
-          <span class="tree-arrow" style="visibility:hidden">▶</span>
-          <span class="tree-icon">${langIcon(file.name)}</span>
-          <span class="tree-label">${file.name}</span>
-          ${extBadge(file.name)}
-        `;
-        fRow.addEventListener('click', e => {
+        fRow.innerHTML = '<span class="tree-arrow" style="visibility:hidden">&#9656;</span><span class="tree-icon">' + langIcon(file.name) + '</span><span class="tree-label">' + file.name + '</span>' + extBadge(file.name);
+        fRow.addEventListener('click', function(e) {
           e.stopPropagation();
           openFile(file);
-          document.querySelectorAll('.tree-row').forEach(r => r.classList.remove('active'));
+          var allRows = document.querySelectorAll('.tree-row');
+          for (var i = 0; i < allRows.length; i++) allRows[i].classList.remove('active');
           fRow.classList.add('active');
-          const crumbHtml = currentPath
-            .map((p, i) => i < currentPath.length - 1
-              ? `<span>${p}</span><span class="sep">›</span>`
-              : `<span>${p}</span>`)
-            .join('') + `<span class="sep">›</span><span>${file.name}</span>`;
+          var crumbHtml = '';
+          for (var i = 0; i < currentPath.length; i++) {
+            crumbHtml += '<span>' + currentPath[i] + '</span>';
+            if (i < currentPath.length - 1) crumbHtml += '<span class="sep">&#8250;</span>';
+          }
+          crumbHtml += '<span class="sep">&#8250;</span><span>' + file.name + '</span>';
           document.getElementById('breadcrumb').innerHTML = crumbHtml;
         });
 
@@ -703,23 +546,19 @@ function buildTree(data, container, depth = 0, pathParts = []) {
         children.appendChild(fItem);
       });
 
-      row.addEventListener('click', e => { e.stopPropagation(); item.classList.toggle('open'); });
+      row.addEventListener('click', function(e) { e.stopPropagation(); item.classList.toggle('open'); });
       item.appendChild(row);
       item.appendChild(children);
 
     } else {
-      const isRoot = depth === 0;
-      row.innerHTML = `
-        <span class="tree-arrow">▶</span>
-        <span class="tree-icon">${isRoot ? '🗂️' : '📁'}</span>
-        <span class="tree-label">${key}</span>
-      `;
+      var isRoot = depth === 0;
+      row.innerHTML = '<span class="tree-arrow">&#9656;</span><span class="tree-icon">' + (isRoot ? '&#128459;' : '&#128193;') + '</span><span class="tree-label">' + key + '</span>';
 
-      const children = document.createElement('div');
+      var children = document.createElement('div');
       children.className = 'tree-children';
       buildTree(val, children, depth + 1, currentPath);
 
-      row.addEventListener('click', e => { e.stopPropagation(); item.classList.toggle('open'); });
+      row.addEventListener('click', function(e) { e.stopPropagation(); item.classList.toggle('open'); });
       item.appendChild(row);
       item.appendChild(children);
     }
@@ -728,32 +567,26 @@ function buildTree(data, container, depth = 0, pathParts = []) {
   }
 }
 
+var tabBar = document.getElementById('tab-bar');
+var contentPane = document.getElementById('content-pane');
+var welcome = document.getElementById('welcome-screen');
 
-/* ═══════════════════════════════════════════════════════════
-   TABS  —  single slot architecture
-═══════════════════════════════════════════════════════════ */
-const tabBar      = document.getElementById('tab-bar');
-const contentPane = document.getElementById('content-pane');
-const welcome     = document.getElementById('welcome-screen');
-
-let tabs = [];
-let activeTab = null;
+var tabs = [];
+var activeTab = null;
 
 function openFile(file) {
-  const existing = tabs.find(t => t.file.url === file.url);
-  if (existing) { activateTab(existing); return; }
+  for (var i = 0; i < tabs.length; i++) {
+    if (tabs[i].file.url === file.url) { activateTab(tabs[i]); return; }
+  }
 
-  const tabEl = document.createElement('div');
+  var tabEl = document.createElement('div');
   tabEl.className = 'tab';
-  tabEl.innerHTML =
-    `<span>${langIcon(file.name)}</span>` +
-    `<span>${file.name}</span>` +
-    `<span class="tab-close" title="cerrar">✕</span>`;
+  tabEl.innerHTML = '<span>' + langIcon(file.name) + '</span><span>' + file.name + '</span><span class="tab-close" title="cerrar">X</span>';
 
-  const entry = { file, tabEl, node: null, loaded: false };
+  var entry = { file: file, tabEl: tabEl, node: null, loaded: false };
   tabs.push(entry);
 
-  tabEl.addEventListener('click', e => {
+  tabEl.addEventListener('click', function(e) {
     if (e.target.classList.contains('tab-close')) closeTab(entry);
     else activateTab(entry);
   });
@@ -773,7 +606,7 @@ function activateTab(entry) {
     contentPane.innerHTML = '';
     contentPane.appendChild(entry.node);
   } else {
-    const node = document.createElement('div');
+    var node = document.createElement('div');
     node.style.cssText = 'display:flex;flex:1;flex-direction:column;overflow:hidden;min-height:0;';
     node.innerHTML = '<div class="loading"><div class="spinner"></div>cargando...</div>';
     entry.node = node;
@@ -787,7 +620,7 @@ function activateTab(entry) {
 }
 
 function closeTab(entry) {
-  const idx = tabs.indexOf(entry);
+  var idx = tabs.indexOf(entry);
   tabs.splice(idx, 1);
   entry.tabEl.remove();
 
@@ -800,96 +633,83 @@ function closeTab(entry) {
       welcome.style.display = 'flex';
       document.getElementById('status-file').textContent = 'ViMap v2.0';
       document.getElementById('status-lang').textContent = 'listo';
-      document.getElementById('status-lines').textContent = '—';
+      document.getElementById('status-lines').textContent = '--';
     }
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   LOAD CONTENT
-═══════════════════════════════════════════════════════════ */
 function loadContent(entry) {
-  const file = entry.file;
-  const node = entry.node;
-  const ext  = extOf(file.name);
+  var file = entry.file;
+  var node = entry.node;
+  var ext = extOf(file.name);
   entry.loaded = true;
 
   if (ext === 'md') {
     fetch(file.url)
-      .then(r => r.text())
-      .then(md => {
-        const lines = md.split('\n').length;
-        node.innerHTML = '<div class="md-wrap">' + marked.parse(md) + '</div>';
-        document.getElementById('status-lines').textContent = lines + ' líneas';
+      .then(function(r) { return r.text(); })
+      .then(function(md) {
+        var lines = md.split('\n').length;
+        var html = simpleMarkdown(md);
+        node.innerHTML = '<div class="md-wrap">' + html + '</div>';
+        document.getElementById('status-lines').textContent = lines + ' lineas';
       })
-      .catch(() => { node.innerHTML = '<div class="loading">⚠ No se pudo cargar el archivo</div>'; });
-  }
-  else if (ext === 'pdf') {
-    const pdfUrl = 'https://docs.google.com/gview?url=' + encodeURIComponent(file.url.trim()) + '&embedded=true';
-    node.innerHTML =
-      '<div class="code-header">' +
-        '<span class="code-filename">' + file.name + '</span>' +
-        '<span class="code-meta"><span>PDF document</span></span>' +
-      '</div>' +
-      '<div class="frame-wrap"><iframe src="' + pdfUrl + '" allowfullscreen></iframe></div>';
-  }
-  else if (ext === 'html') {
-    fetch(file.url.trim())
-      .then(r => r.text())
-      .then(html => {
+      .catch(function() { node.innerHTML = '<div class="loading">Error al cargar el archivo</div>'; });
+  } else if (ext === 'pdf') {
+    node.innerHTML = '<div class="code-header"><span class="code-filename">' + file.name + '</span><span class="code-meta"><span>PDF document</span></span></div><div class="loading">Documento PDF: ' + file.name + '</div>';
+  } else {
+    fetch(file.url)
+      .then(function(r) { return r.text(); })
+      .then(function(text) {
+        var lines = text.split('\n');
+        document.getElementById('status-lines').textContent = lines.length + ' lineas';
+        var highlighted = highlightJava(text);
+        var linesHtml = highlighted.split('\n').map(function(l, i) {
+          return '<div class="line"><span class="ln">' + (i+1) + '</span><span class="lc">' + (l||' ') + '</span></div>';
+        }).join('');
         node.innerHTML =
-          '<div class="code-header">' +
-            '<span class="code-filename">' + file.name + '</span>' +
-            '<div class="code-meta">' +
-              '<span>🌐 HTML preview</span>' +
-            '</div>' +
-          '</div>' +
-          '<div class="frame-wrap"></div>';
-        const wrap = node.querySelector('.frame-wrap');
-        const iframe = document.createElement('iframe');
-        iframe.style.cssText = 'flex:1;width:100%;border:none;min-height:0;';
-        iframe.srcdoc = html;
-        iframe.sandbox = 'allow-scripts allow-same-origin allow-forms';
-        wrap.appendChild(iframe);
-        document.getElementById('status-lines').textContent = html.split('\n').length + ' líneas';
-      })
-      .catch(() => { node.innerHTML = '<div class="loading">⚠ No se pudo cargar el HTML. Asegúrate de usar GitHub Pages o servidor local.</div>'; });
-  }
-  else {
-    fetch(file.url.trim())
-      .then(r => r.text())
-      .then(text => {
-        const lines = text.split('\n');
-        document.getElementById('status-lines').textContent = lines.length + ' líneas';
-        const highlighted = highlightJava(text);
-        const linesHtml = highlighted.split('\n').map((l, i) =>
-          '<div class="line"><span class="ln">' + (i+1) + '</span><span class="lc">' + (l||' ') + '</span></div>'
-        ).join('');
-        node.innerHTML =
-          '<div class="code-header">' +
-            '<span class="code-filename">' + file.name + '</span>' +
-            '<div class="code-meta">' +
-              '<span>☕ Java</span>' +
-              '<span>' + lines.length + ' líneas</span>' +
-            '</div>' +
-          '</div>' +
+          '<div class="code-header"><span class="code-filename">' + file.name + '</span><div class="code-meta"><span>Java</span><span>' + lines.length + ' lineas</span></div></div>' +
           '<div class="code-wrap"><pre class="code-block">' + linesHtml + '</pre></div>';
       })
-      .catch(() => { node.innerHTML = '<div class="loading">⚠ No se pudo cargar el archivo</div>'; });
+      .catch(function() { node.innerHTML = '<div class="loading">Error al cargar el archivo</div>'; });
   }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   SYNTAX HIGHLIGHT (Java)
-═══════════════════════════════════════════════════════════ */
+function simpleMarkdown(text) {
+  var html = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/^>- (.+)$/gm, '<blockquote><li>$1</li></blockquote>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
+    .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+  var paragraphs = html.split(/\n\n+/);
+  var out = '';
+  for (var i = 0; i < paragraphs.length; i++) {
+    var p = paragraphs[i].trim();
+    if (p.length === 0) continue;
+    if (/^<h[123]/.test(p) || /^<li/.test(p) || /^<pre/.test(p) || /^<blockquote/.test(p)) {
+      out += p;
+    } else {
+      out += '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+    }
+  }
+  return out;
+}
+
 function escapeHTML(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 function highlightJava(raw) {
-  return raw.split('\n').map(function(line) {
-    return highlightLine(line);
-  }).join('\n');
+  return raw.split('\n').map(function(line) { return highlightLine(line); }).join('\n');
 }
 
 function highlightLine(line) {
@@ -970,25 +790,21 @@ function esc(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+var handle  = document.getElementById('resize-handle');
+var sidebar = document.getElementById('sidebar-panel');
+var resizing = false, startX = 0, startW = 0;
 
-/* ═══════════════════════════════════════════════════════════
-   SIDEBAR RESIZE
-═══════════════════════════════════════════════════════════ */
-const handle  = document.getElementById('resize-handle');
-const sidebar = document.getElementById('sidebar-panel');
-let resizing = false, startX = 0, startW = 0;
-
-handle.addEventListener('mousedown', e => {
+handle.addEventListener('mousedown', function(e) {
   resizing = true; startX = e.clientX; startW = sidebar.offsetWidth;
   document.body.style.cursor = 'col-resize';
   document.body.style.userSelect = 'none';
 });
-document.addEventListener('mousemove', e => {
+document.addEventListener('mousemove', function(e) {
   if (!resizing) return;
-  const w = Math.max(160, Math.min(520, startW + e.clientX - startX));
+  var w = Math.max(160, Math.min(520, startW + e.clientX - startX));
   sidebar.style.width = w + 'px';
 });
-document.addEventListener('mouseup', () => {
+document.addEventListener('mouseup', function() {
   resizing = false;
   document.body.style.cursor = '';
   document.body.style.userSelect = '';
