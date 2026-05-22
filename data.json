@@ -1,9 +1,9 @@
 {
   "Java": {
     "Temarios PDF": [
-      { "name": "POO (PDF)", "url": "Java/temario_java_poo.pdf" },
-      { "name": "Colecciones (PDF)", "url": "Java/temario_java_colecciones.pdf" },
-      { "name": "Concurrencia (PDF)", "url": "Java/temario_java_concurrencia.pdf" }
+      { "name": "POO (MD)", "url": "Java/temario_java_poo.md" },
+      { "name": "Colecciones (MD)", "url": "Java/temario_java_colecciones.md" },
+      { "name": "Concurrencia (MD)", "url": "Java/temario_java_concurrencia.md" }
     ],
     "POO": [
       { "name": "Persona.java", "url": "Java/POO/Persona.java" },
@@ -36,7 +36,7 @@
   },
   "BaseDeDatos_MySQL": {
     "Temarios PDF": [
-      { "name": "MySQL (PDF)", "url": "BaseDeDatos_MySQL/temario_mysql.pdf" }
+      { "name": "MySQL (MD)", "url": "BaseDeDatos_MySQL/temario_mysql.md" }
     ],
     "Scripts SQL": [
       { "name": "esquema_biblioteca.sql", "url": "BaseDeDatos_MySQL/esquema_biblioteca.sql" },
@@ -46,7 +46,7 @@
   },
   "Html": {
     "Temarios PDF": [
-      { "name": "HTML y CSS (PDF)", "url": "Html/temario_html_css.pdf" }
+      { "name": "HTML y CSS (MD)", "url": "Html/temario_html_css.md" }
     ],
     "Talleres": [
       { "name": "taller_dom.html", "url": "Html/taller_dom.html" },
@@ -59,7 +59,7 @@
   ],
   "Xml": {
     "Temarios PDF": [
-      { "name": "XML (PDF)", "url": "Xml/temario_xml.pdf" }
+      { "name": "XML (MD)", "url": "Xml/temario_xml.md" }
     ],
     "Ejemplos XML": [
       { "name": "datos_ejemplo.xml", "url": "Xml/datos_ejemplo.xml" },
