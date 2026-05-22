@@ -1,3 +1,9 @@
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: Testing (PDF)](../temario_testing.pdf)
+
 # Entornos de Desarrollo - Testing
 
 ## Pruebas de Software
@@ -57,3 +63,4 @@ Metricas comunes:
 3.  Usa Mockito para simular una dependencia externa (base de datos, API) en un test unitario.
 4.  Implementa pruebas de integracion para un repositorio JPA usando una BD en memoria (H2).
 5.  Disena una suite de pruebas con @Tag para separar tests rapidos de tests lentos.
+

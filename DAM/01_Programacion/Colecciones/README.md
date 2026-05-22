@@ -1,5 +1,11 @@
 # Colecciones en Java
 
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: Colecciones (PDF)](../temario_colecciones.pdf)
+
 ## Java Collections Framework
 
 El framework de colecciones proporciona arquitecturas unificadas para almacenar y manipular grupos de objetos.

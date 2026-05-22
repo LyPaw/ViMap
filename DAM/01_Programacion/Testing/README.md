@@ -1,3 +1,9 @@
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: Testing (PDF)](../temario_testing.pdf)
+
 # Testing y Pruebas Unitarias
 
 ## Tipos de pruebas
@@ -44,3 +50,4 @@ Ciclo: Escribir test fallido -> Escribir codigo minimo para pasar el test -> Ref
 3.  Escribe tests parametrizados que prueben una funcion con multiples entradas.
 4.  Implementa una clase `ValidadorDNI` y escribe tests que verifiquen DNI validos e invalidos.
 5.  Usa `assertAll` para agrupar multiples aserciones en un mismo test.
+

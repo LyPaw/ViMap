@@ -1,3 +1,9 @@
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: Flujos de Trabajo (PDF)](../temario_workflow.pdf)
+
 # Sistemas de Gestion Empresarial - Flujos de Trabajo
 
 ## Conceptos fundamentales
@@ -33,3 +39,4 @@ Un flujo de trabajo (workflow) es una secuencia de tareas que procesan un conjun
 3.  Implementa un historial de cambios que registre cada transicion con timestamp y usuario.
 4.  Extiende el workflow con una regla de escalado: si supera 5000 EUR, requiere aprobacion del director.
 5.  Implementa un workflow de incorporacion de empleado (onboarding) con tareas de RRHH, IT y formacion.
+

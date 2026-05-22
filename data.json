@@ -1,9 +1,14 @@
 {
   "Programacion": {
+    "Temarios PDF": [
+      { "name": "Fundamentos (PDF)", "url": "DAM/01_Programacion/temario_fundamentos_programacion.pdf" },
+      { "name": "POO (PDF)", "url": "DAM/01_Programacion/temario_poo.pdf" },
+      { "name": "Colecciones (PDF)", "url": "DAM/01_Programacion/temario_colecciones.pdf" },
+      { "name": "Concurrencia (PDF)", "url": "DAM/01_Programacion/temario_concurrencia.pdf" },
+      { "name": "Testing (PDF)", "url": "DAM/01_Programacion/temario_testing.pdf" }
+    ],
     "Fundamentos": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/01_Programacion/Fundamentos/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/01_Programacion/Fundamentos/README.md" }],
       "Ejemplos": [
         { "name": "HolaMundo.java", "url": "DAM/01_Programacion/Fundamentos/HolaMundo.java" },
         { "name": "Variables.java", "url": "DAM/01_Programacion/Fundamentos/Variables.java" },
@@ -12,9 +17,7 @@
       ]
     },
     "POO": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/01_Programacion/POO/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/01_Programacion/POO/README.md" }],
       "Ejemplos": [
         { "name": "Persona.java", "url": "DAM/01_Programacion/POO/Persona.java" },
         { "name": "Empleado.java", "url": "DAM/01_Programacion/POO/Empleado.java" },
@@ -23,9 +26,7 @@
       ]
     },
     "Colecciones": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/01_Programacion/Colecciones/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/01_Programacion/Colecciones/README.md" }],
       "Ejemplos": [
         { "name": "EjemploArrayList.java", "url": "DAM/01_Programacion/Colecciones/EjemploArrayList.java" },
         { "name": "EjemploHashMap.java", "url": "DAM/01_Programacion/Colecciones/EjemploHashMap.java" },
@@ -33,9 +34,7 @@
       ]
     },
     "Concurrencia": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/01_Programacion/Concurrencia/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/01_Programacion/Concurrencia/README.md" }],
       "Ejemplos": [
         { "name": "HiloSimple.java", "url": "DAM/01_Programacion/Concurrencia/HiloSimple.java" },
         { "name": "ProductorConsumidor.java", "url": "DAM/01_Programacion/Concurrencia/ProductorConsumidor.java" },
@@ -43,20 +42,23 @@
       ]
     },
     "Testing": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/01_Programacion/Testing/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/01_Programacion/Testing/README.md" }],
       "Ejemplos": [
         { "name": "Calculadora.java", "url": "DAM/01_Programacion/Testing/Calculadora.java" },
         { "name": "CalculadoraTest.java", "url": "DAM/01_Programacion/Testing/CalculadoraTest.java" }
       ]
-    }
+    },
+    "Taller Evaluable": [
+      { "name": "taller_evaluable.html", "url": "DAM/01_Programacion/Taller/taller_evaluable.html" }
+    ]
   },
   "AccesoADatos": {
+    "Temarios PDF": [
+      { "name": "JDBC (PDF)", "url": "DAM/02_AccesoADatos/temario_jdbc.pdf" },
+      { "name": "JPA (PDF)", "url": "DAM/02_AccesoADatos/temario_jpa.pdf" }
+    ],
     "JDBC": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/02_AccesoADatos/JDBC/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/02_AccesoADatos/JDBC/README.md" }],
       "Ejemplos": [
         { "name": "ConexionMySQL.java", "url": "DAM/02_AccesoADatos/JDBC/ConexionMySQL.java" },
         { "name": "CRUDEjemplo.java", "url": "DAM/02_AccesoADatos/JDBC/CRUDEjemplo.java" },
@@ -64,21 +66,24 @@
       ]
     },
     "JPA": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/02_AccesoADatos/JPA/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/02_AccesoADatos/JPA/README.md" }],
       "Ejemplos": [
         { "name": "Usuario.java", "url": "DAM/02_AccesoADatos/JPA/Usuario.java" },
         { "name": "UsuarioRepository.java", "url": "DAM/02_AccesoADatos/JPA/UsuarioRepository.java" },
         { "name": "MainJPA.java", "url": "DAM/02_AccesoADatos/JPA/MainJPA.java" }
       ]
-    }
+    },
+    "Taller Evaluable": [
+      { "name": "taller_evaluable.html", "url": "DAM/02_AccesoADatos/Taller/taller_evaluable.html" }
+    ]
   },
   "DesarrolloInterfaces": {
+    "Temarios PDF": [
+      { "name": "JavaFX (PDF)", "url": "DAM/03_DesarrolloInterfaces/temario_javafx.pdf" },
+      { "name": "Swing (PDF)", "url": "DAM/03_DesarrolloInterfaces/temario_swing.pdf" }
+    ],
     "JavaFX": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/03_DesarrolloInterfaces/JavaFX/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/03_DesarrolloInterfaces/JavaFX/README.md" }],
       "Ejemplos": [
         { "name": "HolaFX.java", "url": "DAM/03_DesarrolloInterfaces/JavaFX/HolaFX.java" },
         { "name": "LayoutsDemo.java", "url": "DAM/03_DesarrolloInterfaces/JavaFX/LayoutsDemo.java" },
@@ -86,20 +91,24 @@
       ]
     },
     "Swing": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/03_DesarrolloInterfaces/Swing/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/03_DesarrolloInterfaces/Swing/README.md" }],
       "Ejemplos": [
         { "name": "VentanaSwing.java", "url": "DAM/03_DesarrolloInterfaces/Swing/VentanaSwing.java" },
         { "name": "CalculadoraSwing.java", "url": "DAM/03_DesarrolloInterfaces/Swing/CalculadoraSwing.java" }
       ]
-    }
+    },
+    "Taller Evaluable": [
+      { "name": "taller_evaluable.html", "url": "DAM/03_DesarrolloInterfaces/Taller/taller_evaluable.html" }
+    ]
   },
   "ServiciosProcesos": {
+    "Temarios PDF": [
+      { "name": "Sockets (PDF)", "url": "DAM/04_ServiciosProcesos/temario_sockets.pdf" },
+      { "name": "Hilos (PDF)", "url": "DAM/04_ServiciosProcesos/temario_hilos.pdf" },
+      { "name": "Protocolos (PDF)", "url": "DAM/04_ServiciosProcesos/temario_protocolos.pdf" }
+    ],
     "Sockets": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/04_ServiciosProcesos/Sockets/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/04_ServiciosProcesos/Sockets/README.md" }],
       "Ejemplos": [
         { "name": "ServidorEco.java", "url": "DAM/04_ServiciosProcesos/Sockets/ServidorEco.java" },
         { "name": "ClienteEco.java", "url": "DAM/04_ServiciosProcesos/Sockets/ClienteEco.java" },
@@ -107,28 +116,29 @@
       ]
     },
     "Hilos": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/04_ServiciosProcesos/Hilos/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/04_ServiciosProcesos/Hilos/README.md" }],
       "Ejemplos": [
         { "name": "EjemploHilo.java", "url": "DAM/04_ServiciosProcesos/Hilos/EjemploHilo.java" },
         { "name": "PoolHilos.java", "url": "DAM/04_ServiciosProcesos/Hilos/PoolHilos.java" }
       ]
     },
     "Protocolos": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/04_ServiciosProcesos/Protocolos/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/04_ServiciosProcesos/Protocolos/README.md" }],
       "Ejemplos": [
         { "name": "ClienteHTTP.java", "url": "DAM/04_ServiciosProcesos/Protocolos/ClienteHTTP.java" }
       ]
-    }
+    },
+    "Taller Evaluable": [
+      { "name": "taller_evaluable.html", "url": "DAM/04_ServiciosProcesos/Taller/taller_evaluable.html" }
+    ]
   },
   "SistemasEmpresariales": {
+    "Temarios PDF": [
+      { "name": "ERP (PDF)", "url": "DAM/05_SistemasEmpresariales/temario_erp.pdf" },
+      { "name": "Workflow (PDF)", "url": "DAM/05_SistemasEmpresariales/temario_workflow.pdf" }
+    ],
     "ERPBasico": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/05_SistemasEmpresariales/ERPBasico/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/05_SistemasEmpresariales/ERPBasico/README.md" }],
       "Ejemplos": [
         { "name": "Producto.java", "url": "DAM/05_SistemasEmpresariales/ERPBasico/Producto.java" },
         { "name": "ClienteEmpresa.java", "url": "DAM/05_SistemasEmpresariales/ERPBasico/ClienteEmpresa.java" },
@@ -137,38 +147,41 @@
       ]
     },
     "FlujosTrabajo": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/05_SistemasEmpresariales/FlujosTrabajo/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/05_SistemasEmpresariales/FlujosTrabajo/README.md" }],
       "Ejemplos": [
         { "name": "WorkflowEjemplo.java", "url": "DAM/05_SistemasEmpresariales/FlujosTrabajo/WorkflowEjemplo.java" }
       ]
-    }
+    },
+    "Taller Evaluable": [
+      { "name": "taller_evaluable.html", "url": "DAM/05_SistemasEmpresariales/Taller/taller_evaluable.html" }
+    ]
   },
   "EntornosDesarrollo": {
+    "Temarios PDF": [
+      { "name": "UML (PDF)", "url": "DAM/06_EntornosDesarrollo/temario_uml.pdf" },
+      { "name": "Testing (PDF)", "url": "DAM/06_EntornosDesarrollo/temario_testing.pdf" },
+      { "name": "Git (PDF)", "url": "DAM/06_EntornosDesarrollo/temario_git.pdf" }
+    ],
     "UML": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/06_EntornosDesarrollo/UML/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/06_EntornosDesarrollo/UML/README.md" }],
       "Ejemplos": [
         { "name": "DiagramaClases.md", "url": "DAM/06_EntornosDesarrollo/UML/DiagramaClases.md" }
       ]
     },
     "Testing": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/06_EntornosDesarrollo/Testing/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/06_EntornosDesarrollo/Testing/README.md" }],
       "Ejemplos": [
         { "name": "TestBasico.md", "url": "DAM/06_EntornosDesarrollo/Testing/TestBasico.md" }
       ]
     },
     "Git": {
-      "Teoria": [
-        { "name": "README.md", "url": "DAM/06_EntornosDesarrollo/Git/README.md" }
-      ],
+      "Teoria": [{ "name": "README.md", "url": "DAM/06_EntornosDesarrollo/Git/README.md" }],
       "Ejemplos": [
         { "name": "ComandosGit.md", "url": "DAM/06_EntornosDesarrollo/Git/ComandosGit.md" }
       ]
-    }
+    },
+    "Taller Evaluable": [
+      { "name": "taller_evaluable.html", "url": "DAM/06_EntornosDesarrollo/Taller/taller_evaluable.html" }
+    ]
   }
 }

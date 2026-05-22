@@ -1,3 +1,9 @@
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: JPA (PDF)](../temario_jpa.pdf)
+
 # JPA - Java Persistence API
 
 ## Conceptos fundamentales
@@ -46,3 +52,4 @@ JPQL es un lenguaje de consulta orientado a objetos similar a SQL pero trabaja c
 3.  Escribe una consulta JPQL que obtenga todos los productos con precio mayor a un valor dado.
 4.  Implementa una busqueda paginada usando `setFirstResult()` y `setMaxResults()`.
 5.  Anade validacion con Bean Validation (@NotNull, @Size, @Min) a las entidades JPA.
+

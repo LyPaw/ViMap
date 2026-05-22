@@ -32,8 +32,7 @@ public class ClienteHTTP {
 
     public static String hacerGET() throws Exception {
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create("https://jsonplaceholder.typicode.com/posts/1"))
-            .header("Accept", "application/json")
+            .uri(URI.create("http://localhost:8080/api/ejemplo/1"))
             .GET()
             .build();
 
@@ -52,16 +51,15 @@ public class ClienteHTTP {
     public static String hacerPOST() throws Exception {
         String json = """
             {
-                "title": "Mi nuevo post",
-                "body": "Contenido del post desde ViMap",
+            "title": "Ejemplo de post",
+            "body": "Contenido de ejemplo desde ViMap",
                 "userId": 1
             }
             """;
 
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create("https://jsonplaceholder.typicode.com/posts"))
+            .uri(URI.create("http://localhost:8080/api/ejemplo"))
             .header("Content-Type", "application/json")
-            .header("Accept", "application/json")
             .POST(BodyPublishers.ofString(json))
             .build();
 

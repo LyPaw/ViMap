@@ -1,5 +1,11 @@
 # Programacion Orientada a Objetos (POO)
 
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: POO (PDF)](../temario_poo.pdf)
+
 ## Conceptos fundamentales
 
 1.  **Clase y Objeto**: una clase es una plantilla que define atributos y metodos. Un objeto es una instancia concreta de una clase.

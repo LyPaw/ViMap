@@ -1,3 +1,9 @@
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: Protocolos (PDF)](../temario_protocolos.pdf)
+
 # Programacion de Servicios y Procesos - Protocolos
 
 ## Protocolos de comunicacion en red
@@ -38,3 +44,4 @@
 3.  Implementa la serializacion de objetos Java a JSON usando la libreria Jackson o Gson.
 4.  Desarrolla un cliente REST que consuma una API publica y muestre los resultados.
 5.  Implementa un servidor WebSocket simple para notificaciones en tiempo real.
+
