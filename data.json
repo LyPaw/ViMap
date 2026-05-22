@@ -1,62 +1,71 @@
 {
   "Java": {
     "POO": [
-      { "name": "teoria.md", "url": "Java/POO/teoria.md" },
+      { "name": "README.md", "url": "Java/POO/README.md" },
       { "name": "Persona.java", "url": "Java/POO/Persona.java" },
       { "name": "Empleado.java", "url": "Java/POO/Empleado.java" },
       { "name": "Polimorfismo.java", "url": "Java/POO/Polimorfismo.java" },
       { "name": "Interfaces.java", "url": "Java/POO/Interfaces.java" }
     ],
     "Colecciones": [
-      { "name": "teoria.md", "url": "Java/Colecciones/teoria.md" },
+      { "name": "README.md", "url": "Java/Colecciones/README.md" },
       { "name": "EjemploArrayList.java", "url": "Java/Colecciones/EjemploArrayList.java" },
       { "name": "EjemploHashMap.java", "url": "Java/Colecciones/EjemploHashMap.java" },
       { "name": "EjemploStreams.java", "url": "Java/Colecciones/EjemploStreams.java" }
     ],
     "Concurrencia": [
-      { "name": "teoria.md", "url": "Java/Concurrencia/teoria.md" },
+      { "name": "README.md", "url": "Java/Concurrencia/README.md" },
       { "name": "HiloSimple.java", "url": "Java/Concurrencia/HiloSimple.java" },
       { "name": "ProductorConsumidor.java", "url": "Java/Concurrencia/ProductorConsumidor.java" },
       { "name": "ExecutorEjemplo.java", "url": "Java/Concurrencia/ExecutorEjemplo.java" }
     ],
     "Streams": [
-      { "name": "teoria.md", "url": "Java/Streams/teoria.md" },
+      { "name": "README.md", "url": "Java/Streams/README.md" },
       { "name": "EjemploStreamsAvanzado.java", "url": "Java/Streams/EjemploStreamsAvanzado.java" }
     ],
     "Sockets": [
-      { "name": "teoria.md", "url": "Java/Sockets/teoria.md" },
+      { "name": "README.md", "url": "Java/Sockets/README.md" },
       { "name": "ServidorEco.java", "url": "Java/Sockets/ServidorEco.java" },
       { "name": "ClienteEco.java", "url": "Java/Sockets/ClienteEco.java" },
-      { "name": "ChatServidor.java", "url": "Java/Sockets/ChatServidor.java" }
+      { "name": "ChatServidor.java", "url": "Java/Sockets/ChatServidor.java" },
+      { "name": "ClienteChat.java", "url": "Java/Sockets/ClienteChat.java" }
     ],
     "Testing": [
-      { "name": "teoria.md", "url": "Java/Testing/teoria.md" },
+      { "name": "README.md", "url": "Java/Testing/README.md" },
       { "name": "Calculadora.java", "url": "Java/Testing/Calculadora.java" },
       { "name": "CalculadoraTest.java", "url": "Java/Testing/CalculadoraTest.java" }
     ]
   },
   "BaseDeDatos_MySQL": {
     "Teoria": [
-      { "name": "teoria.md", "url": "BaseDeDatos_MySQL/teoria.md" }
+      { "name": "README.md", "url": "BaseDeDatos_MySQL/README.md" }
     ],
     "Scripts SQL": [
       { "name": "esquema_biblioteca.sql", "url": "BaseDeDatos_MySQL/esquema_biblioteca.sql" },
       { "name": "consultas_avanzadas.sql", "url": "BaseDeDatos_MySQL/consultas_avanzadas.sql" },
       { "name": "triggers_procedimientos.sql", "url": "BaseDeDatos_MySQL/triggers_procedimientos.sql" }
+    ],
+    "JPA Entidades": [
+      { "name": "Usuario.java", "url": "BaseDeDatos_MySQL/JPA/Usuario.java" },
+      { "name": "Autor.java", "url": "BaseDeDatos_MySQL/JPA/Autor.java" },
+      { "name": "Libro.java", "url": "BaseDeDatos_MySQL/JPA/Libro.java" },
+      { "name": "Prestamo.java", "url": "BaseDeDatos_MySQL/JPA/Prestamo.java" },
+      { "name": "MainJPA.java", "url": "BaseDeDatos_MySQL/JPA/MainJPA.java" }
     ]
   },
   "Html": {
     "Teoria": [
-      { "name": "teoria.md", "url": "Html/teoria.md" }
+      { "name": "README.md", "url": "Html/README.md" }
     ],
     "Talleres": [
+      { "name": "taller_evaluable.html", "url": "Html/taller_evaluable.html" },
       { "name": "taller_dom.html", "url": "Html/taller_dom.html" },
       { "name": "taller_formulario.html", "url": "Html/taller_formulario.html" }
     ]
   },
   "Css": {
     "Teoria": [
-      { "name": "teoria.md", "url": "Css/teoria.md" }
+      { "name": "README.md", "url": "Css/README.md" }
     ],
     "Ejemplos": [
       { "name": "flexbox_grid.css", "url": "Css/flexbox_grid.css" },
@@ -65,7 +74,7 @@
   },
   "Xml": {
     "Teoria": [
-      { "name": "teoria.md", "url": "Xml/teoria.md" }
+      { "name": "README.md", "url": "Xml/README.md" }
     ],
     "Ejemplos XML": [
       { "name": "datos_ejemplo.xml", "url": "Xml/datos_ejemplo.xml" },

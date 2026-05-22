@@ -1,29 +1,31 @@
 # ViMap
 
-Workspace interactivo para estudiar DAM (Desarrollo de Aplicaciones Multiplataforma).
+Workspace educativo completo para DAM (Desarrollo de Aplicaciones Multiplataforma). Incluye teoria extendida y codigo funcional para las asignaturas de 1o y 2o curso.
 
 ## Modulos
 
-| Modulo | Contenido |
-|--------|-----------|
-| **Java** | POO, Colecciones, Concurrencia, Streams, Sockets, Testing, temarios PDF |
-| **BaseDeDatos MySQL** | DDL, consultas avanzadas, CTEs, window functions, triggers, procedimientos |
-| **HTML** | Talleres interactivos auto-evaluables (DOM, formularios) |
-| **CSS** | Flexbox, Grid, animaciones, selectores avanzados, variables |
-| **XML** | DTD, XSD, Maven POM, JPA persistence, datos de ejemplo |
+| Modulo | Asignaturas | Contenido |
+|--------|------------|-----------|
+| **Java/** | Programacion, Prog. Servicios y Procesos | POO, Colecciones, Streams, Concurrencia, Sockets, Testing |
+| **BaseDeDatos_MySQL/** | Bases de Datos, Acceso a Datos | DDL, consultas, triggers, procedimientos, JPA/Hibernate, entidades |
+| **Html/** | Lenguajes de Marcas, Desarrollo Interfaces | HTML semantico, SPA, talleres auto-evaluables interactivos |
+| **Css/** | Desarrollo de Interfaces | Flexbox, Grid, animaciones, responsive, variables CSS |
+| **Xml/** | Lenguajes de Marcas | DTD, XSD, XSLT, namespaces, parsing DOM/SAX, configuraciones |
 
 ## Estructura
 
 ```
-Java/               Codigo Java backend (POO, Colecciones, Concurrencia, etc.)
-BaseDeDatos_MySQL/  Scripts SQL (esquemas, consultas, triggers)
-Html/               Talleres interactivos auto-evaluables
-Css/                Ejemplos de estilos CSS
-Xml/                Documentos XML, XSD, DTD, configuraciones
+Java/                   6 submodulos con teoria + codigo funcional
+BaseDeDatos_MySQL/      Scripts SQL + entidades JPA con anotaciones
+Html/                   Talleres auto-evaluables con aserciones JS
+Css/                    Hojas de estilo completas con ejemplos reales
+Xml/                    Documentos XML, esquemas XSD, configuraciones Maven/JPA
 ```
+
+## Acceso
+
+Abre `index.html` en cualquier navegador para explorar el contenido mediante el arbol de archivos. No requiere servidor ni instalacion.
 
 ## Licencia
 
 (C) 2025 Manuel Fuentes Cruz · Todos los derechos reservados.
-
-Este material es de uso exclusivamente educativo. Queda estrictamente prohibida su reproduccion total o parcial, distribucion, modificacion o uso comercial sin autorizacion expresa y por escrito del autor.

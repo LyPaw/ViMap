@@ -482,14 +482,14 @@ function extOf(name) {
 
 function extBadge(name) {
   var e = extOf(name);
-  var map = { java:'ext-java', md:'ext-md', pdf:'ext-pdf', html:'ext-html', css:'ext-css', xml:'ext-xml', sql:'ext-sql' };
+  var map = { java:'ext-java', md:'ext-md', html:'ext-html', css:'ext-css', xml:'ext-xml', sql:'ext-sql' };
   var cls = map[e] || '';
   return cls ? '<span class="file-ext ' + cls + '">.' + e + '</span>' : '';
 }
 
 function langIcon(name) {
   var e = extOf(name);
-  var icons = { java:'J', md:'M', pdf:'P', html:'H', css:'C', xml:'X', sql:'S' };
+  var icons = { java:'J', md:'M', html:'H', css:'C', xml:'X', sql:'S' };
   return icons[e] || '?';
 }
 
@@ -676,13 +676,6 @@ function loadContent(entry) {
         document.getElementById('status-lines').textContent = lines + ' lineas';
       })
       .catch(function() { node.innerHTML = '<div class="loading">Error al cargar el archivo</div>'; });
-  } else if (ext === 'pdf') {
-    node.innerHTML =
-      '<div class="code-header">' +
-        '<span class="code-filename">' + file.name + '</span>' +
-        '<span class="code-meta"><span>PDF document</span></span>' +
-      '</div>' +
-      '<div class="frame-wrap"><iframe src="' + file.url + '" type="application/pdf"></iframe></div>';
   } else if (ext === 'html') {
     fetch(file.url)
       .then(function(r) { return r.text(); })
