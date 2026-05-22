@@ -1,270 +1,173 @@
 {
-  "Java": {
+  "Programacion": {
     "Fundamentos": {
-      "Introducción": {
-        "Guía": [
-          {
-            "name": "IntroJava.html",
-            "url": "DAM/Java/Intro/intro-java-guia.html"
-          }
-        ]
-      },
-      "Array": {
-        "Guía": [
-          {
-            "name": "GuiaListas.html",
-            "url": "DAM/Java/Array/Guía/arrays-java-guia.html"
-          }
-        ]
-      },
-      "Colecciones": {
-        "ArrayList": [
-          {
-            "name": "ArrayList_Clave.html",
-            "url": "DAM/Java/ArrayList/Clave/arraylist-java-guia.html"
-          }
-        ],
-        "Conjuntos": [
-          {
-            "name": "Conjuntos_Clave.html",
-            "url": "DAM/Java/Conjuntos/Clave/conjuntos-java-guia.html"
-          }
-        ],
-        "Mapas": [
-          {
-            "name": "Mapas_Clave.html",
-            "url": "DAM/Java/Mapas/Clave/maps-java-guia.html"
-          }
-        ]
-      },
-      "Fechas": {
-        "Teoría": [
-          {
-            "name": "GuiaFechas.html",
-            "url": "DAM/Java/Fechas/fechas-java-guia.html"
-          }
-        ]
-      }
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/01_Programacion/Fundamentos/README.md" }
+      ],
+      "Ejemplos": [
+        { "name": "HolaMundo.java", "url": "DAM/01_Programacion/Fundamentos/HolaMundo.java" },
+        { "name": "Variables.java", "url": "DAM/01_Programacion/Fundamentos/Variables.java" },
+        { "name": "EstructurasControl.java", "url": "DAM/01_Programacion/Fundamentos/EstructurasControl.java" },
+        { "name": "Arrays.java", "url": "DAM/01_Programacion/Fundamentos/Arrays.java" }
+      ]
     },
     "POO": {
-      "Agenda": {
-        "Enunciado": [
-          {
-            "name": "Enunciado.md",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Agenda/Readme.md"
-          }
-        ],
-        "Código": [
-          {
-            "name": "main.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Agenda/main.java"
-          },
-          {
-            "name": "Agenda.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Agenda/Agenda.java"
-          },
-          {
-            "name": "Contacto.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/Agenda/Contacto.java"
-          }
-        ]
-      },
-      "Biblioteca": {
-        "Código": [
-          {
-            "name": "main.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/main/src/Main.java"
-          },
-          {
-            "name": "Libro.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/main/src/Libros.java"
-          },
-          {
-            "name": "Cliente.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/main/src/Cliente.java"
-          },
-          {
-            "name": "Biblioteca.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/Biblioteca-POO-Java/main/src/Biblioteca.java"
-          }
-        ]
-      },
-      "Deportes": {
-        "Código": [
-          {
-            "name": "main.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/Main.java"
-          },
-          {
-            "name": "Evento.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/Evento.java"
-          },
-          {
-            "name": "EventoAnual.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/EventosAnuales.java"
-          },
-          {
-            "name": "TipoEvento.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/Deportes-POO/main/src/eventosDeportivos/TipoEvento.java"
-          }
-        ]
-      }
-    },
-    "UML": {
-      "Teoría": [
-        {
-          "name": "Guia_UML_a_Java.html",
-          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_guia_teoria.html"
-        }
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/01_Programacion/POO/README.md" }
       ],
-      "Diagramas": [
-        {
-          "name": "UML_ResidentEvil.html",
-          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_resident_evil.html"
-        },
-        {
-          "name": "UML_Zoológico.html",
-          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_zoologico.html"
-        },
-        {
-          "name": "UML_RPG.html",
-          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_rpg.html"
-        },
-        {
-          "name": "UML_Hospital.html",
-          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_hospital.html"
-        },
-        {
-          "name": "UML_SistemaSolar.html",
-          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_sistemaSolar.html"
-        },
-        {
-          "name": "UML_Vehículos.html",
-          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_vehiculos.html"
-        }
-      ],
-      "ResidentEvil": {
-        "Diagramas": [
-          {
-            "name": "UML_ResidentEvil.html",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/uml_resident_evil.html"
-          }
-        ],
-        "Código": [
-          {
-            "name": "Main.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Main.java"
-          },
-          {
-            "name": "Entity.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Entity.java"
-          },
-          {
-            "name": "Character.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Character.java"
-          },
-          {
-            "name": "Survivor.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Survivor.java"
-          },
-          {
-            "name": "Zombie.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Zombie.java"
-          },
-          {
-            "name": "Licker.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Licker.java"
-          },
-          {
-            "name": "Tyrant.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Tyrant.java"
-          },
-          {
-            "name": "Item.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Item.java"
-          },
-          {
-            "name": "Weapon.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Weapon.java"
-          },
-          {
-            "name": "HealingItem.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/HealingItem.java"
-          },
-          {
-            "name": "WeaponType.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/WeaponType.java"
-          },
-          {
-            "name": "InfectionStatus.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/InfectionStatus.java"
-          },
-          {
-            "name": "Room.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Room.java"
-          },
-          {
-            "name": "Attackable.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Attackable.java"
-          },
-          {
-            "name": "Interactable.java",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/ResidentEvil/Interactable.java"
-          }
-        ],
-        "Javadoc": [
-          {
-            "name": "Javadoc.html",
-            "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Java/UML/Codigo/docs/index.html"
-          }
-        ]
-      }
+      "Ejemplos": [
+        { "name": "Persona.java", "url": "DAM/01_Programacion/POO/Persona.java" },
+        { "name": "Empleado.java", "url": "DAM/01_Programacion/POO/Empleado.java" },
+        { "name": "Polimorfismo.java", "url": "DAM/01_Programacion/POO/Polimorfismo.java" },
+        { "name": "Interfaces.java", "url": "DAM/01_Programacion/POO/Interfaces.java" }
+      ]
     },
+    "Colecciones": {
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/01_Programacion/Colecciones/README.md" }
+      ],
+      "Ejemplos": [
+        { "name": "EjemploArrayList.java", "url": "DAM/01_Programacion/Colecciones/EjemploArrayList.java" },
+        { "name": "EjemploHashMap.java", "url": "DAM/01_Programacion/Colecciones/EjemploHashMap.java" },
+        { "name": "EjemploHashSet.java", "url": "DAM/01_Programacion/Colecciones/EjemploHashSet.java" }
+      ]
+    },
+    "Concurrencia": {
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/01_Programacion/Concurrencia/README.md" }
+      ],
+      "Ejemplos": [
+        { "name": "HiloSimple.java", "url": "DAM/01_Programacion/Concurrencia/HiloSimple.java" },
+        { "name": "ProductorConsumidor.java", "url": "DAM/01_Programacion/Concurrencia/ProductorConsumidor.java" },
+        { "name": "ExecutorEjemplo.java", "url": "DAM/01_Programacion/Concurrencia/ExecutorEjemplo.java" }
+      ]
+    },
+    "Testing": {
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/01_Programacion/Testing/README.md" }
+      ],
+      "Ejemplos": [
+        { "name": "Calculadora.java", "url": "DAM/01_Programacion/Testing/Calculadora.java" },
+        { "name": "CalculadoraTest.java", "url": "DAM/01_Programacion/Testing/CalculadoraTest.java" }
+      ]
+    }
+  },
+  "AccesoADatos": {
+    "JDBC": {
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/02_AccesoADatos/JDBC/README.md" }
+      ],
+      "Ejemplos": [
+        { "name": "ConexionMySQL.java", "url": "DAM/02_AccesoADatos/JDBC/ConexionMySQL.java" },
+        { "name": "CRUDEjemplo.java", "url": "DAM/02_AccesoADatos/JDBC/CRUDEjemplo.java" },
+        { "name": "ConsultasAvanzadas.java", "url": "DAM/02_AccesoADatos/JDBC/ConsultasAvanzadas.java" }
+      ]
+    },
+    "JPA": {
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/02_AccesoADatos/JPA/README.md" }
+      ],
+      "Ejemplos": [
+        { "name": "Usuario.java", "url": "DAM/02_AccesoADatos/JPA/Usuario.java" },
+        { "name": "UsuarioRepository.java", "url": "DAM/02_AccesoADatos/JPA/UsuarioRepository.java" },
+        { "name": "MainJPA.java", "url": "DAM/02_AccesoADatos/JPA/MainJPA.java" }
+      ]
+    }
+  },
+  "DesarrolloInterfaces": {
     "JavaFX": {
-      "Teoría": [
-        {
-          "name": "Documentación_JavaFX.html",
-          "url": "DAM/Java/JavaFX/javafx-vimap-guia.html"
-        }
-      ]
-    }
-  },
-  "BaseDeDatos": {
-    "ER": {
-      "Teoría": [
-        {
-          "name": "ER_Teoría.md",
-          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Base_De_Datos/Teor%C3%ADa/Readme.md"
-        }
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/03_DesarrolloInterfaces/JavaFX/README.md" }
       ],
-      "Ejercicios": [
-        {
-          "name": "Ejercicios_BD.md",
-          "url": "https://raw.githubusercontent.com/LyPaw/ViMap/main/DAM/Base_De_Datos/Ejercicios/Readme.md"
-        }
+      "Ejemplos": [
+        { "name": "HolaFX.java", "url": "DAM/03_DesarrolloInterfaces/JavaFX/HolaFX.java" },
+        { "name": "LayoutsDemo.java", "url": "DAM/03_DesarrolloInterfaces/JavaFX/LayoutsDemo.java" },
+        { "name": "EventosJavaFX.java", "url": "DAM/03_DesarrolloInterfaces/JavaFX/EventosJavaFX.java" }
       ]
     },
-    "SQL": {
-      "Conceptos_Clave": []
+    "Swing": {
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/03_DesarrolloInterfaces/Swing/README.md" }
+      ],
+      "Ejemplos": [
+        { "name": "VentanaSwing.java", "url": "DAM/03_DesarrolloInterfaces/Swing/VentanaSwing.java" },
+        { "name": "CalculadoraSwing.java", "url": "DAM/03_DesarrolloInterfaces/Swing/CalculadoraSwing.java" }
+      ]
     }
   },
-  "HTML_CSS": {
-    "Tablas": {
-      "Teoría": [
-        {
-          "name": "Teoria.md",
-          "url": "https://raw.githubusercontent.com/LyPaw/XML-HTML-CSS/main/Tablas/Teor%C3%ADa.md"
-        }
+  "ServiciosProcesos": {
+    "Sockets": {
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/04_ServiciosProcesos/Sockets/README.md" }
       ],
-      "Ejercicios": [
-        {
-          "name": "Ejercicios_Medio_Dificil.md",
-          "url": "https://raw.githubusercontent.com/LyPaw/XML-HTML-CSS/main/Tablas/Ejercicios_Cols_Rows.md"
-        },
-        {
-          "name": "Ejercicio_Dificil.md",
-          "url": "https://raw.githubusercontent.com/LyPaw/XML-HTML-CSS/main/Tablas/EjercicioFinal.md"
-        }
+      "Ejemplos": [
+        { "name": "ServidorEco.java", "url": "DAM/04_ServiciosProcesos/Sockets/ServidorEco.java" },
+        { "name": "ClienteEco.java", "url": "DAM/04_ServiciosProcesos/Sockets/ClienteEco.java" },
+        { "name": "ChatBasico.java", "url": "DAM/04_ServiciosProcesos/Sockets/ChatBasico.java" }
+      ]
+    },
+    "Hilos": {
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/04_ServiciosProcesos/Hilos/README.md" }
+      ],
+      "Ejemplos": [
+        { "name": "EjemploHilo.java", "url": "DAM/04_ServiciosProcesos/Hilos/EjemploHilo.java" },
+        { "name": "PoolHilos.java", "url": "DAM/04_ServiciosProcesos/Hilos/PoolHilos.java" }
+      ]
+    },
+    "Protocolos": {
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/04_ServiciosProcesos/Protocolos/README.md" }
+      ],
+      "Ejemplos": [
+        { "name": "ClienteHTTP.java", "url": "DAM/04_ServiciosProcesos/Protocolos/ClienteHTTP.java" }
+      ]
+    }
+  },
+  "SistemasEmpresariales": {
+    "ERPBasico": {
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/05_SistemasEmpresariales/ERPBasico/README.md" }
+      ],
+      "Ejemplos": [
+        { "name": "Producto.java", "url": "DAM/05_SistemasEmpresariales/ERPBasico/Producto.java" },
+        { "name": "ClienteEmpresa.java", "url": "DAM/05_SistemasEmpresariales/ERPBasico/ClienteEmpresa.java" },
+        { "name": "Pedido.java", "url": "DAM/05_SistemasEmpresariales/ERPBasico/Pedido.java" },
+        { "name": "Factura.java", "url": "DAM/05_SistemasEmpresariales/ERPBasico/Factura.java" }
+      ]
+    },
+    "FlujosTrabajo": {
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/05_SistemasEmpresariales/FlujosTrabajo/README.md" }
+      ],
+      "Ejemplos": [
+        { "name": "WorkflowEjemplo.java", "url": "DAM/05_SistemasEmpresariales/FlujosTrabajo/WorkflowEjemplo.java" }
+      ]
+    }
+  },
+  "EntornosDesarrollo": {
+    "UML": {
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/06_EntornosDesarrollo/UML/README.md" }
+      ],
+      "Ejemplos": [
+        { "name": "DiagramaClases.md", "url": "DAM/06_EntornosDesarrollo/UML/DiagramaClases.md" }
+      ]
+    },
+    "Testing": {
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/06_EntornosDesarrollo/Testing/README.md" }
+      ],
+      "Ejemplos": [
+        { "name": "TestBasico.md", "url": "DAM/06_EntornosDesarrollo/Testing/TestBasico.md" }
+      ]
+    },
+    "Git": {
+      "Teoria": [
+        { "name": "README.md", "url": "DAM/06_EntornosDesarrollo/Git/README.md" }
+      ],
+      "Ejemplos": [
+        { "name": "ComandosGit.md", "url": "DAM/06_EntornosDesarrollo/Git/ComandosGit.md" }
       ]
     }
   }
