@@ -792,19 +792,26 @@ function esc(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-// Visit counter (localStorage)
+// Visit counter (CountAPI)
 (function() {
-  var key = 'vimap_visits';
+  var el = document.getElementById('visit-count');
   var countedKey = 'vimap_counted';
-  var count = parseInt(localStorage.getItem(key)) || 0;
 
-  if (!sessionStorage.getItem(countedKey)) {
-    sessionStorage.setItem(countedKey, '1');
-    count++;
-    localStorage.setItem(key, count);
-  }
+  var incrementar = function() {
+    if (!sessionStorage.getItem(countedKey)) {
+      sessionStorage.setItem(countedKey, '1');
+      return fetch('https://api.countapi.xyz/hit/vimap/visits').then(function(r) { return r.json(); });
+    }
+    return fetch('https://api.countapi.xyz/get/vimap/visits').then(function(r) { return r.json(); });
+  };
 
-  document.getElementById('visit-count').textContent = count;
+  incrementar().then(function(data) {
+    if (data && data.value !== undefined) {
+      el.textContent = data.value;
+    }
+  }).catch(function() {
+    el.textContent = '--';
+  });
 })();
 
 var handle  = document.getElementById('resize-handle');
