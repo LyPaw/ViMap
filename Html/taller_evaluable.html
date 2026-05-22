@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller Evaluable - Mini TODO App</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', sans-serif; background: #0c1018; color: #e2e8f0; padding: 24px; }
+h1 { color: #22d3ee; font-size: 1.4rem; margin-bottom: 8px; }
+h2 { color: #94a3b8; font-size: 1rem; margin: 16px 0 8px; }
+.enunciado { background: #111827; border: 1px solid #1a2233; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+.enunciado p, .enunciado li { color: #94a3b8; line-height: 1.6; font-size: 0.9rem; }
+.enunciado code { background: #1a2233; color: #22d3ee; padding: 2px 6px; border-radius: 4px; }
+.enunciado ul { padding-left: 20px; margin-top: 6px; }
+.enunciado ul ul { margin-top: 2px; }
+textarea { width: 100%; height: 340px; background: #060910; color: #e2e8f0; border: 1px solid #243044; border-radius: 8px; padding: 14px; font-family: 'Consolas', monospace; font-size: 0.82rem; resize: vertical; outline: none; tab-size: 2; }
+textarea:focus { border-color: #3b82f6; }
+.botones { display: flex; gap: 10px; margin: 12px 0; flex-wrap: wrap; }
+button { padding: 10px 24px; border: none; border-radius: 6px; font-family: inherit; font-size: 0.85rem; cursor: pointer; font-weight: 600; }
+.btn-validar { background: #10b981; color: #fff; }
+.btn-validar:hover { background: #059669; }
+.btn-reiniciar { background: #475569; color: #e2e8f0; }
+.btn-reiniciar:hover { background: #64748b; }
+.btn-pista { background: #f59e0b; color: #fff; }
+.btn-pista:hover { background: #d97706; }
+#feedback { padding: 16px 20px; border-radius: 8px; font-size: 0.85rem; display: none; margin-top: 12px; white-space: pre-wrap; font-family: 'Consolas', monospace; line-height: 1.6; }
+.ok { background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #6ee7b7; display: block; }
+.error { background: rgba(239,68,68,0.15); border: 1px solid #ef4444; color: #fca5a5; display: block; }
+.parcial { background: rgba(251,191,36,0.15); border: 1px solid #f59e0b; color: #fcd34d; display: block; }
+#pista { background: #111827; border: 1px solid #1a2233; border-radius: 8px; padding: 16px; margin-top: 8px; display: none; font-size: 0.85rem; color: #94a3b8; line-height: 1.7; }
+#pista code { background: #1a2233; color: #fbbf24; padding: 1px 5px; border-radius: 3px; }
+.resultado-ejecucion { background: #111827; border: 1px solid #1a2233; border-radius: 8px; padding: 16px; margin-top: 12px; font-size: 0.85rem; color: #e2e8f0; font-family: 'Consolas', monospace; max-height: 200px; overflow-y: auto; }
+</style>
+</head>
+<body>
+<h1>Taller Evaluable - Mini TODO App con DOM</h1>
+<div class="enunciado">
+  <p><strong>Enunciado:</strong> Implementa un gestor de tareas (TODO) completo con las siguientes funciones. Todas reciben y devuelven datos, sin modificar el DOM directamente (solo manipulan arrays/objetos). Las pruebas unitarias verificaran cada funcion.</p>
+  <ul>
+    <li><code>agregarTarea(tareas, texto)</code> - Agrega una tarea con <code>{ id, texto, completa: false }</code>. El <code>id</code> debe ser <code>tareas.length + 1</code>. Devuelve el nuevo array.</li>
+    <li><code>toggleTarea(tareas, id)</code> - Cambia el estado <code>completa</code> de la tarea con ese id. Devuelve el array actualizado (nuevo array, no mutar original).</li>
+    <li><code>eliminarTarea(tareas, id)</code> - Elimina la tarea con ese id. Devuelve el nuevo array.</li>
+    <li><code>filtrarTareas(tareas, filtro)</code> - Devuelve tareas filtradas: <code>"todas"</code> (todas), <code>"activas"</code> (completa===false), <code>"completadas"</code> (completa===true).</li>
+    <li><code>contarPendientes(tareas)</code> - Devuelve el numero de tareas con <code>completa === false</code>.</li>
+  </ul>
+  <p style="margin-top:8px;">No uses mutacion directa: cada funcion debe devolver un NUEVO array u objeto, no modificar el original.</p>
+</div>
+<textarea id="codigo">function agregarTarea(tareas, texto) {
+  // Devuelve nuevo array con la tarea anadida
+  // id: tareas.length + 1
+  // completa: false
+
+}
+
+function toggleTarea(tareas, id) {
+  // Devuelve nuevo array con la tarea cuyo id coincide con toggle de completa
+
+}
+
+function eliminarTarea(tareas, id) {
+  // Devuelve nuevo array sin la tarea con ese id
+
+}
+
+function filtrarTareas(tareas, filtro) {
+  // filtro: "todas" | "activas" | "completadas"
+
+}
+
+function contarPendientes(tareas) {
+  // Devuelve el numero de tareas con completa === false
+
+}</textarea>
+<div class="botones">
+  <button class="btn-validar" onclick="validar()">Validar Solucion</button>
+  <button class="btn-pista" onclick="mostrarPista()">Pista</button>
+  <button class="btn-reiniciar" onclick="reiniciar()">Reiniciar</button>
+</div>
+<div id="pista"></div>
+<div id="feedback"></div>
+<script>
+function validar() {
+  var fb = document.getElementById('feedback');
+  try {
+    eval(document.getElementById('codigo').value);
+
+    if (typeof agregarTarea !== 'function') throw new Error('No definiste agregarTarea');
+    if (typeof toggleTarea !== 'function') throw new Error('No definiste toggleTarea');
+    if (typeof eliminarTarea !== 'function') throw new Error('No definiste eliminarTarea');
+    if (typeof filtrarTareas !== 'function') throw new Error('No definiste filtrarTareas');
+    if (typeof contarPendientes !== 'function') throw new Error('No definiste contarPendientes');
+
+    var errores = [];
+    var base = [];
+
+    // Test 1: agregarTarea
+    var r1 = agregarTarea(base, "Comprar pan");
+    if (!Array.isArray(r1)) errores.push('Test 1: agregarTarea debe devolver un array');
+    else if (r1.length !== 1) errores.push('Test 1: debe tener 1 tarea');
+    else if (r1[0].texto !== "Comprar pan") errores.push('Test 1: texto incorrecto');
+    else if (r1[0].completa !== false) errores.push('Test 1: completa debe ser false');
+    else if (r1[0].id !== 1) errores.push('Test 1: id debe ser 1');
+    else if (base.length !== 0) errores.push('Test 1: no debes mutar el array original');
+
+    // Test 2: agregar multiples y ids incrementales
+    var r2 = agregarTarea(agregarTarea(base, "A"), "B");
+    if (r2.length === 2 && r2[1].id !== 2) errores.push('Test 2: el id debe ser incremental');
+
+    // Test 3: toggleTarea
+    var tresTareas = agregarTarea(agregarTarea(agregarTarea(base, "T1"), "T2"), "T3");
+    var r3 = toggleTarea(tresTareas, 2);
+    if (!Array.isArray(r3)) errores.push('Test 3: toggleTarea debe devolver array');
+    else if (r3.length !== 3) errores.push('Test 3: la longitud no debe cambiar');
+    else if (r3[1].completa !== true) errores.push('Test 3: la tarea 2 debe estar completa=true');
+    else if (r3[0].completa !== false) errores.push('Test 3: la tarea 1 no debe cambiar');
+    else if (tresTareas[1].completa !== false) errores.push('Test 3: no debes mutar el array original');
+
+    // Test 4: toggle dos veces (vuelve a false)
+    var r4 = toggleTarea(toggleTarea(tresTareas, 2), 2);
+    if (r4[1].completa !== false) errores.push('Test 4: toggle dos veces debe volver a false');
+
+    // Test 5: eliminarTarea
+    var cincoTareas = agregarTarea(agregarTarea(agregarTarea(agregarTarea(agregarTarea(base, "A"), "B"), "C"), "D"), "E");
+    var r5 = eliminarTarea(cincoTareas, 3);
+    if (!Array.isArray(r5)) errores.push('Test 5: eliminarTarea debe devolver array');
+    else if (r5.length !== 4) errores.push('Test 5: debe tener 4 tareas');
+    else if (r5.some(function(t) { return t.id === 3; })) errores.push('Test 5: la tarea con id=3 no debe existir');
+    else if (cincoTareas.length !== 5) errores.push('Test 5: no debes mutar el array original');
+
+    // Test 6: eliminar id inexistente
+    var r6 = eliminarTarea(base, 99);
+    if (r6.length !== 0) errores.push('Test 6: eliminar id inexistente debe devolver array sin cambios');
+
+    // Test 7: filtrarTareas
+    var tareasMezcla = agregarTarea(agregarTarea(agregarTarea(base, "A"), "B"), "C");
+    tareasMezcla = toggleTarea(tareasMezcla, 1);
+    tareasMezcla = toggleTarea(tareasMezcla, 3);
+
+    var r7a = filtrarTareas(tareasMezcla, "todas");
+    if (r7a.length !== 3) errores.push('Test 7a: filtro "todas" debe devolver 3 tareas');
+
+    var r7b = filtrarTareas(tareasMezcla, "activas");
+    if (r7b.length !== 1) errores.push('Test 7b: filtro "activas" debe devolver 1 tarea');
+    else if (r7b[0].id !== 2) errores.push('Test 7b: la unica activa debe ser id=2');
+
+    var r7c = filtrarTareas(tareasMezcla, "completadas");
+    if (r7c.length !== 2) errores.push('Test 7c: filtro "completadas" debe devolver 2 tareas');
+
+    // Test 8: contarPendientes
+    var r8 = contarPendientes(tareasMezcla);
+    if (r8 !== 1) errores.push('Test 8: debe haber 1 pendiente');
+    if (contarPendientes(base) !== 0) errores.push('Test 8: array vacio debe devolver 0');
+
+    // Test 9: inmutabilidad general
+    var original = agregarTarea(base, "Unica");
+    var trasToggle = toggleTarea(original, 1);
+    var trasEliminar = eliminarTarea(original, 1);
+    if (original.length !== 1) errores.push('Test 9: el array original no debe mutar tras toggle o eliminar');
+    if (original[0].completa !== false) errores.push('Test 9: el objeto original no debe mutar tras toggle');
+
+    if (errores.length === 0) {
+      fb.className = 'ok';
+      fb.textContent = 'Todos los tests pasaron correctamente.';
+      fb.style.display = 'block';
+    } else {
+      fb.className = 'parcial';
+      fb.textContent = errores.length + ' test(s) fallaron:\n  ' + errores.join('\n  ');
+      fb.style.display = 'block';
+    }
+  } catch (e) {
+    fb.className = 'error';
+    fb.textContent = 'Error de ejecucion: ' + e.message;
+    fb.style.display = 'block';
+  }
+}
+
+function mostrarPista() {
+  var p = document.getElementById('pista');
+  if (p.style.display === 'block') {
+    p.style.display = 'none';
+    return;
+  }
+  p.innerHTML = '<strong>Pistas:</strong><br>'
+    + '- <code>agregarTarea:</code> usa <code>[...tareas, { id: tareas.length + 1, texto, completa: false }]</code><br>'
+    + '- <code>toggleTarea:</code> usa <code>tareas.map(t => t.id === id ? { ...t, completa: !t.completa } : t)</code><br>'
+    + '- <code>eliminarTarea:</code> usa <code>tareas.filter(t => t.id !== id)</code><br>'
+    + '- <code>filtrarTareas:</code> usa <code>.filter()</code> segun el valor del filtro<br>'
+    + '- <code>contarPendientes:</code> usa <code>.filter(t => !t.completa).length</code>';
+  p.style.display = 'block';
+}
+
+function reiniciar() {
+  document.getElementById('codigo').value = 'function agregarTarea(tareas, texto) {\n  // Devuelve nuevo array con la tarea anadida\n  // id: tareas.length + 1\n  // completa: false\n\n}\n\nfunction toggleTarea(tareas, id) {\n  // Devuelve nuevo array con la tarea cuyo id coincide con toggle de completa\n\n}\n\nfunction eliminarTarea(tareas, id) {\n  // Devuelve nuevo array sin la tarea con ese id\n\n}\n\nfunction filtrarTareas(tareas, filtro) {\n  // filtro: "todas" | "activas" | "completadas"\n\n}\n\nfunction contarPendientes(tareas) {\n  // Devuelve el numero de tareas con completa === false\n\n}';
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('pista').style.display = 'none';
+}
+</script>
+</body>
+</html>
