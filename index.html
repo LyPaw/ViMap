@@ -493,79 +493,81 @@ function buildTree(data, container, depth, pathParts) {
   if (depth === undefined) depth = 0;
   if (pathParts === undefined) pathParts = [];
   for (var key in data) {
-    var val = data[key];
-    var isFiles = Array.isArray(val);
-    var currentPath = pathParts.concat([key]);
+    (function() {
+      var val = data[key];
+      var isFiles = Array.isArray(val);
+      var currentPath = pathParts.concat([key]);
 
-    var item = document.createElement('div');
-    item.className = 'tree-item';
+      var item = document.createElement('div');
+      item.className = 'tree-item';
 
-    var row = document.createElement('div');
-    row.className = 'tree-row';
-    row.style.paddingLeft = (8 + depth * 14) + 'px';
+      var row = document.createElement('div');
+      row.className = 'tree-row';
+      row.style.paddingLeft = (8 + depth * 14) + 'px';
 
-    if (isFiles) {
-      row.innerHTML = '<span class="tree-arrow">&#9656;</span><span class="tree-icon">&#128194;</span><span class="tree-label">' + key + '</span>' + (val.length ? '<span style="margin-left:auto;font-size:0.58rem;color:var(--text3)">' + val.length + '</span>' : '');
+      if (isFiles) {
+        row.innerHTML = '<span class="tree-arrow">&#9656;</span><span class="tree-icon">&#128194;</span><span class="tree-label">' + key + '</span>' + (val.length ? '<span style="margin-left:auto;font-size:0.58rem;color:var(--text3)">' + val.length + '</span>' : '');
 
-      var children = document.createElement('div');
-      children.className = 'tree-children';
+        var children = document.createElement('div');
+        children.className = 'tree-children';
 
-      if (val.length === 0) {
-        var empty = document.createElement('div');
-        empty.className = 'tree-row';
-        empty.style.paddingLeft = (8 + (depth + 1) * 14) + 'px';
-        empty.style.color = 'var(--text3)';
-        empty.style.fontStyle = 'italic';
-        empty.style.fontSize = '0.68rem';
-        empty.innerHTML = '<span class="tree-arrow" style="visibility:hidden">&#9656;</span><span>vacio</span>';
-        children.appendChild(empty);
-      }
+        if (val.length === 0) {
+          var empty = document.createElement('div');
+          empty.className = 'tree-row';
+          empty.style.paddingLeft = (8 + (depth + 1) * 14) + 'px';
+          empty.style.color = 'var(--text3)';
+          empty.style.fontStyle = 'italic';
+          empty.style.fontSize = '0.68rem';
+          empty.innerHTML = '<span class="tree-arrow" style="visibility:hidden">&#9656;</span><span>vacio</span>';
+          children.appendChild(empty);
+        }
 
-      val.forEach(function(file) {
-        var fItem = document.createElement('div');
-        fItem.className = 'tree-item';
+        val.forEach(function(file) {
+          var fItem = document.createElement('div');
+          fItem.className = 'tree-item';
 
-        var fRow = document.createElement('div');
-        fRow.className = 'tree-row';
-        fRow.style.paddingLeft = (8 + (depth + 1) * 14) + 'px';
-        fRow.innerHTML = '<span class="tree-arrow" style="visibility:hidden">&#9656;</span><span class="tree-icon">' + langIcon(file.name) + '</span><span class="tree-label">' + file.name + '</span>' + extBadge(file.name);
-        fRow.addEventListener('click', function(e) {
-          e.stopPropagation();
-          openFile(file);
-          var allRows = document.querySelectorAll('.tree-row');
-          for (var i = 0; i < allRows.length; i++) allRows[i].classList.remove('active');
-          fRow.classList.add('active');
-          var crumbHtml = '';
-          for (var i = 0; i < currentPath.length; i++) {
-            crumbHtml += '<span>' + currentPath[i] + '</span>';
-            if (i < currentPath.length - 1) crumbHtml += '<span class="sep">&#8250;</span>';
-          }
-          crumbHtml += '<span class="sep">&#8250;</span><span>' + file.name + '</span>';
-          document.getElementById('breadcrumb').innerHTML = crumbHtml;
+          var fRow = document.createElement('div');
+          fRow.className = 'tree-row';
+          fRow.style.paddingLeft = (8 + (depth + 1) * 14) + 'px';
+          fRow.innerHTML = '<span class="tree-arrow" style="visibility:hidden">&#9656;</span><span class="tree-icon">' + langIcon(file.name) + '</span><span class="tree-label">' + file.name + '</span>' + extBadge(file.name);
+          fRow.addEventListener('click', function(e) {
+            e.stopPropagation();
+            openFile(file);
+            var allRows = document.querySelectorAll('.tree-row');
+            for (var i = 0; i < allRows.length; i++) allRows[i].classList.remove('active');
+            fRow.classList.add('active');
+            var crumbHtml = '';
+            for (var i = 0; i < currentPath.length; i++) {
+              crumbHtml += '<span>' + currentPath[i] + '</span>';
+              if (i < currentPath.length - 1) crumbHtml += '<span class="sep">&#8250;</span>';
+            }
+            crumbHtml += '<span class="sep">&#8250;</span><span>' + file.name + '</span>';
+            document.getElementById('breadcrumb').innerHTML = crumbHtml;
+          });
+
+          fItem.appendChild(fRow);
+          children.appendChild(fItem);
         });
 
-        fItem.appendChild(fRow);
-        children.appendChild(fItem);
-      });
+        row.addEventListener('click', function(e) { e.stopPropagation(); item.classList.toggle('open'); });
+        item.appendChild(row);
+        item.appendChild(children);
 
-      row.addEventListener('click', function(e) { e.stopPropagation(); item.classList.toggle('open'); });
-      item.appendChild(row);
-      item.appendChild(children);
+      } else {
+        var isRoot = depth === 0;
+        row.innerHTML = '<span class="tree-arrow">&#9656;</span><span class="tree-icon">' + (isRoot ? '&#128459;' : '&#128193;') + '</span><span class="tree-label">' + key + '</span>';
 
-    } else {
-      var isRoot = depth === 0;
-      row.innerHTML = '<span class="tree-arrow">&#9656;</span><span class="tree-icon">' + (isRoot ? '&#128459;' : '&#128193;') + '</span><span class="tree-label">' + key + '</span>';
+        var children = document.createElement('div');
+        children.className = 'tree-children';
+        buildTree(val, children, depth + 1, currentPath);
 
-      var children = document.createElement('div');
-      children.className = 'tree-children';
-      buildTree(val, children, depth + 1, currentPath);
+        row.addEventListener('click', function(e) { e.stopPropagation(); item.classList.toggle('open'); });
+        item.appendChild(row);
+        item.appendChild(children);
+      }
 
-      row.addEventListener('click', function(e) { e.stopPropagation(); item.classList.toggle('open'); });
-      item.appendChild(row);
-      item.appendChild(children);
-    }
-
-    container.appendChild(item);
+      container.appendChild(item);
+    })();
   }
 }
 
