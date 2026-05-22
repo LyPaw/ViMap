@@ -1,3 +1,9 @@
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: Concurrencia (PDF)](../temario_concurrencia.pdf)
+
 # Concurrencia en Java
 
 ## Conceptos fundamentales
@@ -41,3 +47,4 @@
 3.  Simula una carrera de 5 corredores usando hilos. Muestra el orden de llegada.
 4.  Implementa el problema del productor-consumidor con un buffer de tamanio fijo.
 5.  Usa un ExecutorService con un pool de 3 hilos para procesar 10 tareas.
+

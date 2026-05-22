@@ -1,3 +1,9 @@
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: Sockets (PDF)](../temario_sockets.pdf)
+
 # Programacion de Servicios y Procesos - Sockets
 
 ## Conceptos fundamentales
@@ -52,3 +58,4 @@ while (true) {
 3.  Implementa un servidor de archivos que permita a los clientes descargar ficheros.
 4.  Desarrolla un juego de preguntas y respuestas usando sockets TCP.
 5.  Implementa un servicio de mensajes UDP (broadcast) para descubrimiento de servicios en red.
+

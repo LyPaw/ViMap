@@ -1,3 +1,9 @@
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: Git (PDF)](../temario_git.pdf)
+
 # Entornos de Desarrollo - Git
 
 ## Conceptos fundamentales
@@ -61,3 +67,4 @@ Flujo de trabajo estandar con ramas:
 3.  Simula un conflicto de merge: dos ramas modifican la misma linea de un archivo. Resuelve el conflicto manualmente.
 4.  Usa `git rebase -i HEAD~3` para combinar los ultimos 3 commits en uno solo (squash).
 5.  Crea un tag semantico (v1.0.0) y subelo al repositorio remoto. Comprueba que puedes checkout a ese tag.
+

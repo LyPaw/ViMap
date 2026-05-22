@@ -1,3 +1,9 @@
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: ERP (PDF)](../temario_erp.pdf)
+
 # Sistemas de Gestion Empresarial - ERP
 
 ## Conceptos fundamentales
@@ -39,3 +45,4 @@ Cliente -> Pedido -> Validacion stock -> Preparacion -> Envio -> Factura -> Cobr
 3.  Anade una capa de persistencia JPA a las entidades del sistema.
 4.  Implementa un sistema de descuentos por volumen y por cliente VIP.
 5.  Crea un informe de ventas mensual que agrupe por producto y cliente.
+

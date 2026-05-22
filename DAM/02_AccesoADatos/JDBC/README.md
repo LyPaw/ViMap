@@ -1,3 +1,9 @@
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: JDBC (PDF)](../temario_jdbc.pdf)
+
 # JDBC - Java Database Connectivity
 
 ## Conceptos fundamentales
@@ -39,3 +45,4 @@ JDBC es la API estandar de Java para conectar y operar con bases de datos relaci
 3.  Anade manejo de transacciones para insertar un pedido y sus lineas en dos tablas relacionadas.
 4.  Crea un pool de conexiones usando HikariCP.
 5.  Implementa un metodo que exporte una tabla a un archivo CSV.
+

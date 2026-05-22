@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller Evaluable - Entornos de Desarrollo</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0c1018; color: #e2e8f0; padding: 24px; }
+h1 { color: #22d3ee; font-size: 1.4rem; margin-bottom: 8px; }
+.enunciado { background: #111827; border: 1px solid #1a2233; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.enunciado p { color: #94a3b8; line-height: 1.6; font-size: 0.9rem; }
+.enunciado code { background: #1a2233; color: #22d3ee; padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; }
+textarea { width: 100%; height: 200px; background: #060910; color: #e2e8f0; border: 1px solid #243044; border-radius: 8px; padding: 14px; font-family: 'Consolas', monospace; font-size: 0.85rem; resize: vertical; outline: none; }
+textarea:focus { border-color: #3b82f6; }
+.botones { display: flex; gap: 10px; margin: 12px 0; }
+button { padding: 10px 24px; border: none; border-radius: 6px; font-family: inherit; font-size: 0.85rem; cursor: pointer; font-weight: 600; transition: opacity 0.2s; }
+button:hover { opacity: 0.85; }
+.btn-validar { background: #10b981; color: #fff; }
+.btn-reiniciar { background: #475569; color: #e2e8f0; }
+#feedback { padding: 14px 18px; border-radius: 8px; font-size: 0.85rem; line-height: 1.6; display: none; margin-top: 12px; white-space: pre-wrap; font-family: 'Consolas', monospace; }
+.ok { background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #6ee7b7; display: block; }
+.error { background: rgba(239,68,68,0.15); border: 1px solid #ef4444; color: #fca5a5; display: block; }
+</style>
+</head>
+<body>
+<h1>Taller Evaluable - Entornos de Desarrollo</h1>
+<div class="enunciado">
+  <p><strong>Enunciado:</strong> Implementa la funcion <code>analizarCommits</code> que reciba un array de objetos commit con la estructura <code>{ hash: string, autor: string, fecha: string, mensaje: string }</code> y devuelva un objeto con:</p>
+  <ul style="color:#94a3b8;margin-top:8px;padding-left:20px;font-size:0.85rem;line-height:1.7;">
+    <li><code>total</code>: numero total de commits</li>
+    <li><code>autores</code>: array de nombres de autores sin repetir, ordenados alfabeticamente</li>
+    <li><code>mensajesLargos</code>: cantidad de commits cuyo mensaje tiene mas de 50 caracteres</li>
+    <li><code>porAutor</code>: objeto donde las claves son los autores y los valores el numero de commits de cada uno</li>
+  </ul>
+</div>
+<textarea id="codigo" placeholder="Escribe tu solucion aqui...">function analizarCommits(commits) {
+  // Escribe tu codigo aqui
+
+}</textarea>
+<div class="botones">
+  <button class="btn-validar" onclick="validar()">Validar Solucion</button>
+  <button class="btn-reiniciar" onclick="reiniciar()">Reiniciar</button>
+</div>
+<div id="feedback"></div>
+<script>
+var tests = [
+  {
+    args: [[
+      { hash:"a1", autor:"Ana", fecha:"2024-01-01", mensaje:"fix: corregir bug en login" },
+      { hash:"a2", autor:"Luis", fecha:"2024-01-02", mensaje:"feat: anadir modulo de facturacion completo con tests integrados" },
+      { hash:"a3", autor:"Ana", fecha:"2024-01-03", mensaje:"docs: actualizar README" }
+    ]],
+    expected: function(r) {
+      return r.total === 3 &&
+        JSON.stringify(r.autores) === '["Ana","Luis"]' &&
+        r.mensajesLargos === 1 &&
+        r.porAutor.Ana === 2 && r.porAutor.Luis === 1;
+    },
+    label: "Caso basico con 3 commits"
+  },
+  {
+    args: [[]],
+    expected: function(r) {
+      return r.total === 0 && JSON.stringify(r.autores) === '[]' && r.mensajesLargos === 0 && JSON.stringify(r.porAutor) === '{}';
+    },
+    label: "Array vacio"
+  },
+  {
+    args: [[
+      { hash:"b1", autor:"Bob", fecha:"2024-02-01", mensaje:"corto" },
+      { hash:"b2", autor:"Bob", fecha:"2024-02-02", mensaje:"otro corto" }
+    ]],
+    expected: function(r) {
+      return r.total === 2 && JSON.stringify(r.autores) === '["Bob"]' && r.mensajesLargos === 0 && r.porAutor.Bob === 2;
+    },
+    label: "Un solo autor"
+  }
+];
+
+function validar() {
+  var fb = document.getElementById('feedback');
+  try {
+    var fn = new Function('commits',
+      document.getElementById('codigo').value + '; return analizarCommits(commits);');
+    for (var i = 0; i < tests.length; i++) {
+      var t = tests[i];
+      var res = fn.apply(null, t.args);
+      if (!t.expected(res)) {
+        fb.className = 'error';
+        fb.textContent = 'Test ' + (i+1) + ' fallo (' + t.label + ').\nRecibido: ' + JSON.stringify(res);
+        fb.style.display = 'block';
+        return;
+      }
+    }
+    fb.className = 'ok';
+    fb.textContent = 'Todos los tests pasaron correctamente.';
+    fb.style.display = 'block';
+  } catch (e) {
+    fb.className = 'error';
+    fb.textContent = 'Error de ejecucion: ' + e.message;
+    fb.style.display = 'block';
+  }
+}
+
+function reiniciar() {
+  document.getElementById('codigo').value = 'function analizarCommits(commits) {\n  // Escribe tu codigo aqui\n\n}';
+  document.getElementById('feedback').style.display = 'none';
+}
+</script>
+</body>
+</html>

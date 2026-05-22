@@ -1,3 +1,9 @@
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: Swing (PDF)](../temario_swing.pdf)
+
 # Desarrollo de Interfaces con Swing
 
 ## Conceptos fundamentales
@@ -48,3 +54,4 @@ Los componentes Swing separan datos (Model) de visualizacion (View) y control (C
 3.  Crea una aplicacion de lista de tareas con JList y DefaultListModel.
 4.  Desarrolla un visor de imagenes que cargue archivos JPG/PNG usando JFileChooser.
 5.  Implementa un formulario de alta de clientes con validacion de campos usando JDialog.
+

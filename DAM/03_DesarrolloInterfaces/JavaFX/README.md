@@ -1,3 +1,9 @@
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: JavaFX (PDF)](../temario_javafx.pdf)
+
 # Desarrollo de Interfaces con JavaFX
 
 ## Conceptos fundamentales
@@ -48,3 +54,4 @@ FXML permite definir la interfaz de usuario en un archivo XML separado del codig
 3.  Crea un visor de imagenes con botones anterior/siguiente y contador de imagenes.
 4.  Desarrolla una lista de tareas (TODO list) con TableView, pudiendo anadir, completar y eliminar tareas.
 5.  Implementa un cronometro con botones de iniciar, pausar y reiniciar, usando Timeline.
+

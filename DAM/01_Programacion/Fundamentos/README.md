@@ -1,5 +1,11 @@
 # Fundamentos de Programacion en Java
 
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: Fundamentos de Programacion (PDF)](../temario_fundamentos_programacion.pdf)
+
 ## Contenidos
 
 1.  **Sintaxis basica**: estructura de un programa Java, metodo main, paquetes e importaciones.

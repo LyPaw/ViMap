@@ -1,3 +1,9 @@
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: Hilos (PDF)](../temario_hilos.pdf)
+
 # Programacion de Servicios y Procesos - Hilos
 
 ## Conceptos avanzados de hilos
@@ -51,3 +57,4 @@ CompletableFuture.supplyAsync(() -> "Hola")
 3.  Implementa un pool de conexiones thread-safe usando Semaphore.
 4.  Usa CompletableFuture para hacer llamadas a una API simulada y combinar resultados.
 5.  Implementa un servicio de backup periodico usando ScheduledExecutorService.
+

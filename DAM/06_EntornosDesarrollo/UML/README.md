@@ -1,3 +1,9 @@
+## Material de Estudio
+
+El temario oficial completo de este modulo esta disponible en el siguiente archivo PDF local:
+
+- [Temario: UML (PDF)](../temario_uml.pdf)
+
 # Entornos de Desarrollo - UML
 
 ## Unified Modeling Language
@@ -49,3 +55,4 @@ UML es un lenguaje de modelado visual estandarizado para especificar, visualizar
 3.  Modela un diagrama de secuencia para el proceso de compra online (Cliente -> Carrito -> Pedido -> Pago).
 4.  Disena un diagrama de estados para el ciclo de vida de un pedido (pendiente, confirmado, enviado, entregado, cancelado).
 5.  Transforma un diagrama de clases dado a codigo Java (forward engineering).
+
