@@ -674,7 +674,12 @@ function loadContent(entry) {
       })
       .catch(function() { node.innerHTML = '<div class="loading">Error al cargar el archivo</div>'; });
   } else if (ext === 'pdf') {
-    node.innerHTML = '<div class="code-header"><span class="code-filename">' + file.name + '</span><span class="code-meta"><span>PDF document</span></span></div><div class="loading">Documento PDF: ' + file.name + '</div>';
+    node.innerHTML =
+      '<div class="code-header">' +
+        '<span class="code-filename">' + file.name + '</span>' +
+        '<span class="code-meta"><span>PDF document</span></span>' +
+      '</div>' +
+      '<div class="frame-wrap"><iframe src="' + file.url + '" type="application/pdf"></iframe></div>';
   } else if (ext === 'html') {
     fetch(file.url)
       .then(function(r) { return r.text(); })
