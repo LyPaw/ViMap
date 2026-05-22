@@ -452,6 +452,8 @@ pre.code-block {
   <div class="s-item"><span id="status-lang">listo</span></div>
   <div class="s-sep">|</div>
   <div class="s-item" id="status-lines">--</div>
+  <div class="s-sep">|</div>
+  <div class="s-item"><span id="visit-count">0</span> visitas</div>
   <div class="s-item s-right" id="status-file">ViMap v2.0</div>
 </div>
 
@@ -789,6 +791,21 @@ function tokenSpan(word) {
 function esc(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
+
+// Visit counter (localStorage)
+(function() {
+  var key = 'vimap_visits';
+  var countedKey = 'vimap_counted';
+  var count = parseInt(localStorage.getItem(key)) || 0;
+
+  if (!sessionStorage.getItem(countedKey)) {
+    sessionStorage.setItem(countedKey, '1');
+    count++;
+    localStorage.setItem(key, count);
+  }
+
+  document.getElementById('visit-count').textContent = count;
+})();
 
 var handle  = document.getElementById('resize-handle');
 var sidebar = document.getElementById('sidebar-panel');
