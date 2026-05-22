@@ -197,6 +197,9 @@ header {
 .ext-md    { background: rgba(99,102,241,0.15);   color: #a5b4fc; }
 .ext-pdf   { background: rgba(245,158,11,0.15);   color: #fbbf24; }
 .ext-html  { background: rgba(34,211,238,0.15);   color: #67e8f9; }
+.ext-css   { background: rgba(168,85,247,0.15);   color: #c084fc; }
+.ext-xml   { background: rgba(251,191,36,0.15);   color: #fcd34d; }
+.ext-sql   { background: rgba(249,115,22,0.15);   color: #fb923c; }
 
 .viewer {
   flex: 1;
@@ -479,14 +482,14 @@ function extOf(name) {
 
 function extBadge(name) {
   var e = extOf(name);
-  var map = { java:'ext-java', md:'ext-md', pdf:'ext-pdf', html:'ext-html' };
+  var map = { java:'ext-java', md:'ext-md', pdf:'ext-pdf', html:'ext-html', css:'ext-css', xml:'ext-xml', sql:'ext-sql' };
   var cls = map[e] || '';
   return cls ? '<span class="file-ext ' + cls + '">.' + e + '</span>' : '';
 }
 
 function langIcon(name) {
   var e = extOf(name);
-  var icons = { java:'J', md:'M', pdf:'P', html:'H' };
+  var icons = { java:'J', md:'M', pdf:'P', html:'H', css:'C', xml:'X', sql:'S' };
   return icons[e] || '?';
 }
 
@@ -705,12 +708,13 @@ function loadContent(entry) {
       .then(function(text) {
         var lines = text.split('\n');
         document.getElementById('status-lines').textContent = lines.length + ' lineas';
+        var lang = ({ java:'Java', css:'CSS', xml:'XML', sql:'SQL' })[ext] || 'Codigo';
         var highlighted = highlightJava(text);
         var linesHtml = highlighted.split('\n').map(function(l, i) {
           return '<div class="line"><span class="ln">' + (i+1) + '</span><span class="lc">' + (l||' ') + '</span></div>';
         }).join('');
         node.innerHTML =
-          '<div class="code-header"><span class="code-filename">' + file.name + '</span><div class="code-meta"><span>Java</span><span>' + lines.length + ' lineas</span></div></div>' +
+          '<div class="code-header"><span class="code-filename">' + file.name + '</span><div class="code-meta"><span>' + lang + '</span><span>' + lines.length + ' lineas</span></div></div>' +
           '<div class="code-wrap"><pre class="code-block">' + linesHtml + '</pre></div>';
       })
       .catch(function() { node.innerHTML = '<div class="loading">Error al cargar el archivo</div>'; });

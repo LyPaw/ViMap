@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller Formularios - Html</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', sans-serif; background: #0c1018; color: #e2e8f0; padding: 24px; }
+h1 { color: #22d3ee; font-size: 1.4rem; margin-bottom: 8px; }
+.enunciado { background: #111827; border: 1px solid #1a2233; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+.enunciado p { color: #94a3b8; line-height: 1.6; font-size: 0.9rem; }
+.enunciado code { background: #1a2233; color: #22d3ee; padding: 2px 6px; border-radius: 4px; }
+textarea { width: 100%; height: 200px; background: #060910; color: #e2e8f0; border: 1px solid #243044; border-radius: 8px; padding: 14px; font-family: 'Consolas', monospace; font-size: 0.85rem; resize: vertical; outline: none; }
+textarea:focus { border-color: #3b82f6; }
+.botones { display: flex; gap: 10px; margin: 12px 0; }
+button { padding: 10px 24px; border: none; border-radius: 6px; font-family: inherit; font-size: 0.85rem; cursor: pointer; font-weight: 600; }
+.btn-validar { background: #10b981; color: #fff; }
+.btn-reiniciar { background: #475569; color: #e2e8f0; }
+#feedback { padding: 14px 18px; border-radius: 8px; font-size: 0.85rem; display: none; margin-top: 12px; white-space: pre-wrap; font-family: 'Consolas', monospace; }
+.ok { background: rgba(16,185,129,0.15); border: 1px solid #10b981; color: #6ee7b7; display: block; }
+.error { background: rgba(239,68,68,0.15); border: 1px solid #ef4444; color: #fca5a5; display: block; }
+</style>
+</head>
+<body>
+<h1>Taller Evaluable - Validacion de Formularios</h1>
+<div class="enunciado">
+  <p><strong>Enunciado:</strong> Implementa la funcion <code>validarFormulario(datos)</code> que reciba un objeto con campos <code>{ nombre: string, email: string, edad: number }</code> y devuelva un array de mensajes de error. Debe validar:</p>
+  <ul style="color:#94a3b8;padding-left:20px;margin-top:6px;font-size:0.9rem;line-height:1.7;">
+    <li><code>nombre</code>: no debe estar vacio</li>
+    <li><code>email</code>: debe contener "@" y "."</li>
+    <li><code>edad</code>: debe ser un numero >= 18</li>
+  </ul>
+  <p style="margin-top:8px;">Si no hay errores, devuelve array vacio.</p>
+</div>
+<textarea id="codigo">function validarFormulario(datos) {
+  // Escribe tu codigo aqui
+
+}</textarea>
+<div class="botones">
+  <button class="btn-validar" onclick="validar()">Validar Solucion</button>
+  <button class="btn-reiniciar" onclick="reiniciar()">Reiniciar</button>
+</div>
+<div id="feedback"></div>
+<script>
+function validar() {
+  var fb = document.getElementById('feedback');
+  try {
+    eval(document.getElementById('codigo').value);
+    if (typeof validarFormulario !== 'function') throw new Error('No definiste validarFormulario');
+
+    var r1 = validarFormulario({nombre:'Ana',email:'ana@test.com',edad:25});
+    if (!Array.isArray(r1) || r1.length !== 0) throw new Error('Test 1: datos correctos deben devolver []');
+
+    var r2 = validarFormulario({nombre:'',email:'mal',edad:15});
+    if (!Array.isArray(r2) || r2.length < 3) throw new Error('Test 2: debe encontrar al menos 3 errores');
+
+    var r3 = validarFormulario({nombre:'Luis',email:'sin-arroba',edad:20});
+    if (!r3.some(function(e){return e.indexOf('email')>-1||e.indexOf('Email')>-1||e.indexOf('@')>-1||e.indexOf('.')>-1}))
+      throw new Error('Test 3: debe detectar email invalido');
+
+    var r4 = validarFormulario({nombre:'Carlos',email:'carlos@empresa.com',edad:17});
+    if (!r4.some(function(e){return e.indexOf('edad')>-1||e.indexOf('Edad')>-1||e.indexOf('18')>-1}))
+      throw new Error('Test 4: debe detectar edad < 18');
+
+    fb.className = 'ok';
+    fb.textContent = 'Todos los tests pasaron correctamente.';
+    fb.style.display = 'block';
+  } catch (e) {
+    fb.className = 'error';
+    fb.textContent = 'Error: ' + e.message;
+    fb.style.display = 'block';
+  }
+}
+function reiniciar() {
+  document.getElementById('codigo').value = 'function validarFormulario(datos) {\n  // Escribe tu codigo aqui\n\n}';
+  document.getElementById('feedback').style.display = 'none';
+}
+</script>
+</body>
+</html>
