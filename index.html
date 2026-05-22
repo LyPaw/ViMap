@@ -280,8 +280,10 @@ header {
 
 .code-wrap {
   flex: 1;
-  overflow: auto;
+  overflow: hidden;
   padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .code-header {
@@ -300,12 +302,13 @@ header {
 .code-meta span { display: flex; align-items: center; gap: 4px; }
 
 pre.code-block {
+  flex: 1;
   background: transparent;
   padding: 20px 24px;
   font-family: 'Consolas', monospace;
   font-size: 0.78rem;
   line-height: 1.7;
-  overflow-x: auto;
+  overflow: auto;
   white-space: pre;
   counter-reset: line;
 }
