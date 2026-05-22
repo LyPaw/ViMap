@@ -1,284 +1,33 @@
 # Colecciones en Java
 
-## 1. El Java Collections Framework (JCF)
+## El Java Collections Framework
 
-El JCF proporciona una arquitectura unificada para almacenar y manipular grupos de objetos. Incluye:
+El JCF proporciona una arquitectura unificada para almacenar y manipular grupos de objetos. Incluye interfaces que definen tipos abstractos de colecciones, implementaciones concretas que realizan esas interfaces, y algoritmos estaticos en la clase Collections para ordenar, buscar y mezclar elementos. La interfaz raiz es Collection, de la que heredan List, Set y Queue. La interfaz Map no hereda de Collection pero forma parte del framework.
 
-- **Interfaces**: tipos abstractos de colecciones (List, Set, Map, Queue)
-- **Implementaciones**: clases concretas que implementan las interfaces
-- **Algoritmos**: metodos estaticos en `Collections` para ordenar, buscar, mezclar
+## List
 
-Jerarquia de interfaces principales:
+La interfaz List representa una coleccion ordenada que permite elementos duplicados y acceso posicional mediante indice. Su implementacion principal es ArrayList, basada en un array redimensionable que ofrece acceso por indice en tiempo constante pero insercion y eliminacion en medio en tiempo lineal. LinkedList esta basada en una lista doblemente enlazada, ofreciendo insercion y eliminacion en los extremos en tiempo constante pero acceso por indice en tiempo lineal. LinkedList tambien implementa Queue y Deque, por lo que puede usarse como cola FIFO con offer y poll, o como pila LIFO con push y pop.
 
-```
-Collection (interface raiz)
-  ├── List (ordenada, permite duplicados)
-  │   ├── ArrayList
-  │   └── LinkedList
-  ├── Set (sin duplicados)
-  │   ├── HashSet
-  │   ├── LinkedHashSet
-  │   └── TreeSet
-  └── Queue (cola FIFO)
-      ├── LinkedList
-      └── PriorityQueue
+## Set
 
-Map (clave-valor, NO hereda de Collection)
-  ├── HashMap
-  ├── LinkedHashMap
-  └── TreeMap
-```
+La interfaz Set representa una coleccion que no permite elementos duplicados. La igualdad entre elementos se determina mediante los metodos equals y hashCode. HashSet es la implementacion mas utilizada, basada en una tabla hash que ofrece rendimiento constante para insercion, busqueda y eliminacion, pero sin garantizar ningun orden. TreeSet esta basado en un arbol rojo-negro y mantiene los elementos ordenados segun su orden natural o un Comparator proporcionado, con rendimiento logaritmico. LinkedHashSet mantiene el orden de insercion con un rendimiento similar a HashSet.
 
-## 2. List
+## Map
 
-Coleccion ordenada que permite elementos duplicados y acceso posicional.
+La interfaz Map almacena pares clave-valor, donde las claves son unicas. HashMap ofrece rendimiento constante para insercion, busqueda y eliminacion basado en el codigo hash de las claves. TreeMap mantiene las claves ordenadas con rendimiento logaritmico. LinkedHashMap mantiene el orden de insercion. El metodo getOrDefault permite obtener un valor por defecto si la clave no existe. computeIfAbsent calcula un valor solo si la clave esta ausente, lo que resulta util para inicializar estructuras anidadas. Merge permite combinar valores existentes con uno nuevo mediante una funcion, siendo especialmente util para contar frecuencias de palabras o acumular valores. ConcurrentHashMap es una version thread-safe para entornos concurrentes que no permite null como clave ni valor.
 
-### ArrayList
+## Stream API
 
-Basado en un array redimensionable. Acceso por indice O(1). Insercion/eliminacion en medio O(n).
+Los streams, introducidos en Java 8, permiten procesar colecciones de forma declarativa y funcional. Un stream no es una estructura de datos sino una secuencia de elementos sobre la que se aplican operaciones. Las operaciones se dividen en intermedias, que devuelven un nuevo stream y son lazy, y terminales, que producen un resultado o efecto lateral. Las operaciones intermedias incluyen filter para seleccionar elementos segun un predicado, map para transformar cada elemento, flatMap para aplanar streams anidados, sorted para ordenar, distinct para eliminar duplicados, limit para acotar el numero de elementos, skip para saltar elementos, y peek para inspeccionar sin modificar. Las operaciones terminales incluyen collect para convertir a coleccion, reduce para combinar elementos en un solo valor, forEach para iterar, count para contar, anyMatch allMatch y noneMatch para realizar comprobaciones booleanas, y findFirst y findAny para obtener un elemento.
 
-```java
-List<String> lista = new ArrayList<>();
-lista.add("Java");
-lista.add("Python");
-lista.add("JavaScript");
+## Expresiones Lambda
 
-// Acceso por indice
-String lenguaje = lista.get(1);  // "Python"
+Las expresiones lambda son funciones anonimas que pueden ser tratadas como valores. Su sintaxis consiste en una lista de parametros entre parentesis, una flecha, y un cuerpo que puede ser una expresion o un bloque de sentencias. Las lambdas se usan principalmente para implementar interfaces funcionales, que son interfaces con un unico metodo abstracto. Java proporciona interfaces funcionales predefinidas en el paquete java.util.function: Function que recibe un valor y devuelve otro, Predicate que recibe un valor y devuelve un booleano, Consumer que recibe un valor y no devuelve nada, Supplier que no recibe nada y devuelve un valor, UnaryOperator que recibe y devuelve del mismo tipo, y BinaryOperator que recibe dos valores del mismo tipo y devuelve uno.
 
-// Iteracion
-for (String s : lista) {
-    System.out.println(s);
-}
+## Method References
 
-// Iteracion con indice
-for (int i = 0; i < lista.size(); i++) {
-    System.out.println(i + ": " + lista.get(i));
-}
+Las referencias a metodos son una forma abreviada de escribir lambdas cuando ya existe un metodo que realiza la operacion deseada. La sintaxis usa el operador :: y puede referirse a metodos estaticos, metodos de instancia, metodos de un objeto especifico, o constructores.
 
-// Ordenacion natural
-Collections.sort(lista);
+## Optional
 
-// Ordenacion con comparador
-lista.sort((a, b) -> a.length() - b.length());
-
-// Busqueda binaria (requiere lista ordenada)
-int pos = Collections.binarySearch(lista, "Java");
-```
-
-### LinkedList
-
-Basado en una lista doblemente enlazada. Insercion/eliminacion en extremos O(1). Acceso por indice O(n).
-
-```java
-Queue<String> cola = new LinkedList<>();
-cola.offer("Primero");
-cola.offer("Segundo");
-String primero = cola.poll();  // "Primero"
-
-Deque<String> pila = new LinkedList<>();
-pila.push("A");
-pila.push("B");
-String cima = pila.pop();  // "B"
-```
-
-## 3. Set
-
-Coleccion que no permite elementos duplicados. La igualdad se determina mediante `equals()` y `hashCode()`.
-
-### HashSet
-
-Basado en una tabla hash. O(1) promedio para insercion, busqueda y eliminacion. Sin orden garantizado.
-
-```java
-Set<Integer> numeros = new HashSet<>();
-numeros.add(10);
-numeros.add(5);
-numeros.add(10);  // ignorado
-numeros.add(3);
-
-System.out.println(numeros);  // orden arbitrario
-```
-
-### TreeSet
-
-Basado en un TreeMap (arbol rojo-negro). Ordenado segun el orden natural o un Comparator. O(log n).
-
-```java
-Set<String> ordenado = new TreeSet<>();
-ordenado.add("Carlos");
-ordenado.add("Ana");
-ordenado.add("Beatriz");
-// "Ana", "Beatriz", "Carlos" - orden alfabetico
-
-// Con comparador personalizado
-Set<String> porLongitud = new TreeSet<>((a, b) -> a.length() - b.length());
-```
-
-### LinkedHashSet
-
-Mantiene el orden de insercion. Rendimiento similar a HashSet.
-
-```java
-Set<String> ordenInsercion = new LinkedHashSet<>();
-ordenInsercion.add("Primero");
-ordenInsercion.add("Segundo");
-ordenInsercion.add("Tercero");
-// Mantiene: "Primero", "Segundo", "Tercero"
-```
-
-## 4. Map
-
-Almacena pares clave-valor. Las claves son unicas.
-
-### HashMap
-
-O(1) promedio para insercion, busqueda y eliminacion.
-
-```java
-Map<String, Integer> edades = new HashMap<>();
-edades.put("Ana", 28);
-edades.put("Carlos", 35);
-edades.put("Beatriz", 22);
-
-// Recorrer entradas
-for (Map.Entry<String, Integer> entrada : edades.entrySet()) {
-    System.out.println(entrada.getKey() + " -> " + entrada.getValue());
-}
-
-// getOrDefault: valor por defecto si no existe
-int edad = edades.getOrDefault("David", 0);
-
-// computeIfAbsent: calcula valor solo si ausente
-edades.computeIfAbsent("Elena", k -> 30);
-
-// Merge: combina valores existentes
-edades.merge("Ana", 1, Integer::sum);
-
-// Contar frecuencias de palabras
-String texto = "hola mundo hola java hola mundo";
-Map<String, Integer> frecuencias = new HashMap<>();
-for (String palabra : texto.split(" ")) {
-    frecuencias.merge(palabra, 1, Integer::sum);
-}
-System.out.println(frecuencias);  // {hola=3, mundo=2, java=1}
-```
-
-### TreeMap
-
-Ordenado por clave. O(log n).
-
-```java
-Map<String, Double> productos = new TreeMap<>();
-productos.put("Zapatillas", 89.95);
-productos.put("Camiseta", 29.99);
-productos.put("Pantalon", 49.99);
-// Ordenado alfabeticamente por clave
-```
-
-### ConcurrentHashMap
-
-HashMap thread-safe para uso en entornos concurrentes. No permite null como clave ni valor.
-
-```java
-Map<String, Integer> concurrente = new ConcurrentHashMap<>();
-concurrente.put("clave", 1);
-concurrente.computeIfAbsent("otra", k -> calcularValor(k));
-```
-
-## 5. Stream API (Java 8+)
-
-Los streams permiten procesar colecciones de forma declarativa, similar a las operaciones funcionales.
-
-### Creacion de Streams
-
-```java
-// Desde una coleccion
-lista.stream();
-
-// Desde valores
-Stream.of("a", "b", "c");
-
-// Desde un array
-Arrays.stream(array);
-
-// Rangos numericos
-IntStream.range(0, 10);
-LongStream.rangeClosed(1, 100);
-
-// Stream infinito
-Stream.generate(Math::random).limit(5);
-Stream.iterate(0, n -> n + 2).limit(10);
-```
-
-### Operaciones Intermedias (devolucion Stream)
-
-| Operacion | Descripcion | Ejemplo |
-|-----------|-------------|---------|
-| `filter(Predicate)` | Filtra elementos | `filter(p -> p.getEdad() > 18)` |
-| `map(Function)` | Transforma cada elemento | `map(Persona::getNombre)` |
-| `flatMap(Function)` | Aplana streams anidados | `flatMap(lista -> lista.stream())` |
-| `sorted()` | Ordena naturalmente | `sorted()` |
-| `sorted(Comparator)` | Ordena con comparador | `sorted((a,b) -> b - a)` |
-| `distinct()` | Elimina duplicados | `distinct()` |
-| `limit(long)` | Toma n elementos | `limit(5)` |
-| `skip(long)` | Salta n elementos | `skip(2)` |
-| `peek(Consumer)` | Inspecciona sin modificar | `peek(System.out::println)` |
-
-### Operaciones Terminales (producen resultado)
-
-| Operacion | Descripcion | Ejemplo |
-|-----------|-------------|---------|
-| `collect(Collector)` | Reduce a coleccion | `collect(toList())` |
-| `forEach(Consumer)` | Itera | `forEach(System.out::println)` |
-| `count()` | Cuenta | `count()` |
-| `reduce(BinaryOperator)` | Reduce a un valor | `reduce(0, Integer::sum)` |
-| `anyMatch(Predicate)` | Alguno cumple | `anyMatch(p -> p > 5)` |
-| `allMatch(Predicate)` | Todos cumplen | `allMatch(p -> p > 0)` |
-| `noneMatch(Predicate)` | Ninguno cumple | `noneMatch(p -> p < 0)` |
-| `findFirst()` | Primer elemento | `findFirst()` |
-| `findAny()` | Cualquier elemento | `findAny()` |
-| `toArray()` | A array | `toArray()` |
-
-### Collectors
-
-```java
-// A lista
-.collect(Collectors.toList())
-
-// A set
-.collect(Collectors.toSet())
-
-// A mapa
-.collect(Collectors.toMap(Persona::getId, Function.identity()))
-
-// Agrupar
-.collect(Collectors.groupingBy(Persona::getCiudad))
-
-// Particionar
-.collect(Collectors.partitioningBy(p -> p.getEdad() >= 18))
-
-// Joining
-.collect(Collectors.joining(", "))
-
-// Sumarizar
-.collect(Collectors.summingInt(Persona::getEdad))
-.collect(Collectors.averagingDouble(Producto::getPrecio))
-```
-
-## 6. Optional
-
-Contenedor que puede o no contener un valor, eliminando los NullPointerException.
-
-```java
-public Optional<String> buscarNombre(int id) {
-    if (id > 0) return Optional.of("Nombre encontrado");
-    else return Optional.empty();
-}
-
-Optional<String> resultado = buscarNombre(1);
-String nombre = resultado.orElse("default");
-String nombre2 = resultado.orElseGet(() -> calcularDefault());
-resultado.ifPresent(System.out::println);
-resultado.orElseThrow(() -> new RuntimeException("No encontrado"));
-```
+Optional es un contenedor que puede contener o no un valor, disenado para evitar los NullPointerException. Proporciona metodos como isPresent para comprobar si hay valor, ifPresent para ejecutar una accion si lo hay, orElse para devolver un valor por defecto, orElseGet para calcular un valor por defecto solo si es necesario, orElseThrow para lanzar una excepcion si no hay valor, map para transformar el valor si existe, filter para aplicar un predicado, y flatMap para evitar anidar opcionales.

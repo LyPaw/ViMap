@@ -1,238 +1,31 @@
-# Base de Datos MySQL y Acceso a Datos (1º y 2º DAM)
+# Base de Datos MySQL y Acceso a Datos (1o y 2o DAM)
 
-Este directorio cubre dos asignaturas: **Bases de Datos** (1º curso) y **Acceso a Datos** (2º curso).
+Este directorio cubre dos asignaturas del ciclo: Bases de Datos de primer curso y Acceso a Datos de segundo curso. La primera se centra en el diseno y manipulacion de bases de datos relacionales con SQL, mientras que la segunda aborda la persistencia desde Java mediante JPA y Hibernate.
 
 ## Estructura
 
-| Carpeta/Archivo | Asignatura | Contenido |
-|----------------|-----------|-----------|
-| `README.md` | Ambas | Teoria completa: diseno, normalizacion, JPA, Hibernate |
-| `esquema_biblioteca.sql` | Bases de Datos | DDL completo: tablas, FK, indices, triggers, eventos, datos iniciales |
-| `consultas_avanzadas.sql` | Bases de Datos | Subconsultas, CTEs, window functions, vistas, CASE |
-| `triggers_procedimientos.sql` | Bases de Datos | Procedimientos, funciones, triggers con logica compleja |
-| `JPA/` | Acceso a Datos | Entidades JPA con anotaciones, repositorios y configuracion |
+La carpeta contiene tres scripts SQL que cubren todo el espectro de la asignatura de Bases de Datos. esquema_biblioteca.sql incluye la creacion completa del esquema con tablas, claves foraneas, indices, triggers, eventos y datos iniciales. consultas_avanzadas.sql contiene subconsultas, CTEs con la clausula WITH, funciones de ventana con OVER, vistas con CREATE VIEW, expresiones CASE, e indices compuestos. triggers_procedimientos.sql incluye procedimientos almacenados con parametros de entrada y salida, funciones que devuelven valores escalares, y triggers con logica condicional compleja.
 
-## 1. Diseno de Bases de Datos
+La subcarpeta JPA contiene las entidades Java con anotaciones Jakarta Persistence que mapean las tablas de la base de datos biblioteca. Incluye las clases Usuario, Autor, Libro, Prestamo con sus relaciones OneToMany, ManyToOne y Enumerated, ademas de un MainJPA que demuestra el ciclo completo de persistencia: insercion de datos, confirmacion de transaccion, consultas JPQL con JOIN FETCH y manejo de excepciones.
 
-### Modelo Entidad-Relacion (E/R)
+## Diseno de Bases de Datos
 
-Entidades: objetos del mundo real con existencia propia (Usuario, Libro, Pedido).
-Atributos: propiedades de las entidades (nombre, precio, fecha).
-Relaciones: asociaciones entre entidades (1:1, 1:N, N:M).
+El modelo Entidad-Relacion es la tecnica fundamental para el diseno conceptual de bases de datos. Las entidades representan objetos del mundo real con existencia propia, como Usuario, Libro o Pedido. Los atributos son las propiedades de esas entidades, como nombre, precio o fecha. Las relaciones son asociaciones entre entidades y pueden ser de varios tipos: uno a uno, donde una entidad se relaciona con exactamente otra; uno a muchos, donde una entidad se relaciona con varias; y muchos a muchos, donde varias entidades se relacionan con varias. Las relaciones muchos a muchos requieren una tabla intermedia para su implementacion en el modelo relacional.
 
-### Notacion grafica (MER)
+La transformacion del modelo Entidad-Relacion al modelo relacional sigue reglas precisas. Cada entidad se convierte en una tabla. Los atributos se convierten en columnas. La clave primaria es el identificador unico de cada fila. Las relaciones uno a muchos se modelan agregando una clave foranea en la tabla del lado muchos que referencia a la tabla del lado uno. Las relaciones muchos a muchos requieren una tabla intermedia que contiene las claves foraneas de ambas tablas relacionadas.
 
-```
-[USUARIO] --- (realiza) --- [PRESTAMO] --- (incluye) --- [LIBRO]
-```
+## Normalizacion
 
-Cada entidad se representa como rectangulo, cada relacion como rombo, cada atributo como elipse.
+La normalizacion es un proceso para eliminar redundancias y anomalias en el diseno de bases de datos. La primera forma normal exige que cada columna contenga valores atomicos e indivisibles, prohibiendo listas o conjuntos en una misma celda. La segunda forma normal, que solo aplica a tablas con clave primaria compuesta, requiere que cada columna no clave dependa de la clave primaria completa y no solo de una parte de ella. La tercera forma normal exige que las columnas no clave dependan directamente de la clave primaria y no de otras columnas no clave, eliminando las dependencias transitivas. Cumplir la tercera forma normal generalmente es suficiente para la mayoria de aplicaciones empresariales.
 
-### Transformacion a esquema relacional
+## Integridad Referencial
 
-1. Cada entidad se convierte en una tabla
-2. Los atributos se convierten en columnas
-3. La clave primaria es el identificador unico
-4. Las relaciones 1:N se modelan con FK en la tabla N
-5. Las relaciones N:M requieren una tabla intermedia
+Las claves foraneas, definidas con FOREIGN KEY, garantizan la integridad referencial de la base de datos: no pueden existir referencias a filas que no existen. Las acciones referenciales determinan que ocurre cuando se elimina o actualiza la fila padre. ON DELETE CASCADE elimina automaticamente las filas hijas. ON DELETE RESTRICT impide eliminar si existen referencias. ON DELETE SET NULL pone a NULL la clave foranea en las filas hijas. ON DELETE NO ACTION es similar a RESTRICT en MySQL.
 
-## 2. Normalizacion
+## JPA y Hibernate
 
-Proceso para eliminar redundancias y anomalias en el diseno.
+JPA, Jakarta Persistence API, es el estandar de Java para el mapeo objeto-relacional. Las entidades son clases Java anotadas con Entity que se corresponden con tablas de la base de datos. Cada instancia de la entidad representa una fila de la tabla. La anotacion Table especifica la tabla, Id marca la clave primaria, GeneratedValue define la estrategia de generacion de identificadores, y Column personaliza el mapeo de columnas.
 
-### 1FN (Primera Forma Normal)
+Las relaciones entre entidades se mapean con anotaciones especificas. OneToMany y ManyToOne modelan relaciones uno a muchos y muchos a uno, siendo la segunda el lado propietario de la relacion que contiene la clave foranea con JoinColumn. OneToOne modela relaciones uno a uno. ManyToMany modela relaciones muchos a muchos, requiriendo JoinTable para la tabla intermedia. Cascade determina que operaciones en la entidad padre se propagan a las hijas, como persist, merge o remove. Fetch define la estrategia de carga: LAZY carga los datos solo cuando se accede a ellos, mientras que EAGER los carga inmediatamente.
 
-Cada columna debe contener valores atomicos (indivisibles). No se permiten listas o conjuntos en una celda.
-
-```sql
--- MAL: campo categorias con valores separados por comas
--- id | titulo | categorias
--- 1  | Libro  | "novela, drama"
-
--- BIEN: tabla separada para categorias
--- libros: id, titulo
--- categorias: id, nombre
--- libros_categorias: libro_id, categoria_id
-```
-
-### 2FN (Segunda Forma Normal)
-
-Cada columna no clave debe depender de la clave primaria completa (no solo de parte de ella). Aplica solo a tablas con clave compuesta.
-
-### 3FN (Tercera Forma Normal)
-
-Las columnas no clave deben depender directamente de la clave primaria, no de otras columnas no clave.
-
-```sql
--- MAL: dependencia transitiva
--- empleados: id, nombre, departamento_id, departamento_ciudad
--- "departamento_ciudad" depende de "departamento_id", no de "id"
-
--- BIEN: tabla separada para departamentos
--- empleados: id, nombre, departamento_id
--- departamentos: id, ciudad
-```
-
-## 3. Integridad Referencial
-
-Las claves foraneas (FOREIGN KEY) garantizan que no existan referencias huerfanas.
-
-```sql
-CREATE TABLE prestamos (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    usuario_id INT NOT NULL,
-    libro_id INT NOT NULL,
-    fecha_inicio DATE NOT NULL,
-    fecha_devolucion DATE,
-    estado ENUM('ACTIVO', 'DEVUELTO', 'VENCIDO') DEFAULT 'ACTIVO',
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
-        ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (libro_id) REFERENCES libros(id)
-        ON DELETE RESTRICT ON UPDATE CASCADE
-);
-```
-
-Acciones referenciales:
-- `ON DELETE CASCADE`: elimina automaticamente las filas hijas
-- `ON DELETE RESTRICT`: impide eliminar si hay referencias
-- `ON DELETE SET NULL`: pone a NULL la FK al eliminar el padre
-- `ON DELETE NO ACTION`: similar a RESTRICT (comportamiento por defecto)
-
-## 4. JPA y Hibernate (Acceso a Datos - 2º curso)
-
-JPA (Jakarta Persistence API) es el estandar de Java para mapeo objeto-relacional (ORM).
-
-### Entidades JPA
-
-```java
-@Entity
-@Table(name = "usuarios")
-public class Usuario {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, length = 100)
-    private String nombre;
-
-    @Column(unique = true, nullable = false)
-    private String email;
-
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private List<Prestamo> prestamos = new ArrayList<>();
-
-    public Usuario() {}
-
-    public Usuario(String nombre, String email) {
-        this.nombre = nombre;
-        this.email = email;
-    }
-}
-```
-
-### Tipos de relaciones JPA
-
-| Relacion | Anotacion | Ejemplo |
-|----------|-----------|---------|
-| 1:1 | `@OneToOne` | Usuario -> Direccion |
-| 1:N | `@OneToMany` | Usuario -> Prestamos |
-| N:1 | `@ManyToOne` | Prestamo -> Usuario |
-| N:M | `@ManyToMany` | Libro -> Categoria |
-
-### EntityManager (CRUD basico)
-
-```java
-@PersistenceContext
-private EntityManager em;
-
-// Crear
-em.persist(usuario);
-
-// Leer por ID
-Usuario u = em.find(Usuario.class, 1L);
-
-// Leer con JPQL
-List<Usuario> usuarios = em.createQuery(
-    "SELECT u FROM Usuario u WHERE u.email LIKE :email",
-    Usuario.class)
-    .setParameter("email", "%@mail.com")
-    .getResultList();
-
-// Actualizar
-Usuario u = em.find(Usuario.class, 1L);
-u.setNombre("Nuevo nombre");
-em.merge(u);
-
-// Eliminar
-Usuario u = em.find(Usuario.class, 1L);
-em.remove(u);
-```
-
-### Repository pattern con JPA
-
-```java
-@Repository
-public class UsuarioRepository {
-    @PersistenceContext
-    private EntityManager em;
-
-    public Usuario guardar(Usuario usuario) {
-        if (usuario.getId() == null) {
-            em.persist(usuario);
-            return usuario;
-        } else {
-            return em.merge(usuario);
-        }
-    }
-
-    public Optional<Usuario> buscarPorId(Long id) {
-        return Optional.ofNullable(em.find(Usuario.class, id));
-    }
-
-    public List<Usuario> buscarTodos() {
-        return em.createQuery("SELECT u FROM Usuario u", Usuario.class)
-                 .getResultList();
-    }
-
-    public void eliminar(Long id) {
-        buscarPorId(id).ifPresent(em::remove);
-    }
-}
-```
-
-### Configuracion en persistence.xml
-
-```xml
-<persistence version="3.0"
-    xmlns="https://jakarta.ee/xml/ns/persistence">
-    <persistence-unit name="ViMapPU" transaction-type="RESOURCE_LOCAL">
-        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>modelo.Usuario</class>
-        <class>modelo.Libro</class>
-        <properties>
-            <property name="jakarta.persistence.jdbc.url"
-                      value="jdbc:mysql://localhost:3306/biblioteca"/>
-            <property name="jakarta.persistence.jdbc.user" value="root"/>
-            <property name="jakarta.persistence.jdbc.password" value="password"/>
-            <property name="jakarta.persistence.jdbc.driver"
-                      value="com.mysql.cj.jdbc.Driver"/>
-            <property name="hibernate.dialect"
-                      value="org.hibernate.dialect.MySQLDialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
-            <property name="hibernate.show_sql" value="true"/>
-        </properties>
-    </persistence-unit>
-</persistence>
-```
-
-### Ciclo de vida de una entidad JPA
-
-```
-NEW (no gestionada)
-  → persist() → MANAGED (gestionada, dentro de transaccion)
-  → find()/merge() → MANAGED
-  → refresh() → MANAGED (recarga desde BD)
-  → detach() → DETACHED (fuera de gestion)
-  → remove() → REMOVED (se eliminara en el flush)
-  → close()/commit() → DETACHED
-```
+El EntityManager es la interfaz principal para interactuar con la base de datos. persist inserta una nueva entidad. find busca por clave primaria. merge actualiza una entidad existente o inserta si no existe. remove elimina la entidad. createQuery permite escribir consultas JPQL, que son similares a SQL pero trabajan con objetos y sus atributos en lugar de tablas y columnas. El ciclo de vida de una entidad incluye los estados new o no gestionada, managed o gestionada dentro de una transaccion, detached o separada cuando la transaccion ha terminado, y removed o eliminada.

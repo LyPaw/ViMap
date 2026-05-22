@@ -1,383 +1,45 @@
-# CSS - Hojas de Estilo en Cascada (1º y 2º DAM)
+# CSS - Hojas de Estilo en Cascada (1o y 2o DAM)
 
-## 1. Fundamentos de CSS
+## Fundamentos de CSS
 
-CSS (Cascading Style Sheets) es el lenguaje que define la presentacion visual de documentos HTML. Separa el contenido (HTML) de la forma (CSS).
+CSS, Cascading Style Sheets, es el lenguaje que define la presentacion visual de documentos HTML. Su funcion principal es separar el contenido, que se define en HTML, de la forma, que se define en CSS. Esto permite cambiar la apariencia completa de un sitio web modificando solo los archivos de estilo, sin tocar el HTML.
 
-### Como se aplica CSS
+El nombre cascada proviene del algoritmo que resuelve conflictos entre reglas CSS cuando dos o mas reglas pretenden aplicar estilos diferentes al mismo elemento. El algoritmo considera tres criterios en orden. El primero es el origen del CSS: el estilo del navegador tiene la menor prioridad, seguido del estilo del usuario, y el estilo del autor tiene la mayor prioridad. El segundo criterio es la especificidad del selector: los selectores mas especificos tienen prioridad sobre los mas genericos. El tercer criterio es el orden de declaracion: a igual especificidad, la ultima regla declarada es la que se aplica.
 
-```html
-<!-- CSS externo (recomendado) -->
-<link rel="stylesheet" href="estilos.css">
+La especificidad se calcula con cuatro valores. Los selectores de elemento y pseudoelementos suman uno al cuarto valor. Los selectores de clase, atributo y pseudoclases suman uno al tercer valor. Los selectores de ID suman uno al segundo valor. Los estilos en linea declarados en el atributo style del HTML suman uno al primer valor. La declaracion important anula cualquier otra regla, pero su uso debe evitarse porque rompe el flujo natural de la cascada y dificulta el mantenimiento.
 
-<!-- CSS interno en el head -->
-<style>
-  body { font-family: sans-serif; }
-</style>
+## Selectores avanzados
 
-<!-- CSS en linea (evitar) -->
-<p style="color: red;">Texto rojo</p>
-```
+Los selectores de atributo permiten seleccionar elementos segun la presencia o el valor de sus atributos. El selector con un atributo presente selecciona elementos que tengan ese atributo, independientemente de su valor. El selector con valor exacto selecciona elementos cuyo atributo tenga exactamente ese valor. El selector que empieza con selecciona elementos cuyo atributo comienza con un valor determinado, util para enlaces que empiezan con https. El selector que termina con selecciona elementos cuyo atributo termina con un valor, como archivos pdf. El selector que contiene selecciona elementos cuyo atributo contiene esa subcadena en cualquier posicion.
 
-### La cascada
+Las pseudoclases estructurales seleccionan elementos segun su posicion en el arbol del documento. first-child selecciona el primer hijo de su padre. last-child selecciona el ultimo hijo. nth-child selecciona hijos segun una formula como odd para impares, even para pares, o 3n+1 para cada tres empezando por el primero. empty selecciona elementos sin hijos. not selecciona elementos que no coinciden con un selector dado. Las pseudoclases de estado como hover, focus, active, checked, disabled y required permiten aplicar estilos segun el estado del elemento o la interaccion del usuario.
 
-El nombre "cascada" viene de como se resuelven los conflictos entre reglas:
+Los pseudoelementos permiten estilizar partes especificas de un elemento. before y after insertan contenido generado por CSS antes o despues del contenido del elemento, siendo muy utiles para decoraciones, iconos o indicadores visuales. first-line aplica estilos a la primera linea de un bloque de texto. first-letter aplica estilos a la primera letra. placeholder estiliza el texto de placeholder de los campos de formulario.
 
-1. **Origen**: CSS del navegador < CSS del usuario < CSS del autor
-2. **Especificidad**: cuanto mas especifico es el selector, mayor prioridad
-3. **Orden**: a igual especificidad, gana la ultima regla declarada
+## Flexbox
 
-### Calculo de especificidad
+Flexbox es un modelo de layout unidimensional que trabaja en una sola direccion, fila o columna. El contenedor flex se activa con display flex y sus propiedades controlan la direccion con flex-direction, el ajuste de linea con flex-wrap, la alineacion horizontal con justify-content, la alineacion vertical con align-items, la alineacion de multiplas lineas con align-content, y el espaciado entre items con gap.
 
-```
-Selectores                      Especificidad (a,b,c,d)
-*                                  0,0,0,0
-elemento                           0,0,0,1
-.clase, [atributo], :pseudo        0,0,1,0
-#id                                0,1,0,0
-style="..."                        1,0,0,0
-!important                         anula cualquier regla
-```
+Los items flexibles tienen propiedades individuales para controlar su comportamiento. flex-grow determina la capacidad del item para crecer si hay espacio disponible. flex-shrink determina su capacidad para encogerse si no hay espacio. flex-basis establece el tamano base antes de distribuir el espacio. La propiedad flex es un shorthand que combina grow, shrink y basis. align-self sobrescribe la alineacion del contenedor para un item especifico. order permite cambiar el orden visual sin alterar el orden en el HTML.
 
-```css
-/* Especificidad: 0,0,0,1 */
-p { color: blue; }
+## CSS Grid
 
-/* Especificidad: 0,0,1,0 */
-.texto { color: green; }
+CSS Grid es un modelo de layout bidimensional que trabaja simultaneamente con filas y columnas. El contenedor grid se activa con display grid. Las propiedades grid-template-columns y grid-template-rows definen el tamano y numero de columnas y filas. La unidad fr representa una fraccion del espacio disponible. La funcion repeat permite repetir patrones de columnas. auto-fit y minmax permiten crear diseños responsive sin media queries.
 
-/* Especificidad: 0,0,1,1 */
-p.texto { color: red; }
+Los items grid se colocan automaticamente en las celdas disponibles, pero pueden posicionarse explicitamente usando grid-column y grid-row con valores de linea de inicio y fin, o usando span para indicar cuantas celdas deben ocupar. grid-template-areas permite definir areas nombradas en el contenedor y asignar items a esas areas con grid-area, lo que facilita la creacion de layouts complejos como el patron de pagina completa con header, sidebar, contenido, aside y footer.
 
-/* Especificidad: 0,1,0,0 */
-#principal { color: yellow; }
+## Animaciones y Transiciones
 
-/* Gana !important (evitar su uso) */
-p { color: purple !important; }
-```
+Las transiciones permiten cambios suaves entre dos estados de un elemento. Se definen con la propiedad transition que especifica la propiedad a animar, la duracion, la funcion de tiempo como ease o linear, y el retardo. Las transiciones se activan automaticamente cuando cambia el valor de la propiedad, por ejemplo al hacer hover sobre un boton.
 
-## 2. Selectores avanzados
+Las animaciones con keyframes permiten secuencias de cambios mas complejas. Se definen con la regla keyframes que establece puntos de control con porcentajes o las palabras clave from y to. La propiedad animation aplica la animacion con nombre, duracion, funcion de tiempo, iteraciones, direccion y estado final. Las animaciones pueden ejecutarse una vez o en bucle infinito.
 
-### Selectores de atributo
+## Responsive Design
 
-```css
-/* Atributo presente */
-[disabled] { opacity: 0.5; }
+El diseno responsive adapta la apariencia de una pagina al tamano de la pantalla del dispositivo. Las media queries permiten aplicar estilos condicionales segun caracteristicas del dispositivo como el ancho de pantalla, la orientacion o las preferencias del usuario. El enfoque mobile first consiste en escribir primero los estilos base para pantallas pequenas y luego anadir estilos para pantallas mayores mediante media queries con min-width.
 
-/* Atributo con valor exacto */
-[type="submit"] { background: blue; }
+Las container queries son una evolucion de las media queries que permiten aplicar estilos basados en el tamano del contenedor padre en lugar del tamano de la ventana. Esto permite crear componentes verdaderamente reutilizables que se adaptan al espacio disponible independientemente del contexto.
 
-/* Atributo que empieza con */
-a[href^="https"] { color: green; }
+## Variables CSS
 
-/* Atributo que termina con */
-a[href$=".pdf"]::after { content: " [PDF]"; }
-
-/* Atributo que contiene */
-a[href*="google"] { color: red; }
-
-/* Atributo con palabra separada por espacios */
-[lang~="es"] { font-style: italic; }
-```
-
-### Pseudoclases estructurales
-
-```css
-/* Posicion entre hermanos */
-li:first-child { font-weight: bold; }
-li:last-child { border: none; }
-li:nth-child(odd) { background: #f0f0f0; }
-li:nth-child(3n+1) { color: blue; }  /* cada 3 empezando por 1 */
-
-/* Relacion con el contenido */
-p:empty { display: none; }
-
-/* Negacion */
-input:not([type="submit"]) { border: 1px solid gray; }
-
-/* Estado */
-:hover, :focus, :active, :checked, :disabled, :required
-```
-
-### Pseudoelementos
-
-```css
-/* Antes y despues del contenido del elemento */
-.card::before {
-    content: "";
-    display: block;
-    width: 40px;
-    height: 3px;
-    background: #3b82f6;
-    margin-bottom: 12px;
-}
-
-.card::after {
-    content: " \2192";  /* flecha derecha */
-    color: #3b82f6;
-}
-
-/* Primera linea y primera letra */
-p::first-line { font-weight: bold; }
-p::first-letter { font-size: 2em; float: left; }
-
-/* Placeholder de inputs */
-input::placeholder { color: gray; font-style: italic; }
-```
-
-## 3. Flexbox
-
-Flexbox es un modelo de layout unidimensional (una sola direccion: fila o columna).
-
-### Propiedades del contenedor
-
-```css
-.contenedor-flex {
-    display: flex;           /* activa flexbox */
-    flex-direction: row;     /* row | column | row-reverse | column-reverse */
-    flex-wrap: wrap;         /* nowrap | wrap | wrap-reverse */
-    justify-content: center; /* flex-start | flex-end | center | space-between | space-around | space-evenly */
-    align-items: center;     /* stretch | flex-start | flex-end | center | baseline */
-    align-content: center;   /* distribucion en multi-linea */
-    gap: 16px;               /* espacio entre items (row-gap column-gap) */
-}
-```
-
-### Propiedades de los items
-
-```css
-.item-flex {
-    flex-grow: 1;      /* capacidad de crecer (0 = no crece) */
-    flex-shrink: 1;    /* capacidad de encoger (0 = no encoge) */
-    flex-basis: auto;  /* tamano base antes de distribuir espacio */
-    flex: 1 1 200px;   /* shorthand: grow shrink basis */
-    align-self: center; /* sobrescribe align-items del contenedor */
-    order: 0;          /* orden de visualizacion (-1 antes, 1 despues) */
-}
-```
-
-### Patrones comunes con Flexbox
-
-```css
-/* Centrar perfectamente */
-.centrado {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Layout santamaria (header, 3 columnas, footer) */
-.pagina {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-.contenido {
-    display: flex;
-    flex: 1;
-}
-.sidebar { flex: 0 0 250px; }
-.main { flex: 1; }
-.aside { flex: 0 0 200px; }
-
-/* Grilla responsive sin media queries */
-.grilla-flex {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-}
-.grilla-flex > * {
-    flex: 1 1 250px;  /* minimo 250px, crece si hay espacio */
-}
-```
-
-## 4. CSS Grid
-
-Grid es un modelo de layout bidimensional (filas y columnas simultaneamente).
-
-### Propiedades del contenedor
-
-```css
-.contenedor-grid {
-    display: grid;
-    grid-template-columns: 200px 1fr 200px;   /* 3 columnas */
-    grid-template-rows: auto 1fr auto;         /* 3 filas */
-    gap: 16px;                                 /* espaciado */
-    grid-template-areas:                       /* areas nombradas */
-        "header  header  header"
-        "sidebar content aside"
-        "footer  footer  footer";
-}
-
-/* Unidades especiales de Grid */
-grid-template-columns: 1fr 2fr 1fr;    /* fracciones */
-grid-template-columns: repeat(3, 1fr); /* 3 columnas iguales */
-grid-template-columns: auto-fit minmax(250px, 1fr); /* responsive automatico */
-grid-template-columns: 100px auto 100px;
-```
-
-### Propiedades de los items
-
-```css
-.item-grid {
-    grid-column: 1 / 3;         /* de columna 1 a 3 */
-    grid-column: span 2;        /* ocupa 2 columnas */
-    grid-row: 1 / 3;
-    grid-area: content;          /* asigna a un area nombrada */
-    justify-self: center;        /* alineacion horizontal en la celda */
-    align-self: center;          /* alineacion vertical en la celda */
-}
-```
-
-### Grid responsive sin media queries
-
-```css
-.grid-auto {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-}
-/* auto-fit crea tantas columnas como quepan, minimo 280px cada una */
-```
-
-## 5. Animaciones y Transiciones
-
-### Transiciones
-
-```css
-.boton {
-    background: #3b82f6;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    /* transition: property duration timing-function delay */
-}
-
-.boton:hover {
-    background: #6366f1;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-}
-```
-
-### Animaciones @keyframes
-
-```css
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50%      { transform: scale(1.1); }
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-}
-
-@keyframes slideIn {
-    0%   { transform: translateX(-100%); opacity: 0; }
-    100% { transform: translateX(0); opacity: 1; }
-}
-
-.elemento {
-    animation: fadeIn 0.6s ease-out forwards;
-    /* animation: name duration timing-function delay iteration-count direction fill-mode */
-}
-```
-
-## 6. Responsive Design
-
-### Media Queries
-
-```css
-/* Mobile first: estilos base para movil */
-.contenedor {
-    padding: 16px;
-}
-
-/* Tablet */
-@media (min-width: 768px) {
-    .contenedor {
-        padding: 32px;
-        max-width: 720px;
-        margin: 0 auto;
-    }
-}
-
-/* Desktop */
-@media (min-width: 1024px) {
-    .contenedor {
-        padding: 48px;
-        max-width: 960px;
-    }
-}
-
-/* Pantalla grande */
-@media (min-width: 1440px) {
-    .contenedor {
-        max-width: 1200px;
-    }
-}
-
-/* Preferencias del sistema */
-@media (prefers-color-scheme: dark) {
-    body { background: #0f172a; color: #e2e8f0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    * { animation-duration: 0.01ms !important; }
-}
-```
-
-### Container Queries
-
-```css
-.tarjeta-contenedor {
-    container-type: inline-size;
-    container-name: tarjeta;
-}
-
-@container tarjeta (min-width: 400px) {
-    .tarjeta-contenido {
-        display: flex;
-        gap: 16px;
-        align-items: center;
-    }
-}
-```
-
-## 7. Variables CSS
-
-```css
-:root {
-    --color-primario: #3b82f6;
-    --color-secundario: #6366f1;
-    --color-fondo: #0f172a;
-    --color-texto: #e2e8f0;
-    --espaciado-base: 16px;
-    --radio-borde: 8px;
-    --fuente-principal: 'Segoe UI', system-ui, sans-serif;
-    --sombra: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.componente {
-    background: var(--color-fondo);
-    color: var(--color-texto);
-    padding: var(--espaciado-base);
-    border-radius: var(--radio-borde);
-    box-shadow: var(--sombra);
-}
-```
+Las variables CSS, tambien llamadas propiedades personalizadas, permiten definir valores reutilizables en todo el documento. Se declaran con doble guion dentro del selector root para que esten disponibles globalmente, y se usan con la funcion var. Las variables facilitan la creacion de temas, la consistencia visual y el mantenimiento del codigo, ya que un cambio en la definicion de la variable se refleja automaticamente en todos los lugares donde se usa.
