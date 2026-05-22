@@ -1,0 +1,142 @@
+/* ===============================
+   Ejemplos de Flexbox y CSS Grid
+   =============================== */
+
+/* --- Flexbox basico --- */
+.flex-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 20px;
+    background: #f0f0f0;
+}
+
+.flex-item {
+    flex: 1 1 200px;
+    padding: 20px;
+    background: #3b82f6;
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+}
+
+/* --- Flexbox: layout de 3 columnas --- */
+.flex-layout {
+    display: flex;
+    min-height: 400px;
+}
+
+.flex-sidebar {
+    flex: 0 0 250px;
+    background: #1e293b;
+    color: white;
+    padding: 20px;
+}
+
+.flex-main {
+    flex: 1;
+    padding: 20px;
+    background: #f8fafc;
+}
+
+.flex-aside {
+    flex: 0 0 200px;
+    background: #e2e8f0;
+    padding: 20px;
+}
+
+/* --- CSS Grid basico --- */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    padding: 20px;
+}
+
+.grid-item {
+    padding: 30px;
+    background: #6366f1;
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+}
+
+/* --- Grid con areas nombradas --- */
+.grid-layout {
+    display: grid;
+    grid-template-areas:
+        "header  header  header"
+        "sidebar content aside"
+        "footer  footer  footer";
+    grid-template-columns: 200px 1fr 200px;
+    grid-template-rows: auto 1fr auto;
+    min-height: 500px;
+    gap: 4px;
+}
+
+.grid-header  { grid-area: header;  background: #3b82f6; padding: 20px; color: white; }
+.grid-sidebar { grid-area: sidebar; background: #1e293b; padding: 20px; color: white; }
+.grid-content { grid-area: content; background: #f8fafc; padding: 20px; }
+.grid-aside   { grid-area: aside;   background: #e2e8f0; padding: 20px; }
+.grid-footer  { grid-area: footer;  background: #475569; padding: 20px; color: white; }
+
+/* --- Grid responsive --- */
+.grid-responsive {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    padding: 20px;
+}
+
+/* --- Variables CSS y temas --- */
+:root {
+    --color-primario: #3b82f6;
+    --color-secundario: #6366f1;
+    --color-fondo: #0f172a;
+    --color-texto: #e2e8f0;
+    --espaciado: 16px;
+    --borde-redondo: 8px;
+}
+
+.theme-card {
+    background: var(--color-fondo);
+    color: var(--color-texto);
+    padding: var(--espaciado);
+    border-radius: var(--borde-redondo);
+    border: 1px solid var(--color-primario);
+}
+
+/* --- Media queries --- */
+@media (max-width: 768px) {
+    .flex-layout {
+        flex-direction: column;
+    }
+    .flex-sidebar,
+    .flex-aside {
+        flex: none;
+        width: 100%;
+    }
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .grid-layout {
+        grid-template-areas:
+            "header"
+            "content"
+            "sidebar"
+            "aside"
+            "footer";
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+    .flex-container {
+        flex-direction: column;
+    }
+}

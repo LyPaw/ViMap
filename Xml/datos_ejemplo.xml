@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<biblioteca>
+    <libro id="1">
+        <isbn>978-84-376-0494-7</isbn>
+        <titulo>Cien anios de soledad</titulo>
+        <autor id="101">
+            <nombre>Gabriel</nombre>
+            <apellidos>Garcia Marquez</apellidos>
+            <nacionalidad>Colombiana</nacionalidad>
+        </autor>
+        <anio>1967</anio>
+        <precio moneda="EUR">19.99</precio>
+        <categorias>
+            <categoria>Novela</categoria>
+            <categoria>Realismo magico</categoria>
+        </categorias>
+    </libro>
+    <libro id="2">
+        <isbn>978-84-670-2013-1</isbn>
+        <titulo>Don Quijote de la Mancha</titulo>
+        <autor id="102">
+            <nombre>Miguel</nombre>
+            <apellidos>de Cervantes</apellidos>
+            <nacionalidad>Espanola</nacionalidad>
+        </autor>
+        <anio>1605</anio>
+        <precio moneda="EUR">14.50</precio>
+        <categorias>
+            <categoria>Clasico</categoria>
+            <categoria>Novela</categoria>
+        </categorias>
+    </libro>
+</biblioteca>

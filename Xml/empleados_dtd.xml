@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE empleados [
+    <!ELEMENT empleados (empleado+)>
+    <!ELEMENT empleado (nombre, puesto, salario, departamento)>
+    <!ATTLIST empleado id ID #REQUIRED>
+    <!ELEMENT nombre (#PCDATA)>
+    <!ELEMENT puesto (#PCDATA)>
+    <!ELEMENT salario (#PCDATA)>
+    <!ELEMENT departamento (#PCDATA)>
+]>
+<empleados>
+    <empleado id="E001">
+        <nombre>Ana Lopez</nombre>
+        <puesto>Desarrolladora Senior</puesto>
+        <salario>45000</salario>
+        <departamento>Informatica</departamento>
+    </empleado>
+    <empleado id="E002">
+        <nombre>Carlos Ruiz</nombre>
+        <puesto>Analista</puesto>
+        <salario>38000</salario>
+        <departamento>Finanzas</departamento>
+    </empleado>
+</empleados>
