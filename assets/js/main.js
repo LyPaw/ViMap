@@ -83,10 +83,23 @@ async function boot() {
   // Bovedas cifradas.
   try {
     const vaults = await loadVaultsIndex();
-    if (vaults.length) initVaultUi(vaults, byPath);
+    if (vaults.length) {
+      initVaultUi(vaults, byPath);
+    } else {
+      hideVaultUi();
+    }
   } catch (err) {
     console.warn("[vault] sin indice de bovedas:", err);
   }
+}
+
+function hideVaultUi() {
+  const chip = Q("#vault-chip");
+  const btn = Q("#btn-vault");
+  const welcomeBtn = Q("#btn-unlock-welcome");
+  if (chip) chip.hidden = true;
+  if (btn) btn.hidden = true;
+  if (welcomeBtn) welcomeBtn.hidden = true;
 }
 
 // ---------------------------------------------------------------------------

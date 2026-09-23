@@ -20,7 +20,7 @@ ejemplo generada al cifrar `encrypted/personal-notes/` (ver
 | Script                      | Descripcion                                                     |
 |-----------------------------|-----------------------------------------------------------------|
 | `npm start`                 | Servidor estatico local (SPA por hash, CSP, no-store indices)   |
-| `npm run build:manifest`    | Escanea `vault/` -> `public/manifest.json`                      |
+| `npm run build:manifest`    | Escanea `demo/` -> `public/manifest.json`                      |
 | `npm run validate`          | Chequea estructura, ESM y ausencia de secretos en lo publico    |
 | `npm run dist`              | Ensambla `dist/` listo para Pages (html, config, public, assets, encrypted) |
 | `npm run ci`                | validate -> build-manifest -> assemble-dist (usado por CI)      |

@@ -59,7 +59,7 @@ public/
 config/public-config.json     # config publica (iterations, paths)
 ```
 
-`build-manifest.mjs` genera `public/manifest.json` desde `vault/` (nombres,
+`build-manifest.mjs` genera `public/manifest.json` desde `demo/` (nombres,
 tamano, viewer/categoria/lenguaje). `public/vaults.json` apunta a
 `encrypted/<vault-id>/manifest.enc`; el `id` solo localiza la boveda, no
 autentica.

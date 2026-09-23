@@ -4,6 +4,7 @@ dist/
 
 # Fuente en claro de la boveda. NUNCA debe publicarse.
 vault-private/
+vault/
 
 # Secretos y credenciales. Nunca deben subirse.
 .env
