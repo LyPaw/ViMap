@@ -17,7 +17,7 @@ export async function render(entry, container, ctx) {
   await hljsReady;
 
   const text = await entry.fetch();
-  const html = renderSafeMarkdown(text, entry);
+  const html = renderSafeMarkdown(text, entry, ctx);
   container.textContent = "";
 
   const breadcrumb = el("div", { class: "md-breadcrumb" }, [
@@ -31,11 +31,11 @@ export async function render(entry, container, ctx) {
   const article = el("article", { class: "md-body", "aria-label": "Contenido Markdown" });
   article.innerHTML = html;
 
-  container.append(breadcrumb, meta, articleapsed);
-  wireAnchors(articlePreview);
+  container.append(breadcrumb, meta, article);
+  wireAnchors(article);
 }
 
-function renderSafeMarkdown(text, entry) {
+function renderSafeMarkdown(text, entry, ctx) {
   const raw = window.marked.parse(text, { gfm: true, breaks: false });
   // Reescritura de rutas relativas: las imagenes/enlaces internos apuntan al archivo real.
   let html = raw.replace(/(\bsrc|href)="([^"]+)"/g, (m, attr, href) => {

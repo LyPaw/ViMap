@@ -10,9 +10,12 @@ let count = 0;
 
 export async function render(entry, container, ctx) {
   container.textContent = "";
-  const res = await fetch(entry.downloadUrl || entry.path, { cache: "no-store" });
-  if (!res.ok) throw new Error("HTTP " + res.status);
-  const text = await res.text();
+  const text = entry.fetch
+    ? await entry.fetch()
+    : await fetch(entry.downloadUrl || entry.path, { cache: "no-store" }).then((r) => {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.text();
+      });
   count = (text.match(/\n/g) || []).length + 1;
 
   await highlightJsReady();

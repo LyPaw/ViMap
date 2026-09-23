@@ -6,9 +6,12 @@ import { esc, el } from "../core/utils.js";
 import { toast } from "../core/toast.js";
 
 export async function render(entry, container, ctx) {
-  const res = await fetch(entry.downloadUrl || entry.path, { cache: "no-store" });
-  if (!res.ok) throw new Error("HTTP " + res.status);
-  const text = await res.text();
+  const text = entry.fetch
+    ? await entry.fetch()
+    : await fetch(entry.downloadUrl || entry.path, { cache: "no-store" }).then((r) => {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.text();
+      });
 
   container.textContent = "";
   const pre = el("pre", { class: "text-pre" },
