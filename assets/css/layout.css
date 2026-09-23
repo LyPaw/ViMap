@@ -269,6 +269,19 @@
   #btn-download .btn-label {
     display: none;
   }
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 55;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.35);
+  }
 }
 
 @media (max-width: 640px) {

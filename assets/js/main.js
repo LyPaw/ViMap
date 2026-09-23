@@ -3,7 +3,7 @@
 // la boveda cifrada, la busqueda, el router de hash, teclado, tema y visores.
 
 import { loadConfig, getConfig } from "./config.js";
-import { initTheme, applyTheme, setTheme, effectiveTheme } from "./core/theme.js";
+import { initTheme } from "./core/theme.js";
 import { loadManifest, loadVaultsIndex } from "./core/manifest.js";
 import { createTree } from "./core/tree.js";
 import { parseRoute, navigateTo, initRouter } from "./core/router.js";
@@ -19,6 +19,7 @@ import {
   isUnlocked,
   vaultIdOf,
   getVaultEntries,
+  getVaultEntryByPath,
   decryptVaultFile,
   vaultEntryAttempts,
 } from "./crypto/session.js";
@@ -45,10 +46,6 @@ async function boot() {
   const cfg = await loadConfig();
   initTheme(cfg.defaultTheme || "system");
 
-  document.querySelectorAll(".theme-btn").forEach((btn) => {
-    btn.addEventListener("click", () => setTheme(btn.dataset.pref || "system"));
-  });
-
   const manifest = await loadManifest();
   const entries = manifest.entries;
   const byPath = manifest.byPath;
@@ -70,10 +67,18 @@ async function boot() {
     },
   });
 
-  wireSearch(searchEngine, entries, byPath(supply), searchInput, searchResults);
+  wireSearch(searchEngine, entries, byPath, searchInput, searchResults);
   wireKeyboard(searchInput);
   wireRouter(manifest, byPath);
   wireWelcome(byPath);
+  wireSidebar();
+
+  // Apertura inicial por hash (enlace compartido #/file/<ruta>).
+  const initial = parseRoute();
+  if (initial) {
+    const entry = byPath.get(initial);
+    if (entry) openEntry(entry);
+  }
 
   // Bovedas cifradas.
   try {
@@ -97,12 +102,12 @@ async function openEntry(entry) {
   const btnWrap = Q("#btn-wrap");
   const btnCopy = Q("#btn-copy");
   const btnDownload = Q("#btn-download");
-  const viewerName = Q("#viewer-name");
-  const appName = Q(".brand-name");
 
-  // Ruta en el pan (hash) para enlazar/compartir.
-  if (window.location.hash !== "#/file/" + encodeURIComponent(entry.path)) {
-    window.location.hash = "#/file/" + encodeURIComponent(entry.path);
+  // Ruta en el hash para enlazar/compartir: el router la re-abre (un solo render).
+  const targetHash = "#/file/" + encodeURIComponent(entry.path);
+  if (window.location.hash !== targetHash) {
+    window.location.hash = targetHash;
+    return;
   }
 
   welcomeHide();
@@ -114,13 +119,12 @@ async function openEntry(entry) {
     el("span", { class: "crumb-file", text: entry.name })
   );
 
-  viewerName.textContent = entry.language ? entry.language : entry.category;
   badge.textContent = entry.language || entry.ext || "";
   badge.hidden = !badge.textContent;
 
-  btnWrap?.classList.toggle("hiddenbtn", !(entry.viewer === "code" && !entry.encrypted));
-  btnCopy?.classList.toggle("hiddenbtn", entry.encrypted);
-  btnDownload?.classList.toggle("hiddenbtn", false);
+  if (btnWrap) btnWrap.hidden = !(entry.viewer === "code" && !entry.encrypted);
+  if (btnCopy) btnCopy.hidden = entry.encrypted;
+  if (btnDownload) btnDownload.hidden = false;
 
   btnCopy.onclick = async () => {
     try {
@@ -176,7 +180,8 @@ async function openEntry(entry) {
 // ---------------------------------------------------------------------------
 
 function wireSearch(engine, entries, byPath, input, results) {
-  let timer = null | null;
+  input.closest("form")?.addEventListener("submit", (ev) => ev.preventDefault());
+  let timer = null;
   input.addEventListener("input", () => {
     clearTimeout(timer);
     timer = setTimeout(() => runSearch(engine, input.value, results), 180);
@@ -247,7 +252,7 @@ function wireKeyboard(searchInput) {
 
 function wireRouter(_manifest, byPath) {
   initRouter((path) => {
-    const entry = byPath.get(path);
+    const entry = byPath.get(path) || getVaultEntryByPath(path);
     if (entry) openEntry(entry);
     else {
       announce("Archivo no encontrado: " + path);
@@ -262,9 +267,7 @@ function wireRouter(_manifest, byPath) {
 
 function wireWelcome(byPath) {
   const welcome = Q("#welcome-screen");
-  const unlockBtn = Q("#btn-unlock-welcome");
-  const openFirst = Q("#btn-open-first");
-  const desc = Q("#app-desc-welcome");
+  const desc = Q("#app-desc");
 
   if (byPath.size === 0) {
     desc.textContent = "Aun no hay archivos publicos. Añade contenido en la carpeta vault/ de tu repositorio y regenera el manifiesto.";
@@ -272,6 +275,23 @@ function wireWelcome(byPath) {
     return;
   }
   welcome.hidden = true;
+}
+
+// Panel lateral: toggle off-canvas en movil con scrim (cierra al clicar fuera).
+function wireSidebar() {
+  const btn = Q("#sidebar-toggle");
+  const sidebar = Q("#sidebar");
+  const scrim = Q("#scrim");
+  if (!btn || !sidebar) return;
+
+  function toggle() {
+    const open = sidebar.classList.toggle("open");
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+    if (scrim) scrim.hidden = !open;
+  }
+
+  btn.addEventListener("click", toggle);
+  if (scrim) scrim.addEventListener("click", toggle);
 }
 
 function welcomeHide() {
@@ -284,38 +304,70 @@ function welcomeHide() {
 // ---------------------------------------------------------------------------
 
 function initVaultUi(vaults, byPath) {
-  const dialogo = Q("#vault-dialog");
+  const dialogo = Q("#unlock-dialog");
   const sel = Q("#vault-select");
   const pass = Q("#unlock-password");
   const errBox = Q("#unlock-error");
-  const riskBox = Q("#risk-warning");
+  const riskPanel = Q("#dialog-risk");
+  const unlockPanel = Q("#dialog-unlock");
   const riskAccept = Q("#risk-accept");
   const btnUnlock = Q("#btn-unlock-submit");
   const btnCancel = Q("#btn-unlock-cancel");
+  const btnClose = Q("#btn-dialog-close");
   const vaultChip = Q("#vault-chip");
   const vaultStatus = Q("#vault-status");
   const vaultTree = Q("#vault-tree");
+  const vaultTreeSection = Q("#vault-tree-section");
   const btnVault = Q("#btn-vault");
 
   for (const v of vaults) {
     const o = document.createElement("option");
     o.value = v.id;
-    o.textContent = v.label && v.label.name ? v.label.name : v.id;
+    o.textContent = typeof v.label === "string" ? v.label : (v.label && v.label.name) || v.id;
     sel.append(o);
+  }
+
+  function openDialog() {
+    errBox.hidden = true;
+    const accepted = store.isRiskAccepted();
+    riskPanel.hidden = accepted;
+    unlockPanel.hidden = !accepted;
+    dialogo.hidden = false;
+    (accepted ? sel : riskAccept).focus();
+  }
+
+  function closeDialog() {
+    dialogo.hidden = true;
+    errBox.hidden = true;
   }
 
   btnVault.addEventListener("click", () => {
     if (isUnlocked()) {
       lockVault();
-      vaultStatus.textContent = "bloqueada";
+      vaultStatus.textContent = "Bloqueado";
+      vaultChip.dataset.state = "locked";
+      vaultTree.textContent = "";
+      if (vaultTreeSection) vaultTreeSection.hidden = true;
       toast("Boveda bloqueada");
       return;
     }
-    dialogo.hidden = false;
-    sel.focus();
+    openDialog();
   });
 
-  btnCancel.addEventListener("click", () => (dialogo.hidden = true));
+  btnCancel.addEventListener("click", closeDialog);
+  btnClose.addEventListener("click", closeDialog);
+
+  const btnWelcome = Q("#btn-unlock-welcome");
+  if (btnWelcome) btnWelcome.addEventListener("click", openDialog);
+
+  riskAccept.addEventListener("change", () => {
+    if (riskAccept.checked) {
+      riskPanel.hidden = true;
+      unlockPanel.hidden = false;
+      sel.focus();
+    }
+    errBox.hidden = true;
+  });
 
   btnUnlock.addEventListener("click", async () => {
     const v = vaults.find((x) => x.id === sel.value);
@@ -332,18 +384,19 @@ function initVaultUi(vaults, byPath) {
       await unlockVault(v, password);
       dialogo.hidden = true;
       pass.value = "";
-      vaultStatus.textContent = "desbloqueada";
+      vaultStatus.textContent = "Desbloqueada";
       vaultChip.dataset.state = "unlocked";
       store.setRiskAccepted();
 
       const entries = getVaultEntries();
-      const vaultByPath = new Map(entries.map((e) => [e.path, e]));
       createTree(vaultTree, entries, {
         onOpen: async (e) => openEntry(e),
       });
-      Q("#vault-tree-section").hidden = false;
+      if (vaultTreeSection) vaultTreeSection.hidden = false;
       announce("Boveda desbloqueada: " + entries.length + " archivos");
     } catch (err) {
+      unlockPanel.hidden = false;
+      riskPanel.hidden = true;
       showUnlockError((err && err.message) || "No se pudo desbloquear");
       if (err && err.code === "AUTH_FAILED") {
         const n = vaultEntryAttempts();
@@ -358,11 +411,6 @@ function initVaultUi(vaults, byPath) {
     errBox.textContent = msg;
     errBox.hidden = false;
   }
-
-  // Passphrase con mayusculas: pasa el texto sin tocar.
-  riskAccept.addEventListener("change", () => {
-    errBox.hidden = true;
-  });
 }
 
 // Datos cedidos por scripts (cifrados). Se inyectan despues del unlock.
