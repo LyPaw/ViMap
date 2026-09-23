@@ -17,7 +17,7 @@ import {
   unlockVault,
   lockVault,
   isUnlocked,
-  vaultIdOf,
+  unlockedVaultId,
   getVaultEntries,
   getVaultEntryByPath,
   decryptVaultFile,
@@ -129,7 +129,7 @@ async function openEntry(entry) {
   btnCopy.onclick = async () => {
     try {
       const text = entry.encrypted
-        ? await decryptVaultFile(vaultIdOf(), entry.id)
+        ? await decryptVaultFile(unlockedVaultId(), entry.id)
         : await entry.fetch();
       await copyToClipboard(text);
       toast("Copiado al portapapeles");

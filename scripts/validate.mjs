@@ -90,6 +90,57 @@ if (fs.existsSync(path.join(ROOT, "public/vaults.json"))) {
   }
 }
 
+// Verificacion cruzada de imports/exports ESM en assets/js: un `import { x }`
+// debe existir como export en el modulo destino; si no, falla en runtime.
+function esmExports(src) {
+  const names = new Set();
+  for (const m of src.matchAll(/export\s+(?:async\s+)?function\s+([A-Za-z_$][\w$]*)/g)) names.add(m[1]);
+  for (const m of src.matchAll(/export\s+(?:async\s+)?(?:const|let|var|class)\s+([A-Za-z_$][\w$]*)/g)) names.add(m[1]);
+  for (const m of src.matchAll(/export\s*\{([^}]*)\}/g)) {
+    for (const part of m[1].split(",")) {
+      const p = part.trim().split(/\s+as\s+/)[0].trim();
+      if (p) names.add(p);
+    }
+  }
+  if (/\/export\s+default\s+\w+/.test(src) || /export\s+default\s+function|class/.test(src)) names.add("default");
+  return names;
+}
+
+function walkEsModules(dir) {
+  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+    const abs = path.join(dir, ent.name);
+    if (ent.isDirectory()) walkEsModules(abs);
+    else if (/\.js$/.test(ent.name)) verifyModule(abs);
+  }
+}
+
+function verifyModule(abs) {
+  let src;
+  try {
+    src = fs.readFileSync(abs, "utf8");
+  } catch {
+    failures.push("no se pudo leer " + path.relative(ROOT, abs));
+    return;
+  }
+  for (const m of src.matchAll(/import\s*\{([^}]*)\}\s*from\s*["']([^"']+)["']/g)) {
+    const names = m[1].split(",").map((s) => s.trim().split(/\s+as\s+/)[0].trim()).filter(Boolean);
+    if (!names.length) continue;
+    const spec = m[2].endsWith(".js") ? m[2] : m[2] + ".js";
+    const target = path.resolve(path.dirname(abs), spec);
+    if (!fs.existsSync(target)) {
+      failures.push(`import destino inexistente en ${path.relative(ROOT, abs)}: ${m[2]}`);
+      continue;
+    }
+    const exports = esmExports(fs.readFileSync(target, "utf8"));
+    for (const n of names) {
+      if (!exports.has(n)) {
+        failures.push(`import inexistente en ${path.relative(ROOT, abs)}: ${n} (no lo exporta ${m[2]})`);
+      }
+    }
+  }
+}
+walkEsModules(path.join(ROOT, "assets/js"));
+
 if (failures.length) {
   console.error("[validate] FALLOS:");
   for (const f of failures) console.error("  - " + f);

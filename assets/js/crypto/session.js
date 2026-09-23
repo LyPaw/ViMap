@@ -7,7 +7,7 @@ import { b64ToBytes } from "../core/utils.js";
 import { parseEnvelopeText } from "./envelope.js";
 import { deriveKey } from "./kdf.js";
 import { decryptEnvelope } from "./aead.js";
-import { resetAttempts } from "./attempts.js";
+import { getAttempts, registerFailure, resetAttempts } from "./attempts.js";
 
 const state = {
   vaultId: null,
@@ -27,6 +27,10 @@ export function unlockedVaultId() {
 
 export function vaultEntryCount() {
   return state.entries.length;
+}
+
+export function vaultEntryAttempts() {
+  return getAttempts();
 }
 
 export function getVaultEntries() {
@@ -52,6 +56,7 @@ export async function unlockVault(vault, password) {
     key = await deriveKey(password, b64ToBytes(envelope.kdf.salt), envelope.kdf.iterations);
     plaintext = await decryptEnvelope(key, envelope);
   } catch (err) {
+    if (err && err.code === "AUTH_FAILED") registerFailure();
     throw err;
   }
 
