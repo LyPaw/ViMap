@@ -1,54 +1,5 @@
 {
   "version": 1,
-  "generatedAt": "2026-09-23T10:39:42.604Z",
-  "files": [
-    {
-      "id": "c0b311c4f20d",
-      "name": "app.js",
-      "path": "javascript/app.js",
-      "ext": "js",
-      "size": 44,
-      "updatedAt": "2026-09-23T08:46:33.604Z",
-      "viewer": "code",
-      "category": "codigo",
-      "language": "javascript",
-      "tags": []
-    },
-    {
-      "id": "07cf72b54aa5",
-      "name": "ejemplo.js",
-      "path": "javascript/ejemplo.js",
-      "ext": "js",
-      "size": 118,
-      "updatedAt": "2026-09-23T08:45:39.416Z",
-      "viewer": "code",
-      "category": "codigo",
-      "language": "javascript",
-      "tags": []
-    },
-    {
-      "id": "29df43705daf",
-      "name": "nota.md",
-      "path": "markdown/nota.md",
-      "ext": "md",
-      "size": 175,
-      "updatedAt": "2026-09-23T08:45:39.421Z",
-      "viewer": "markdown",
-      "category": "nota",
-      "language": "markdown",
-      "tags": []
-    },
-    {
-      "id": "c9011172a61c",
-      "name": "hola.py",
-      "path": "python/hola.py",
-      "ext": "py",
-      "size": 107,
-      "updatedAt": "2026-09-23T08:58:42.398Z",
-      "viewer": "code",
-      "category": "codigo",
-      "language": "python",
-      "tags": []
-    }
-  ]
+  "generatedAt": "2026-09-23T10:59:17.838Z",
+  "files": []
 }

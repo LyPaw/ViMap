@@ -12,7 +12,7 @@ function arg(name) {
   return i >= 0 ? process.argv[i + 1] : null;
 }
 const ROOT = path.resolve(arg("root") || path.resolve(here, ".."));
-const VAULT = path.resolve(ROOT, arg("vault") || "vault");
+const VAULT = path.resolve(ROOT, arg("vault") || "demo");
 const OUT = path.resolve(ROOT, arg("out") || "public/manifest.json");
 
 const MD_RE = /\.(md|mdx|markdown|mdown|markdn)$/i;

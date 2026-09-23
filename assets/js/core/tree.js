@@ -82,7 +82,12 @@ export function createTree(container, entries, { onOpen }) {
     }
 
     if (!dirs.length && !files.length) {
-      parentEl.appendChild(el("div", { class: "tree-empty", text: "vacio" }));
+      parentEl.appendChild(
+        el("div", {
+          class: "tree-empty",
+          text: depth === 0 ? "Sin archivos publicos: abre tu boveda para ver el contenido" : "vacio",
+        })
+      );
     }
   }
 
