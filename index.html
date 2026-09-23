@@ -1,854 +1,188 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="author" content="Manuel Fuentes Cruz">
-<title>ViMap</title>
-<link rel="icon" type="image/png" href="Logo/icon.png">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --bg:        #060910;
-  --surface:   #0c1018;
-  --surface2:  #111827;
-  --border:    #1a2233;
-  --border2:   #243044;
-  --accent:    #3b82f6;
-  --accent2:   #6366f1;
-  --accent3:   #22d3ee;
-  --text:      #e2e8f0;
-  --text2:     #94a3b8;
-  --text3:     #475569;
-  --green:     #10b981;
-  --yellow:    #f59e0b;
-  --red:       #ef4444;
-  --sidebar-w: 280px;
-  --header-h:  52px;
-}
-
-html, body { height: 100%; overflow: hidden; }
-
-body {
-  font-family: 'Segoe UI', 'Consolas', monospace;
-  background: var(--bg);
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
-}
-
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
-header {
-  height: var(--header-h);
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  padding: 0 18px;
-  gap: 14px;
-  flex-shrink: 0;
-  position: relative;
-  z-index: 10;
-}
-
-.logo-mark {
-  font-weight: 800;
-  font-size: 1.1rem;
-  letter-spacing: -0.5px;
-  background: linear-gradient(135deg, var(--accent3), var(--accent), var(--accent2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.header-sep { flex: 1; }
-
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.7rem;
-  color: var(--text3);
-}
-.breadcrumb span { color: var(--text2); }
-.breadcrumb .sep { color: var(--text3); }
-
-.header-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 6px var(--green);
-}
-
-.app {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
-
-.sidebar {
-  width: var(--sidebar-w);
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
-.sidebar-header {
-  padding: 14px 14px 10px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-
-.search-box { position: relative; }
-
-.search-box input {
-  width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border2);
-  border-radius: 6px;
-  padding: 6px 10px 6px 30px;
-  color: var(--text);
-  font-family: 'Segoe UI', 'Consolas', monospace;
-  font-size: 0.7rem;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.search-box input::placeholder { color: var(--text3); }
-.search-box input:focus { border-color: var(--accent); }
-
-.search-icon {
-  position: absolute;
-  left: 9px; top: 50%;
-  transform: translateY(-50%);
-  color: var(--text3);
-  font-size: 0.75rem;
-  pointer-events: none;
-}
-
-.sidebar-tree {
-  flex: 1;
-  overflow-y: auto;
-  padding: 8px 6px 16px;
-}
-
-.tree-item { position: relative; }
-
-.tree-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 8px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.72rem;
-  color: var(--text2);
-  transition: background 0.15s, color 0.15s;
-  user-select: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.tree-row:hover { background: var(--surface2); color: var(--text); }
-.tree-row.active { background: rgba(59,130,246,0.15); color: var(--accent3); }
-
-.tree-arrow {
-  font-size: 0.55rem;
-  color: var(--text3);
-  transition: transform 0.2s;
-  flex-shrink: 0;
-  width: 10px;
-}
-.tree-item.open > .tree-row .tree-arrow { transform: rotate(90deg); }
-
-.tree-icon { flex-shrink: 0; font-size: 0.8rem; }
-.tree-label { overflow: hidden; text-overflow: ellipsis; }
-
-.tree-children {
-  display: none;
-  padding-left: 16px;
-  position: relative;
-}
-.tree-children::before {
-  content: '';
-  position: absolute;
-  left: 14px; top: 0; bottom: 0;
-  width: 1px;
-  background: var(--border);
-}
-.tree-item.open > .tree-children { display: block; }
-
-.file-ext {
-  margin-left: auto;
-  font-size: 0.58rem;
-  padding: 1px 5px;
-  border-radius: 3px;
-  flex-shrink: 0;
-  font-weight: 500;
-}
-.ext-java  { background: rgba(239,68,68,0.15);   color: #f87171; }
-.ext-md    { background: rgba(99,102,241,0.15);   color: #a5b4fc; }
-.ext-pdf   { background: rgba(245,158,11,0.15);   color: #fbbf24; }
-.ext-html  { background: rgba(34,211,238,0.15);   color: #67e8f9; }
-.ext-css   { background: rgba(168,85,247,0.15);   color: #c084fc; }
-.ext-xml   { background: rgba(251,191,36,0.15);   color: #fcd34d; }
-.ext-sql   { background: rgba(249,115,22,0.15);   color: #fb923c; }
-
-.viewer {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: var(--bg);
-}
-
-.tab-bar {
-  height: 38px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: flex-end;
-  padding: 0 0 0 16px;
-  flex-shrink: 0;
-  gap: 2px;
-  overflow-x: auto;
-}
-
-.tab {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 6px 14px 7px;
-  font-size: 0.68rem;
-  color: var(--text3);
-  cursor: pointer;
-  border-radius: 6px 6px 0 0;
-  border: 1px solid transparent;
-  border-bottom: none;
-  white-space: nowrap;
-  transition: all 0.15s;
-  position: relative;
-  bottom: 0;
-}
-.tab:hover { color: var(--text2); background: var(--surface2); }
-.tab.active {
-  color: var(--text);
-  background: var(--bg);
-  border-color: var(--border);
-  border-bottom-color: var(--bg);
-}
-.tab-close {
-  color: var(--text3);
-  font-size: 0.7rem;
-  line-height: 1;
-  padding: 1px 2px;
-  border-radius: 3px;
-  transition: background 0.1s, color 0.1s;
-}
-.tab-close:hover { background: rgba(239,68,68,0.2); color: var(--red); }
-
-.welcome {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  color: var(--text3);
-}
-.welcome-glyph { font-size: 3rem; opacity: 0.3; }
-.welcome h2 { font-size: 1.1rem; color: var(--text3); font-weight: 600; }
-.welcome p { font-size: 0.72rem; color: var(--text3); }
-
-.content-pane {
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.content-pane > div {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.code-wrap {
-  flex: 1;
-  overflow: hidden;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.code-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 20px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
-  flex-shrink: 0;
-}
-
-.code-filename { font-size: 0.8rem; font-weight: 600; color: var(--text); }
-
-.code-meta { font-size: 0.65rem; color: var(--text3); display: flex; gap: 12px; }
-.code-meta span { display: flex; align-items: center; gap: 4px; }
-
-pre.code-block {
-  flex: 1;
-  background: transparent;
-  padding: 20px 24px;
-  font-family: 'Consolas', monospace;
-  font-size: 0.78rem;
-  line-height: 1.7;
-  overflow: auto;
-  white-space: pre;
-  counter-reset: line;
-}
-
-.line { display: flex; gap: 16px; }
-.ln {
-  color: var(--text3);
-  font-size: 0.68rem;
-  min-width: 32px;
-  text-align: right;
-  flex-shrink: 0;
-  user-select: none;
-  padding-top: 1px;
-}
-.lc { flex: 1; }
-
-.kw  { color: #60a5fa; font-weight: 500; }
-.cls { color: #34d399; }
-.str { color: #fb923c; }
-.cmt { color: #4b5563; font-style: italic; }
-.num { color: #a78bfa; }
-.ann { color: #f472b6; }
-
-.md-wrap {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 24px 40px;
-  width: 100%;
-  max-width: 100%;
-}
-
-.md-wrap h1 { font-size: 1.8rem; font-weight: 800; color: var(--text); margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-.md-wrap h2 { font-size: 1.2rem; font-weight: 600; color: var(--accent3); margin: 28px 0 12px; }
-.md-wrap h3 { font-size: 1rem; color: var(--accent); margin: 20px 0 8px; }
-.md-wrap p  { color: var(--text2); line-height: 1.75; margin-bottom: 14px; font-size: 0.85rem; }
-.md-wrap ul, .md-wrap ol { color: var(--text2); padding-left: 20px; margin-bottom: 14px; font-size: 0.83rem; }
-.md-wrap li { line-height: 1.7; margin-bottom: 4px; }
-.md-wrap code { background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; color: var(--accent3); font-size: 0.8rem; }
-.md-wrap pre { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; overflow-x: auto; margin-bottom: 18px; }
-.md-wrap pre code { background: none; border: none; padding: 0; color: var(--text); font-size: 0.78rem; }
-.md-wrap blockquote { border-left: 3px solid var(--accent2); padding-left: 16px; color: var(--text3); margin: 16px 0; font-style: italic; }
-.md-wrap table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 0.8rem; }
-.md-wrap th { background: var(--surface2); color: var(--text); padding: 8px 12px; border: 1px solid var(--border2); text-align: left; }
-.md-wrap td { padding: 7px 12px; border: 1px solid var(--border); color: var(--text2); }
-.md-wrap tr:hover td { background: rgba(255,255,255,0.02); }
-
-.frame-wrap {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: var(--bg);
-}
-.frame-wrap iframe {
-  flex: 1;
-  border: none;
-  width: 100%;
-  height: 100%;
-}
-
-.loading {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: var(--text3);
-  font-size: 0.75rem;
-}
-.spinner {
-  width: 18px; height: 18px;
-  border: 2px solid var(--border2);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.statusbar {
-  height: 24px;
-  background: var(--accent);
-  display: flex;
-  align-items: center;
-  padding: 0 14px;
-  gap: 20px;
-  font-size: 0.62rem;
-  color: rgba(255,255,255,0.85);
-  flex-shrink: 0;
-}
-.statusbar .s-item { display: flex; align-items: center; gap: 5px; }
-.statusbar .s-sep  { color: rgba(255,255,255,0.3); }
-.statusbar .s-right { margin-left: auto; }
-
-.resize-handle {
-  width: 4px;
-  background: transparent;
-  cursor: col-resize;
-  flex-shrink: 0;
-  transition: background 0.2s;
-}
-.resize-handle:hover { background: var(--accent); }
-
-.sidebar-logo {
-  flex-shrink: 0;
-  padding: 14px 16px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.sidebar-logo img {
-  max-width: 120px;
-  width: 100%;
-  height: auto;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-.sidebar-logo img:hover { opacity: 1; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' blob:; media-src 'none'; object-src 'none'; frame-src 'none'; child-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; manifest-src 'self'">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="permissions-policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), battery=(), accelerometer=(), gyroscope=()">
+  <meta name="description" content="Archivo personal de notas y codigo">
+  <meta name="author" content="Manuel Fuentes Cruz">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#060910">
+  <title>ViMap</title>
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/themes.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/markdown.css">
+  <link rel="stylesheet" href="assets/css/code.css">
 </head>
 <body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
 
-<header>
-  <div class="header-sep"></div>
-  <div class="breadcrumb" id="breadcrumb">
-    <span>workspace</span>
-  </div>
-  <div class="header-dot"></div>
-</header>
+  <header class="site-header">
+    <button id="sidebar-toggle" class="icon-btn" type="button" aria-label="Abrir panel de archivos" aria-controls="sidebar" aria-expanded="false">
+      <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
 
-<div class="app">
-
-  <div class="sidebar" id="sidebar-panel">
-    <div class="sidebar-tree" id="tree-root"></div>
-    <div class="sidebar-logo">
-      <img src="Logo/logo.png" alt="ViMap logo">
+    <div class="brand" aria-hidden="true">
+      <img src="assets/icons/logo.svg" alt="" class="brand-logo">
+      <span class="brand-name" id="app-name">ViMap</span>
     </div>
+
+    <div class="search-wrap">
+      <form id="search-form" role="search" aria-label="Buscar archivos">
+        <svg class="search-icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="search-input" type="search" autocomplete="off" spellcheck="false"
+               placeholder="Buscar archivos  ( / )" aria-label="Buscar archivos"
+               aria-controls="search-results" aria-expanded="false" role="combobox" aria-autocomplete="list">
+        <kbd class="search-kbd" aria-hidden="true">/</kbd>
+      </form>
+      <div id="search-results" class="search-results" role="listbox" hidden></div>
+    </div>
+
+    <nav class="head-actions" aria-label="Preferencias">
+      <div class="theme-switch" role="group" aria-label="Tema de color">
+        <button id="theme-light" type="button" class="theme-btn" title="Tema claro" aria-label="Tema claro">
+          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button id="theme-system" type="button" class="theme-btn" title="Tema segun el sistema" aria-label="Tema segun el sistema">
+          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 20h8M12 16v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <button id="theme-dark" type="button" class="theme-btn" title="Tema oscuro" aria-label="Tema oscuro">
+          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z" fill="currentColor"/></svg>
+        </button>
+      </div>
+
+      <div class="vault-chip" id="vault-chip" data-state="locked">
+        <span class="vault-dot" aria-hidden="true"></span>
+        <span class="vault-label" id="vault-status">Bloqueado</span>
+      </div>
+      <button id="btn-vault" type="button" class="btn btn-primary">Desbloquear boveda</button>
+    </nav>
+  </header>
+
+  <div class="app">
+    <aside id="sidebar" class="sidebar" aria-label="Explorador de archivos">
+      <div class="sidebar-body">
+        <section class="tree-section" aria-label="Archivos publicos">
+          <h2 class="tree-heading" id="public-tree-title">Archivos publicos</h2>
+          <div id="public-tree" class="tree" role="tree" aria-labelledby="public-tree-title"></div>
+        </section>
+
+        <section class="tree-section" id="vault-tree-section" aria-label="Boveda privada" hidden>
+          <h2 class="tree-heading" id="vault-tree-title">Boveda privada</h2>
+          <div id="vault-tree" class="tree" role="tree" aria-labelledby="vault-tree-title"></div>
+        </section>
+      </div>
+      <footer class="sidebar-foot">
+        <p>Atajos: <kbd>s</kbd>/<kbd>/</kbd> buscar · <kbd>&#8592;</kbd><kbd>&#8593;</kbd><kbd>&#8595;</kbd><kbd>&#8594;</kbd> navegar · <kbd>Enter</kbd> abrir</p>
+      </footer>
+    </aside>
+    <div id="scrim" class="scrim" hidden></div>
+
+    <section id="main" class="viewer" aria-label="Documento">
+      <div class="viewer-bar" id="viewer-bar" hidden>
+        <nav class="breadcrumb" id="breadcrumb" aria-label="Ruta actual"></nav>
+        <div class="file-actions" id="file-actions">
+          <button id="btn-wrap" type="button" class="btn btn-ghost" title="Activar o desactivar el ajuste de linea" hidden>
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18M3 12h12a4 4 0 0 1 0 8H10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="m13 17-3 3-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="btn-label">Ajuste</span>
+          </button>
+          <button id="btn-copy" type="button" class="btn btn-ghost" title="Copiar contenido">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+            <span class="btn-label">Copiar</span>
+          </button>
+          <button id="btn-download" type="button" class="btn btn-ghost" title="Descargar archivo">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            <span class="btn-label">Descargar</span>
+          </button>
+          <span class="lang-badge" id="lang-badge" hidden></span>
+        </div>
+      </div>
+
+      <div id="pane" class="pane">
+        <div id="welcome-screen" class="welcome">
+          <img src="assets/icons/logo.svg" alt="" class="welcome-logo">
+          <h2 id="app-name-welcome">ViMap</h2>
+          <p id="app-desc">Archivo personal de notas y codigo</p>
+          <div class="welcome-note">
+            <p>Esta aplicacion es un sitio <strong>estatico</strong> publicado en GitHub Pages. No sustituye un sistema de
+            autenticacion con servidor: no almacenes secretos de produccion, credenciales, tokens ni informacion
+            extremadamente sensible.</p>
+            <p>La <strong>boveda cifrada</strong> se descifra exclusivamente en tu memoria del navegador con una
+            contrasena que nunca se guarda ni se transmite. Su seguridad depende de la fortaleza de esa contrasena.</p>
+          </div>
+          <button id="btn-unlock-welcome" type="button" class="btn btn-primary">Desbloquear boveda</button>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <div class="resize-handle" id="resize-handle"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
-  <div class="viewer">
-    <div class="tab-bar" id="tab-bar"></div>
-    <div class="content-pane" id="content-pane">
-      <div class="welcome" id="welcome-screen">
-        <div class="welcome-glyph">V</div>
-        <h2>ViMap</h2>
-        <p>Selecciona un archivo de la barra lateral</p>
+  <div id="unlock-dialog" class="dialog-backdrop" hidden>
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+      <div class="dialog-head">
+        <h2 id="dialog-title">Desbloquear boveda</h2>
+        <button id="btn-dialog-close" type="button" class="icon-btn" aria-label="Cerrar">
+          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <div class="dialog-body" id="dialog-risk" hidden>
+        <div id="risk-warning" class="risk-box" role="note">
+          <p><strong>Antes de usar el cifrado, entiende los limites de esta aplicacion:</strong></p>
+          <ul>
+            <li>Los archivos y manifiestos cifrados son <strong>descargables por cualquier visitante</strong>. Un atacante
+                puede copiar el ciphertext y atacarlo por fuerza bruta offline.</li>
+            <li>El descifrado ocurre solo en tu navegador; GitHub Pages no ofrece backend ni autenticacion.</li>
+            <li>La seguridad depende de que uses una contrasena <strong>larga y aleatoria</strong> (o frase de paso de alta
+                entropia). Si la olvidas, no hay recuperacion.</li>
+            <li>El limite de intentos fallidos es solo una ayuda de interfaz y <strong>no es una medida de seguridad real</strong>,
+                puede eludirse con las herramientas del navegador.</li>
+            <li>No guardes aqui secretos de produccion ni datos que requieran control de acceso real.</li>
+          </ul>
+          <label class="risk-check">
+            <input type="checkbox" id="risk-accept" autocomplete="off">
+            <span>Entiendo estos riesgos y deseo continuar.</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="dialog-body" id="dialog-unlock">
+        <label class="field">
+          <span class="field-label" id="vault-select-label">Boveda</span>
+          <select id="vault-select" class="field-input" aria-labelledby="vault-select-label"></select>
+        </label>
+        <label class="field">
+          <span class="field-label" for="unlock-password">Contrasena de descifrado local</span>
+          <input id="unlock-password" type="password" class="field-input" autocomplete="off" autocapitalize="off"
+                 spellcheck="false" aria-describedby="unlock-error" placeholder="Frase de paso de alta entropia">
+        </label>
+        <p class="field-hint">La contrasena se usa solo para derivar la clave de descifrado en memoria. Se borra al bloquear
+        o recargar. No se guarda ni se envia a ningun servicio.</p>
+        <p id="attempts-note" class="attempts-note" hidden></p>
+        <p id="unlock-error" class="form-error" role="alert" hidden></p>
+        <div class="dialog-actions">
+          <button id="btn-unlock-cancel" type="button" class="btn btn-ghost">Cancelar</button>
+          <button id="btn-unlock-submit" type="button" class="btn btn-primary">Desbloquear</button>
+        </div>
       </div>
     </div>
   </div>
 
-</div>
+  <noscript>
+    <div class="noscript">
+      Esta aplicacion requiere JavaScript (ES Modules) para navegar, leer y descifrar archivos.
+    </div>
+  </noscript>
 
-<div class="statusbar">
-  <div class="s-item"><span id="status-lang">listo</span></div>
-  <div class="s-sep">|</div>
-  <div class="s-item" id="status-lines">--</div>
-  <div class="s-item s-right" id="status-file">ViMap</div>
-</div>
-
-<script>
-function extOf(name) {
-  return name.split('.').pop().toLowerCase();
-}
-
-function extBadge(name) {
-  var e = extOf(name);
-  var map = { java:'ext-java', md:'ext-md', html:'ext-html', css:'ext-css', xml:'ext-xml', sql:'ext-sql' };
-  var cls = map[e] || '';
-  return cls ? '<span class="file-ext ' + cls + '">.' + e + '</span>' : '';
-}
-
-function langIcon(name) {
-  var e = extOf(name);
-  var icons = { java:'J', md:'M', html:'H', css:'C', xml:'X', sql:'S' };
-  return icons[e] || '?';
-}
-
-var treeRoot = document.getElementById('tree-root');
-
-fetch('data.json')
-  .then(function(r) {
-    if (!r.ok) throw new Error('No se pudo cargar data.json');
-    return r.json();
-  })
-  .then(function(fileTree) {
-    buildTree(fileTree, treeRoot);
-  })
-  .catch(function(err) {
-    treeRoot.innerHTML = '<div style="padding:16px;color:#ef4444;font-size:0.72rem;">Error: ' + err.message + '</div>';
-  });
-
-function buildTree(data, container, depth, pathParts) {
-  if (depth === undefined) depth = 0;
-  if (pathParts === undefined) pathParts = [];
-  for (var key in data) {
-    (function() {
-      var val = data[key];
-      var isFiles = Array.isArray(val);
-      var currentPath = pathParts.concat([key]);
-
-      var item = document.createElement('div');
-      item.className = 'tree-item';
-
-      var row = document.createElement('div');
-      row.className = 'tree-row';
-      row.style.paddingLeft = (8 + depth * 14) + 'px';
-
-      if (isFiles) {
-        row.innerHTML = '<span class="tree-arrow">&#9656;</span><span class="tree-icon">&#128194;</span><span class="tree-label">' + key + '</span>' + (val.length ? '<span style="margin-left:auto;font-size:0.58rem;color:var(--text3)">' + val.length + '</span>' : '');
-
-        var children = document.createElement('div');
-        children.className = 'tree-children';
-
-        if (val.length === 0) {
-          var empty = document.createElement('div');
-          empty.className = 'tree-row';
-          empty.style.paddingLeft = (8 + (depth + 1) * 14) + 'px';
-          empty.style.color = 'var(--text3)';
-          empty.style.fontStyle = 'italic';
-          empty.style.fontSize = '0.68rem';
-          empty.innerHTML = '<span class="tree-arrow" style="visibility:hidden">&#9656;</span><span>vacio</span>';
-          children.appendChild(empty);
-        }
-
-        val.forEach(function(file) {
-          var fItem = document.createElement('div');
-          fItem.className = 'tree-item';
-
-          var fRow = document.createElement('div');
-          fRow.className = 'tree-row';
-          fRow.style.paddingLeft = (8 + (depth + 1) * 14) + 'px';
-          fRow.innerHTML = '<span class="tree-arrow" style="visibility:hidden">&#9656;</span><span class="tree-icon">' + langIcon(file.name) + '</span><span class="tree-label">' + file.name + '</span>' + extBadge(file.name);
-          fRow.addEventListener('click', function(e) {
-            e.stopPropagation();
-            openFile(file);
-            var allRows = document.querySelectorAll('.tree-row');
-            for (var i = 0; i < allRows.length; i++) allRows[i].classList.remove('active');
-            fRow.classList.add('active');
-            var crumbHtml = '';
-            for (var i = 0; i < currentPath.length; i++) {
-              crumbHtml += '<span>' + currentPath[i] + '</span>';
-              if (i < currentPath.length - 1) crumbHtml += '<span class="sep">&#8250;</span>';
-            }
-            crumbHtml += '<span class="sep">&#8250;</span><span>' + file.name + '</span>';
-            document.getElementById('breadcrumb').innerHTML = crumbHtml;
-          });
-
-          fItem.appendChild(fRow);
-          children.appendChild(fItem);
-        });
-
-        row.addEventListener('click', function(e) { e.stopPropagation(); item.classList.toggle('open'); });
-        item.appendChild(row);
-        item.appendChild(children);
-
-      } else {
-        var isRoot = depth === 0;
-        row.innerHTML = '<span class="tree-arrow">&#9656;</span><span class="tree-icon">' + (isRoot ? '&#128459;' : '&#128193;') + '</span><span class="tree-label">' + key + '</span>';
-
-        var children = document.createElement('div');
-        children.className = 'tree-children';
-        buildTree(val, children, depth + 1, currentPath);
-
-        row.addEventListener('click', function(e) { e.stopPropagation(); item.classList.toggle('open'); });
-        item.appendChild(row);
-        item.appendChild(children);
-      }
-
-      container.appendChild(item);
-    })();
-  }
-}
-
-var tabBar = document.getElementById('tab-bar');
-var contentPane = document.getElementById('content-pane');
-var welcome = document.getElementById('welcome-screen');
-
-var tabs = [];
-var activeTab = null;
-
-function openFile(file) {
-  for (var i = 0; i < tabs.length; i++) {
-    if (tabs[i].file.url === file.url) { activateTab(tabs[i]); return; }
-  }
-
-  var tabEl = document.createElement('div');
-  tabEl.className = 'tab';
-  tabEl.innerHTML = '<span>' + langIcon(file.name) + '</span><span>' + file.name + '</span><span class="tab-close" title="cerrar">X</span>';
-
-  var entry = { file: file, tabEl: tabEl, node: null, loaded: false };
-  tabs.push(entry);
-
-  tabEl.addEventListener('click', function(e) {
-    if (e.target.classList.contains('tab-close')) closeTab(entry);
-    else activateTab(entry);
-  });
-
-  tabBar.appendChild(tabEl);
-  activateTab(entry);
-}
-
-function activateTab(entry) {
-  if (activeTab) activeTab.tabEl.classList.remove('active');
-  activeTab = entry;
-  entry.tabEl.classList.add('active');
-
-  welcome.style.display = 'none';
-
-  if (entry.loaded && entry.node) {
-    contentPane.innerHTML = '';
-    contentPane.appendChild(entry.node);
-  } else {
-    var node = document.createElement('div');
-    node.style.cssText = 'display:flex;flex:1;flex-direction:column;overflow:hidden;min-height:0;';
-    node.innerHTML = '<div class="loading"><div class="spinner"></div>cargando...</div>';
-    entry.node = node;
-    contentPane.innerHTML = '';
-    contentPane.appendChild(node);
-    loadContent(entry);
-  }
-
-  document.getElementById('status-file').textContent = entry.file.name;
-  document.getElementById('status-lang').textContent = extOf(entry.file.name).toUpperCase();
-}
-
-function closeTab(entry) {
-  var idx = tabs.indexOf(entry);
-  tabs.splice(idx, 1);
-  entry.tabEl.remove();
-
-  if (activeTab === entry) {
-    activeTab = null;
-    if (tabs.length > 0) {
-      activateTab(tabs[Math.max(0, idx - 1)]);
-    } else {
-      contentPane.innerHTML = '';
-      welcome.style.display = 'flex';
-      document.getElementById('status-file').textContent = 'ViMap v2.0';
-      document.getElementById('status-lang').textContent = 'listo';
-      document.getElementById('status-lines').textContent = '--';
-    }
-  }
-}
-
-function loadContent(entry) {
-  var file = entry.file;
-  var node = entry.node;
-  var ext = extOf(file.name);
-  entry.loaded = true;
-
-  if (ext === 'md') {
-    fetch(file.url)
-      .then(function(r) { return r.text(); })
-      .then(function(md) {
-        var lines = md.split('\n').length;
-        var html = simpleMarkdown(md);
-        node.innerHTML = '<div class="md-wrap">' + html + '</div>';
-        document.getElementById('status-lines').textContent = lines + ' lineas';
-      })
-      .catch(function() { node.innerHTML = '<div class="loading">Error al cargar el archivo</div>'; });
-  } else if (ext === 'html') {
-    fetch(file.url)
-      .then(function(r) { return r.text(); })
-      .then(function(html) {
-        node.innerHTML =
-          '<div class="code-header">' +
-            '<span class="code-filename">' + file.name + '</span>' +
-            '<span class="code-meta"><span>HTML interactivo</span></span>' +
-          '</div>' +
-          '<div class="frame-wrap"></div>';
-        var wrap = node.querySelector('.frame-wrap');
-        var iframe = document.createElement('iframe');
-        iframe.style.cssText = 'flex:1;width:100%;border:none;min-height:0;';
-        iframe.srcdoc = html;
-        iframe.sandbox = 'allow-scripts allow-same-origin';
-        wrap.appendChild(iframe);
-        document.getElementById('status-lines').textContent = html.split('\n').length + ' lineas';
-      })
-      .catch(function() { node.innerHTML = '<div class="loading">Error al cargar el HTML</div>'; });
-  } else {
-    fetch(file.url)
-      .then(function(r) { return r.text(); })
-      .then(function(text) {
-        var lines = text.split('\n');
-        document.getElementById('status-lines').textContent = lines.length + ' lineas';
-        var lang = ({ java:'Java', css:'CSS', xml:'XML', sql:'SQL' })[ext] || 'Codigo';
-        var highlighted = highlightJava(text);
-        var linesHtml = highlighted.split('\n').map(function(l, i) {
-          return '<div class="line"><span class="ln">' + (i+1) + '</span><span class="lc">' + (l||' ') + '</span></div>';
-        }).join('');
-        node.innerHTML =
-          '<div class="code-header"><span class="code-filename">' + file.name + '</span><div class="code-meta"><span>' + lang + '</span><span>' + lines.length + ' lineas</span></div></div>' +
-          '<div class="code-wrap"><pre class="code-block">' + linesHtml + '</pre></div>';
-      })
-      .catch(function() { node.innerHTML = '<div class="loading">Error al cargar el archivo</div>'; });
-  }
-}
-
-function simpleMarkdown(text) {
-  var html = text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/^>- (.+)$/gm, '<blockquote><li>$1</li></blockquote>')
-    .replace(/^- (.+)$/gm, '<li>$1</li>')
-    .replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>')
-    .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>');
-
-  var paragraphs = html.split(/\n\n+/);
-  var out = '';
-  for (var i = 0; i < paragraphs.length; i++) {
-    var p = paragraphs[i].trim();
-    if (p.length === 0) continue;
-    if (/^<h[123]/.test(p) || /^<li/.test(p) || /^<pre/.test(p) || /^<blockquote/.test(p)) {
-      out += p;
-    } else {
-      out += '<p>' + p.replace(/\n/g, '<br>') + '</p>';
-    }
-  }
-  return out;
-}
-
-function escapeHTML(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function highlightJava(raw) {
-  return raw.split('\n').map(function(line) { return highlightLine(line); }).join('\n');
-}
-
-function highlightLine(line) {
-  var out = '';
-  var i = 0;
-  var len = line.length;
-
-  while (i < len) {
-    if (line[i] === '/' && line[i+1] === '*') {
-      var end = line.indexOf('*/', i + 2);
-      if (end === -1) end = len - 2;
-      var tok = line.slice(i, end + 2);
-      out += '<span class="cmt">' + esc(tok) + '</span>';
-      i = end + 2;
-      continue;
-    }
-    if (line[i] === '/' && line[i+1] === '/') {
-      out += '<span class="cmt">' + esc(line.slice(i)) + '</span>';
-      break;
-    }
-    if (line[i] === '"') {
-      var j = i + 1;
-      while (j < len && !(line[j] === '"' && line[j-1] !== '\\')) j++;
-      var tok = line.slice(i, j + 1);
-      out += '<span class="str">' + esc(tok) + '</span>';
-      i = j + 1;
-      continue;
-    }
-    if (line[i] === "'" && i + 2 < len) {
-      var j = i + 1;
-      while (j < len && !(line[j] === "'" && line[j-1] !== '\\')) j++;
-      var tok = line.slice(i, j + 1);
-      out += '<span class="str">' + esc(tok) + '</span>';
-      i = j + 1;
-      continue;
-    }
-    if (line[i] === '@' && i + 1 < len && /[A-Za-z]/.test(line[i+1])) {
-      var j = i + 1;
-      while (j < len && /[A-Za-z0-9_]/.test(line[j])) j++;
-      out += '<span class="ann">' + esc(line.slice(i, j)) + '</span>';
-      i = j;
-      continue;
-    }
-    if (/[A-Za-z_$0-9]/.test(line[i])) {
-      var j = i;
-      while (j < len && /[A-Za-z_$0-9]/.test(line[j])) j++;
-      var word = line.slice(i, j);
-      var span = tokenSpan(word);
-      out += span;
-      i = j;
-      continue;
-    }
-    out += esc(line[i]);
-    i++;
-  }
-  return out;
-}
-
-var KEYWORDS = new Set([
-  'abstract','assert','boolean','break','byte','case','catch','char','class',
-  'const','continue','default','do','double','else','enum','extends','final',
-  'finally','float','for','goto','if','implements','import','instanceof','int',
-  'interface','long','native','new','null','package','private','protected',
-  'public','record','return','sealed','short','static','strictfp','super',
-  'switch','this','throw','throws','transient','true','false','try','var',
-  'void','volatile','while','permits','String','System','ArrayList','HashMap',
-  'HashSet','LinkedList','List','Map','Set'
-]);
-
-function tokenSpan(word) {
-  if (KEYWORDS.has(word))           return '<span class="kw">'  + esc(word) + '</span>';
-  if (/^\d/.test(word))             return '<span class="num">' + esc(word) + '</span>';
-  if (/^[A-Z]/.test(word))         return '<span class="cls">' + esc(word) + '</span>';
-  return esc(word);
-}
-
-function esc(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-var handle  = document.getElementById('resize-handle');
-var sidebar = document.getElementById('sidebar-panel');
-var resizing = false, startX = 0, startW = 0;
-
-handle.addEventListener('mousedown', function(e) {
-  resizing = true; startX = e.clientX; startW = sidebar.offsetWidth;
-  document.body.style.cursor = 'col-resize';
-  document.body.style.userSelect = 'none';
-});
-document.addEventListener('mousemove', function(e) {
-  if (!resizing) return;
-  var w = Math.max(160, Math.min(520, startW + e.clientX - startX));
-  sidebar.style.width = w + 'px';
-});
-document.addEventListener('mouseup', function() {
-  resizing = false;
-  document.body.style.cursor = '';
-  document.body.style.userSelect = '';
-});
-</script>
+  <script src="assets/vendor/marked.min.js" defer></script>
+  <script src="assets/vendor/purify.min.js" defer></script>
+  <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>

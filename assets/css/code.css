@@ -1,0 +1,189 @@
+.code-viewer {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.code-area {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: var(--bg);
+}
+
+.code-area pre {
+  margin: 0;
+  padding: 18px 20px;
+  font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  white-space: pre;
+}
+
+.code-area.wrap pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.code-line {
+  display: flex;
+  gap: 18px;
+}
+.code-line:hover {
+  background: rgba(127, 127, 127, 0.05);
+}
+.ln {
+  color: var(--text3);
+  font-size: 0.72rem;
+  min-width: 34px;
+  text-align: right;
+  flex-shrink: 0;
+  user-select: none;
+}
+.lc {
+  flex: 1;
+  min-width: 0;
+}
+
+.plain-viewer {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 22px 28px;
+  font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+  font-size: 0.84rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.binary-viewer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 28px;
+  text-align: center;
+}
+.binary-viewer .file-glyph {
+  font-size: 2.4rem;
+  opacity: 0.6;
+}
+.binary-viewer p {
+  color: var(--text2);
+  font-size: 0.9rem;
+  max-width: 420px;
+}
+
+/* highlight.js tokens, tema coherente con el tema global */
+:root[data-theme="dark"] .hljs-keyword,
+:root[data-theme="dark"] .hljs-selector-tag,
+:root[data-theme="dark"] .hljs-literal,
+:root[data-theme="dark"] .hljs-section,
+:root[data-theme="dark"] .hljs-link {
+  color: #7dd3fc;
+}
+:root[data-theme="dark"] .hljs-title,
+:root[data-theme="dark"] .hljs-title.function_,
+:root[data-theme="dark"] .hljs-title.class_ {
+  color: #34d399;
+}
+:root[data-theme="dark"] .hljs-string,
+:root[data-theme="dark"] .hljs-meta .hljs-string,
+:root[data-theme="dark"] .hljs-attr {
+  color: #fb923c;
+}
+:root[data-theme="dark"] .hljs-comment,
+:root[data-theme="dark"] .hljs-quote {
+  color: #64748b;
+  font-style: italic;
+}
+:root[data-theme="dark"] .hljs-number,
+:root[data-theme="dark"] .hljs-symbol,
+:root[data-theme="dark"] .hljs-bullet {
+  color: #c4b5fd;
+}
+:root[data-theme="dark"] .hljs-annotation,
+:root[data-theme="dark"] .hljs-attribute {
+  color: #f472b6;
+}
+:root[data-theme="dark"] .hljs-variable,
+:root[data-theme="dark"] .hljs-template-variable,
+:root[data-theme="dark"] .hljs-params {
+  color: #e2e8f0;
+}
+:root[data-theme="dark"] .hljs-built_in {
+  color: #93c5fd;
+}
+:root[data-theme="dark"] .hljs-type {
+  color: #6ee7b7;
+}
+:root[data-theme="dark"] .hljs-tag {
+  color: #67e8f9;
+}
+:root[data-theme="dark"] .hljs-name {
+  color: #93c5fd;
+}
+:root[data-theme="dark"] .hljs-selector-class,
+:root[data-theme="dark"] .hljs-selector-id,
+:root[data-theme="dark"] .hljs-selector-pseudo {
+  color: #a5b4fc;
+}
+
+:root[data-theme="light"] .hljs-keyword,
+:root[data-theme="light"] .hljs-selector-tag,
+:root[data-theme="light"] .hljs-literal,
+:root[data-theme="light"] .hljs-section,
+:root[data-theme="light"] .hljs-link {
+  color: #0369a1;
+}
+:root[data-theme="light"] .hljs-title,
+:root[data-theme="light"] .hljs-title.function_,
+:root[data-theme="light"] .hljs-title.class_ {
+  color: #047857;
+}
+:root[data-theme="light"] .hljs-string,
+:root[data-theme="light"] .hljs-meta .hljs-string,
+:root[data-theme="light"] .hljs-attr {
+  color: #b45309;
+}
+:root[data-theme="light"] .hljs-comment,
+:root[data-theme="light"] .hljs-quote {
+  color: #64748b;
+  font-style: italic;
+}
+:root[data-theme="light"] .hljs-number,
+:root[data-theme="light"] .hljs-symbol,
+:root[data-theme="light"] .hljs-bullet {
+  color: #6d28d9;
+}
+:root[data-theme="light"] .hljs-annotation,
+:root[data-theme="light"] .hljs-attribute {
+  color: #be185d;
+}
+:root[data-theme="light"] .hljs-variable,
+:root[data-theme="light"] .hljs-template-variable,
+:root[data-theme="light"] .hljs-params {
+  color: #0f172a;
+}
+:root[data-theme="light"] .hljs-built_in {
+  color: #1d4ed8;
+}
+:root[data-theme="light"] .hljs-type {
+  color: #15803d;
+}
+:root[data-theme="light"] .hljs-tag {
+  color: #0e7490;
+}
+:root[data-theme="light"] .hljs-name {
+  color: #1d4ed8;
+}
+:root[data-theme="light"] .hljs-selector-class,
+:root[data-theme="light"] .hljs-selector-id,
+:root[data-theme="light"] .hljs-selector-pseudo {
+  color: #4c1d95;
+}

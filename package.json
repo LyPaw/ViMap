@@ -1,0 +1,19 @@
+{
+  "name": "vimap",
+  "version": "2.0.0",
+  "description": "Repositorio personal de notas y codigo. Sitio estatico para GitHub Pages con boveda cifrada en el cliente.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "build:manifest": "node scripts/build-manifest.mjs",
+    "validate": "node scripts/validate.mjs",
+    "dist": "node scripts/assemble-dist.mjs",
+    "encrypt": "node scripts/encrypt-vault.mjs",
+    "decrypt": "node scripts/decrypt-vault.mjs",
+    "ci": "node scripts/validate.mjs && node scripts/build-manifest.mjs && node scripts/assemble-dist.mjs"
+  }
+}

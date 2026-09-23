@@ -1,24 +1,87 @@
 # ViMap
 
-Workspace educativo completo para el Ciclo Formativo de Grado Superior en Desarrollo de Aplicaciones Multiplataforma (DAM). Este repositorio constituye un libro de texto interactivo que integra teoria academica formal y codigo funcional para las asignaturas de primer y segundo curso.
+Archivo personal de notas y codigo como SPA estatica (ESM puro, sin build, sin
+dependencias runtime). Corre en GitHub Pages y descifra la boveda privada
+**en el navegador**: la contrasena nunca viaja por la red.
 
-## Modulos
+## Demostracion rapida
 
-| Modulo | Asignaturas | Contenido Teorico |
-|--------|------------|-------------------|
-| **Java/** | Programacion, Prog. Servicios y Procesos | Tratado completo de POO: encapsulacion, acoplamiento, cohesion, herencia vs composicion, polimorfismo, interfaces, clases abstractas, principios SOLID. Modelo de ejecucion multihilo, sincronizacion, condiciones de carrera, interbloqueos, framework de ejecutores, CompletableFuture. Arquitectura cliente-servidor, modelo OSI/TCP, protocolos de transporte, servidores concurrentes. |
-| **BaseDeDatos_MySQL/** | Bases de Datos, Acceso a Datos | RDBMS, modelo entidad-relacion, tres formas normales de Codd, integridad referencial, ORM, arquitectura JPA, ciclo de vida de entidades (transient, managed, detached, removed), relaciones entre entidades y estrategias de carga. |
-| **Html/** | Lenguajes de Marcas, Desarrollo Interfaces | Arquitectura web, DOM, HTML5 semantico, formularios y validacion nativa, principios de usabilidad y accesibilidad W3C, modelo de caja CSS, diseno fluido, SPA, teoria de la reactividad fina orientada al estado. |
-| **Css/** | Desarrollo de Interfaces | Cascada y especificidad, selectores avanzados, modelo de caja, diseno fluido, Flexbox unidimensional, Grid bidimensional, animaciones y transiciones, diseno adaptable con media queries, variables CSS y personalizacion de temas. |
-| **Xml/** | Lenguajes de Marcas | Lenguajes de marcas en la empresa, documentos bien formados, DTD, XSD con tipos y restricciones, XSLT, parsing DOM/SAX/StAX, aplicaciones empresariales de XML (configuracion, SOAP, serializacion). |
+```powershell
+npm start          # servidor local -> http://localhost:8080
+npm run ci         # validate -> build-manifest -> assemble-dist (dist/)
+```
 
-## Estructura Academica
+Abrir `http://localhost:8080`, elegir la boveda y probar con la password de
+ejemplo generada al cifrar `encrypted/personal-notes/` (ver
+[Formato de boveda](docs/encrypted-format.md)).
 
-Cada modulo contiene archivos README.md con la teoria en formato de libro de texto academico, sin incluir codigo de ejemplo. El codigo funcional reside exclusivamente en archivos nativos (.java, .sql, .html, .css, .xml, .xsd) dentro de sus respectivas subcarpetas de practicas, manteniendo una separacion absoluta entre el marco conceptual y los talleres practicos.
+## Scripts
 
-## Acceso
+| Script                      | Descripcion                                                     |
+|-----------------------------|-----------------------------------------------------------------|
+| `npm start`                 | Servidor estatico local (SPA por hash, CSP, no-store indices)   |
+| `npm run build:manifest`    | Escanea `vault/` -> `public/manifest.json`                      |
+| `npm run validate`          | Chequea estructura, ESM y ausencia de secretos en lo publico    |
+| `npm run dist`              | Ensambla `dist/` listo para Pages (html, config, public, assets, encrypted) |
+| `npm run ci`                | validate -> build-manifest -> assemble-dist (usado por CI)      |
+| `npm run encrypt`           | `node scripts/encrypt-vault.mjs` (ver abajo)                    |
+| `npm run decrypt`           | `node scripts/decrypt-vault.mjs` (ver abajo)                    |
 
-Abra index.html en cualquier navegador para explorar el contenido mediante el arbol de archivos. No requiere servidor ni instalacion.
+## Boveda cifrada
+
+La fuente en claro vive en `vault/` (contenido de ejemplo: `javascript/`,
+`markdown/`, `python/`). La boveda cifrada se genera con:
+
+```powershell
+$env:VIMAP_VAULT_PASSWORD = "mi-password"
+node scripts/encrypt-vault.mjs vault --vault-id personal-notes --iterations 310000
+```
+
+- `VIMAP_VAULT_PASSWORD` se prefiere sobre stdin oculto. Nunca pases la
+  contrasena como argumento.
+- Salida: `encrypted/<vault-id>/manifest.enc` (indice cifrado) y un `<id>.enc`
+  por archivo (envelope v1: AES-256-GCM, PBKDF2-SHA-256, 310000 iteraciones).
+- `public/vaults.json` apunta a la boveda; el `id` localiza, no autentica.
+- Para descifrar: `node scripts/decrypt-vault.mjs personal-notes --out <dir>`.
+
+Detalles del formato y verificacion por SHA-256 en
+[docs/encrypted-format.md](docs/encrypted-format.md).
+
+## Despliegue (GitHub Pages)
+
+`.github/workflows/deploy.yml` ejecuta CI y publica `dist/` con Pages cuando se
+empuja a `main`. Requisitos una vez:
+
+1. Repositorio -> Settings -> Pages -> Source: **GitHub Actions**.
+2. La boveda `encrypted/<vault-id>/` debe estar commiteada (solo blobs
+   cifrados; `validate.mjs` garantiza que no haya secretos en lo publico).
+3. `vault/` (fuente en claro) queda fuera de `dist/`; si alguna vez contiene
+   material privado, move la fuente a `vault-private/` (gitignored) y cifra de
+   ahi en adelante.
+
+## Estructura
+
+```
+index.html / 404.html      SPA (rutas por hash) y pagina 404
+assets/js/                 ESM del cliente: core/, crypto/, viewers/, config
+assets/vendor/             marked.min.js, purify.min.js, highlight.min.js
+config/public-config.json  config publica (iterations, paths, limites)
+public/                    manifest.json + vaults.json (indices publicos)
+vault/                     fuente en claro de la boveda de ejemplo
+encrypted/                 boveda cifrada (envelope v1)
+scripts/                   serve/validate/build-manifest/assemble-dist/encrypt/decrypt
+docs/                      documentacion tecnica
+dist/                      build de Pages (generado, gitignored)
+```
+
+## Seguridad
+
+- Sin backend ni telemetria; CSP estricta, `X-Content-Type-Options: nosniff`,
+  `Referrer-Policy: no-referrer`, `no-store` en indices.
+- El indice privado (rutas/nombres) viaja cifrado en `manifest.enc`.
+- GCM autentica el tag de 16 bytes: la contrasena incorrecta falla
+  inmediatamente. Politica de intentos y aviso de riesgo en el cliente.
+- `npm run validate` escanea lo publicable en busca de tokens/PATs/keys.
 
 ## Licencia
 

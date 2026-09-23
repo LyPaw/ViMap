@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="ViMap">
+  <rect width="64" height="64" rx="14" fill="#0c1018"/>
+  <path d="M18 46V18l10 16V18h10v28H28L18 46Zm20 0V18h10v10h-5v18H38Z" fill="#22d3ee"/>
+  <path d="M18 46h10V30L18 46Z" fill="#3b82f6"/>
+</svg>
