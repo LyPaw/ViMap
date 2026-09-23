@@ -27,38 +27,6 @@ ejemplo generada al cifrar `encrypted/personal-notes/` (ver
 | `npm run encrypt`           | `node scripts/encrypt-vault.mjs` (ver abajo)                    |
 | `npm run decrypt`           | `node scripts/decrypt-vault.mjs` (ver abajo)                    |
 
-## Boveda cifrada
-
-La fuente en claro vive en `vault/` (contenido de ejemplo: `javascript/`,
-`markdown/`, `python/`). La boveda cifrada se genera con:
-
-```powershell
-$env:VIMAP_VAULT_PASSWORD = "mi-password"
-node scripts/encrypt-vault.mjs vault --vault-id personal-notes --iterations 310000
-```
-
-- `VIMAP_VAULT_PASSWORD` se prefiere sobre stdin oculto. Nunca pases la
-  contrasena como argumento.
-- Salida: `encrypted/<vault-id>/manifest.enc` (indice cifrado) y un `<id>.enc`
-  por archivo (envelope v1: AES-256-GCM, PBKDF2-SHA-256, 310000 iteraciones).
-- `public/vaults.json` apunta a la boveda; el `id` localiza, no autentica.
-- Para descifrar: `node scripts/decrypt-vault.mjs personal-notes --out <dir>`.
-
-Detalles del formato y verificacion por SHA-256 en
-[docs/encrypted-format.md](docs/encrypted-format.md).
-
-## Despliegue (GitHub Pages)
-
-`.github/workflows/deploy.yml` ejecuta CI y publica `dist/` con Pages cuando se
-empuja a `main`. Requisitos una vez:
-
-1. Repositorio -> Settings -> Pages -> Source: **GitHub Actions**.
-2. La boveda `encrypted/<vault-id>/` debe estar commiteada (solo blobs
-   cifrados; `validate.mjs` garantiza que no haya secretos en lo publico).
-3. `vault/` (fuente en claro) queda fuera de `dist/`; si alguna vez contiene
-   material privado, move la fuente a `vault-private/` (gitignored) y cifra de
-   ahi en adelante.
-
 ## Estructura
 
 ```
