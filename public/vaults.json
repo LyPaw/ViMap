@@ -1,5 +1,0 @@
-{
-  "version": 1,
-  "comment": "Indice publico no sensible. El id localiza la boveda cifrada; NO autentica al usuario. La contrasena es un secreto de descifrado local.",
-  "vaults": []
-}

@@ -1,50 +1,107 @@
+/* Temas retro tipo Windows XP.
+   data-theme="dark"  -> la estetica "Classic oscuro" (ventanas en gris antracita)
+   data-theme="light" -> la estetica "Luna" clasica (gris/celeste, boton Inicio verde).
+   Toda la estructura usa unicamente CSS Grid (sin flexbox).
+   Tipografia del sistema XP: Tahoma. */
+
 :root,
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg:        #060910;
-  --surface:   #0c1018;
-  --surface2:  #121826;
-  --surface3:  #1a2233;
-  --border:    #1a2233;
-  --border2:   #243044;
-  --accent:    #3b82f6;
-  --accent2:   #6366f1;
-  --accent3:   #22d3ee;
-  --text:      #e2e8f0;
-  --text2:     #94a3b8;
-  --text3:     #64748b;
-  --green:     #10b981;
-  --green-dim: rgba(16, 185, 129, 0.15);
-  --red:       #ef4444;
-  --red-dim:   rgba(239, 68, 68, 0.15);
-  --amber:     #f59e0b;
-  --amber-dim: rgba(245, 158, 11, 0.15);
-  --shadow:    0 12px 32px rgba(0, 0, 0, 0.45);
-  --header-h:  56px;
-  --sidebar-w: 300px;
+
+  /* Superficies y texto */
+  --bg:          #20201e;   /* areas de documento/visor */
+  --body:        #1b1b19;   /* lienzo base */
+  --surface:     #3b3b39;   /* superficies de panel (dialogos, menus) */
+  --surface2:    #343432;   /* barras de herramientas */
+  --surface3:    #4a4a48;   /* cara elevada / hover */
+  --face:        #40403e;   /* cara de botones */
+  --menu-bg:     #3b3b39;   /* fondo solido de menus contextuales y panel Inicio */
+  --menu-text:   #e8e8e6;
+  --element:     #2e2e2c;   /* inputs hundidos */
+  --border:      #565654;
+  --border2:     #6f6f6d;
+  --bevel-h:     rgba(255, 255, 255, 0.30);
+  --bevel-l:     rgba(0, 0, 0, 0.55);
+  --sunken:      rgba(0, 0, 0, 0.60);
+  --sunken-l:    rgba(255, 255, 255, 0.08);
+
+  /* Acentos y estados (azul de seleccion XP) */
+  --accent:      #316ac5;
+  --accent2:     #4b84d8;
+  --accent3:     #7db1ff;
+  --sel-a:       #3981e7;
+  --sel-b:       #1a58c5;
+  --hover-bg:    rgba(80, 130, 220, 0.18);
+
+  --text:        #e8e8e6;
+  --text2:       #c0c0be;
+  --text3:       #929290;
+
+  --green:       #5cb85c;
+  --green-dim:   rgba(92, 184, 92, 0.16);
+  --red:         #e05252;
+  --red-dim:     rgba(224, 82, 82, 0.16);
+  --amber:       #e0a020;
+  --amber-dim:   rgba(224, 160, 32, 0.16);
+
+  --shadow:      0 5px 16px rgba(0, 0, 0, 0.55);
+
+  /* Chrome de ventana XP */
+  --titlebar-a:    #245edb;
+  --titlebar-b:    #0a3fbf;
+  --titlebar-text: #fff;
+  --start-a:       #3f9c46;
+  --start-b:       #1c5e24;
+  --taskbar-h:     30px;
+  --desktop-text:  #eaf2ff;
+  --desktop-bg:    linear-gradient(180deg, #25457c 0%, #1c3a68 45%, #12294d 100%);
 }
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg:        #ffffff;
-  --surface:   #f1f5f9;
-  --surface2:  #e2e8f0;
-  --surface3:  #cbd5e1;
-  --border:    #dbe2ec;
-  --border2:   #c3ccda;
-  --accent:    #2563eb;
-  --accent2:   #6d28d9;
-  --accent3:   #0e7490;
-  --text:      #0f172a;
-  --text2:     #334155;
-  --text3:     #64748b;
-  --green:     #059669;
-  --green-dim: rgba(5, 150, 105, 0.12);
-  --red:       #dc2626;
-  --red-dim:   rgba(220, 38, 38, 0.10);
-  --amber:     #b45309;
-  --amber-dim: rgba(180, 83, 9, 0.12);
-  --shadow:    0 12px 32px rgba(15, 23, 42, 0.14);
-  --header-h:  56px;
-  --sidebar-w: 300px;
+
+  --bg:          #ffffff;
+  --body:        #f5f4ee;
+  --surface:     #ece9d8;
+  --surface2:    #d4d0c8;
+  --surface3:    #f7f6f1;
+  --face:        #ece9d8;
+  --menu-bg:     #ece9d8;   /* fondo solido de menus contextuales y panel Inicio */
+  --menu-text:   #141414;
+  --element:     #ffffff;
+  --border:      #aca899;
+  --border2:     #7f9db9;
+  --bevel-h:     #ffffff;
+  --bevel-l:     #808080;
+  --sunken:      rgba(0, 0, 0, 0.28);
+  --sunken-l:    rgba(255, 255, 255, 0.92);
+
+  --accent:      #316ac5;
+  --accent2:     #4b84cc;
+  --accent3:     #19458f;
+  --sel-a:       #316ac5;
+  --sel-b:       #1453a8;
+  --hover-bg:    rgba(49, 106, 197, 0.14);
+
+  --text:        #141414;
+  --text2:       #3a3a38;
+  --text3:       #60605e;
+
+  --green:       #37743a;
+  --green-dim:   rgba(55, 116, 58, 0.13);
+  --red:         #b02020;
+  --red-dim:     rgba(176, 32, 32, 0.10);
+  --amber:       #9a6700;
+  --amber-dim:   rgba(154, 103, 0, 0.12);
+
+  --shadow:      0 6px 20px rgba(0, 0, 0, 0.35);
+
+  --titlebar-a:    #0997ff;
+  --titlebar-b:    #0053ee;
+  --titlebar-text: #fff;
+  --start-a:       #3f9c46;
+  --start-b:       #1c5e24;
+  --taskbar-h:     30px;
+  --desktop-text:  #ffffff;
+  --desktop-bg:    linear-gradient(180deg, #7fb2e5 0%, #4b86c8 30%, #2b63ae 60%, #174a92 100%);
 }

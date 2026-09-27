@@ -1,0 +1,918 @@
+/* Categoria "Universos y generos": 12 temas originales de generos visuales.
+   Todo procedural con CSS (gradientes y patrones); sin imagenes ni
+   referencias a franquicias. Mismo set de tokens que themes-extra.css. */
+
+/* ============================================================ Horizonte Neon */
+:root[data-theme="horizonte-neon"],
+[data-preview="horizonte-neon"] {
+  color-scheme: dark;
+  --bg: #0c1030;
+  --body: #0a0e2a;
+  --surface: #131845;
+  --surface2: #0e1338;
+  --surface3: #1b2160;
+  --face: #151b52;
+  --menu-bg: #0a0e2a;
+  --menu-text: #d8f4ff;
+  --element: #060818;
+  --border: #3d2a7a;
+  --border2: #ff2ea6;
+  --bevel-h: rgba(0, 229, 255, 0.4);
+  --bevel-l: rgba(0, 0, 0, 0.7);
+  --sunken: rgba(0, 0, 0, 0.7);
+  --sunken-l: rgba(255, 46, 166, 0.12);
+  --accent: #ff2ea6;
+  --accent2: #00e5ff;
+  --accent3: #9d4dff;
+  --sel-a: #c2149e;
+  --sel-b: #5b0fa8;
+  --hover-bg: rgba(0, 229, 255, 0.12);
+  --text: #d8f4ff;
+  --text2: #9db4dd;
+  --text3: #5f6fa0;
+  --green: #39ff88;
+  --green-dim: rgba(57, 255, 136, 0.12);
+  --red: #ff2b5e;
+  --red-dim: rgba(255, 43, 94, 0.14);
+  --amber: #ffd23b;
+  --amber-dim: rgba(255, 210, 59, 0.12);
+  --shadow: 0 0 28px rgba(255, 46, 166, 0.3), 0 10px 34px rgba(0, 0, 0, 0.65);
+  --titlebar-a: #d1148c;
+  --titlebar-b: #3b0f6e;
+  --titlebar-text: #ffffff;
+  --start-a: #ff2ea6;
+  --start-b: #8f12b8;
+  --taskbar-a: #131845;
+  --taskbar-b: #060818;
+  --taskbar-line: #00e5ff;
+  --taskbar-h: 32px;
+  --desktop-text: #d8f4ff;
+  --desktop-bg:
+    radial-gradient(26% 20% at 50% 34%, #ffd23b 0%, #ff7a3c 28%, #ff2ea6 55%, transparent 72%),
+    repeating-linear-gradient(180deg, transparent 0 14px, rgba(255, 46, 166, 0.28) 14px 15px),
+    linear-gradient(180deg, #05071c 0%, #0a0e2a 55%, #2a0f4e 100%);
+  --tbwin-a: #8f12b8;
+  --tbwin-b: #2a0a5e;
+  --tbwin-text: #ffffff;
+  --btn-a: #2a1560;
+  --btn-b: #12083a;
+  --primary-a: #ff2ea6;
+  --primary-b: #8f12b8;
+  --font-ui: "Segoe UI", Verdana, Tahoma, sans-serif;
+  --radius-win: 4px;
+  --radius-btn: 3px;
+  --radius-menu: 3px;
+  --anim-ms: 200ms;
+  --glow: drop-shadow(0 0 6px rgba(0, 229, 255, 0.65));
+}
+:root[data-theme="horizonte-neon"] .start-btn {
+  animation: neonPulse 3.4s ease-in-out infinite;
+}
+@keyframes neonPulse {
+  0%, 100% { box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 0 6px rgba(255,46,166,.5); }
+  50% { box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 0 16px rgba(255,46,166,.9); }
+}
+
+/* ============================================================ Terminal de Nave */
+:root[data-theme="terminal-nave"],
+[data-preview="terminal-nave"] {
+  color-scheme: dark;
+  --bg: #0b0d07;
+  --body: #11140b;
+  --surface: #1a1e10;
+  --surface2: #141809;
+  --surface3: #232a14;
+  --face: #1c2110;
+  --menu-bg: #11140b;
+  --menu-text: #e6e2c0;
+  --element: #060804;
+  --border: #4a5426;
+  --border2: #8a9a4b;
+  --bevel-h: rgba(255, 176, 0, 0.25);
+  --bevel-l: rgba(0, 0, 0, 0.8);
+  --sunken: rgba(0, 0, 0, 0.85);
+  --sunken-l: rgba(168, 184, 74, 0.1);
+  --accent: #ffb000;
+  --accent2: #ffd23b;
+  --accent3: #a8b84a;
+  --sel-a: #6b6f1f;
+  --sel-b: #3f4413;
+  --hover-bg: rgba(255, 176, 0, 0.1);
+  --text: #e6e2c0;
+  --text2: #a8a478;
+  --text3: #6b6a45;
+  --green: #8aa844;
+  --green-dim: rgba(138, 168, 68, 0.14);
+  --red: #ff5a3c;
+  --red-dim: rgba(255, 90, 60, 0.12);
+  --amber: #ffb000;
+  --amber-dim: rgba(255, 176, 0, 0.14);
+  --shadow: 0 6px 22px rgba(0, 0, 0, 0.65);
+  --titlebar-a: #2a3013;
+  --titlebar-b: #11140b;
+  --titlebar-text: #ffb000;
+  --start-a: #4a5426;
+  --start-b: #232a14;
+  --taskbar-a: #1a1e10;
+  --taskbar-b: #060804;
+  --taskbar-line: #8a9a4b;
+  --taskbar-h: 30px;
+  --desktop-text: #e6e2c0;
+  --desktop-bg:
+    repeating-linear-gradient(90deg, transparent 0 88px, rgba(138, 154, 75, 0.08) 88px 89px),
+    linear-gradient(180deg, #141809 0%, #0b0d07 100%);
+  --tbwin-a: #3a4220;
+  --tbwin-b: #1a1e10;
+  --tbwin-text: #ffb000;
+  --btn-a: #2a3013;
+  --btn-b: #141809;
+  --primary-a: #c98a00;
+  --primary-b: #7a5200;
+  --font-ui: "Courier New", Consolas, monospace;
+  --font-mono: "Courier New", Consolas, monospace;
+  --radius-win: 2px;
+  --radius-btn: 2px;
+  --radius-menu: 2px;
+  --anim-ms: 120ms;
+}
+:root[data-theme="terminal-nave"] .tray-clock {
+  animation: teleBlink 2.6s ease-in-out infinite;
+}
+@keyframes teleBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+/* ============================================================ Archivo Anomalo */
+:root[data-theme="archivo-anomalo"],
+[data-preview="archivo-anomalo"] {
+  color-scheme: dark;
+  --bg: #1c1e24;
+  --body: #23252b;
+  --surface: #2a2d34;
+  --surface2: #22242b;
+  --surface3: #33363f;
+  --face: #2c2f37;
+  --menu-bg: #1c1e24;
+  --menu-text: #dfe3e6;
+  --element: #101115;
+  --border: #4a4e59;
+  --border2: #ffd23b;
+  --bevel-h: rgba(255, 255, 255, 0.12);
+  --bevel-l: rgba(0, 0, 0, 0.6);
+  --sunken: rgba(0, 0, 0, 0.6);
+  --sunken-l: rgba(255, 255, 255, 0.05);
+  --accent: #ffd23b;
+  --accent2: #ff5252;
+  --accent3: #9aa2ad;
+  --sel-a: #5a5346;
+  --sel-b: #35311f;
+  --hover-bg: rgba(255, 210, 59, 0.1);
+  --text: #dfe3e6;
+  --text2: #a7adb6;
+  --text3: #6e747e;
+  --green: #57c785;
+  --green-dim: rgba(87, 199, 133, 0.12);
+  --red: #ff5252;
+  --red-dim: rgba(255, 82, 82, 0.14);
+  --amber: #ffd23b;
+  --amber-dim: rgba(255, 210, 59, 0.14);
+  --shadow: 0 8px 26px rgba(0, 0, 0, 0.6);
+  --titlebar-a: #3a3d45;
+  --titlebar-b: #1c1e24;
+  --titlebar-text: #ffd23b;
+  --start-a: #3a3d45;
+  --start-b: #1c1e24;
+  --taskbar-a: #2a2d34;
+  --taskbar-b: #101115;
+  --taskbar-line: #ffd23b;
+  --taskbar-h: 30px;
+  --desktop-text: #dfe3e6;
+  --desktop-bg:
+    repeating-linear-gradient(0deg, transparent 0 46px, rgba(255, 255, 255, 0.025) 46px 47px),
+    repeating-linear-gradient(90deg, transparent 0 46px, rgba(255, 255, 255, 0.025) 46px 47px),
+    linear-gradient(180deg, #26282f 0%, #141519 100%);
+  --tbwin-a: #3a3d45;
+  --tbwin-b: #1c1e24;
+  --tbwin-text: #ffd23b;
+  --btn-a: #33363f;
+  --btn-b: #22242b;
+  --primary-a: #8a7a1f;
+  --primary-b: #4d4413;
+  --font-ui: "Courier New", Consolas, monospace;
+  --font-mono: "Courier New", Consolas, monospace;
+  --radius-win: 2px;
+  --radius-btn: 2px;
+  --radius-menu: 2px;
+  --anim-ms: 140ms;
+}
+:root[data-theme="archivo-anomalo"] .win-titlebar {
+  position: relative;
+}
+:root[data-theme="archivo-anomalo"] .win-titlebar::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 72px;
+  opacity: 0.5;
+  background: repeating-linear-gradient(-45deg, #ffd23b 0 8px, #1c1e24 8px 16px);
+}
+:root[data-theme="archivo-anomalo"] body::before {
+  opacity: 1;
+  background: linear-gradient(180deg, transparent 42%, rgba(255, 210, 59, 0.045) 50%, transparent 58%);
+  background-size: 100% 340px;
+  animation: scanSweep 7s linear infinite;
+}
+@keyframes scanSweep {
+  from { background-position: 0 -340px; }
+  to { background-position: 0 340px; }
+}
+
+/* ============================================================ Reino de Pixeles */
+:root[data-theme="reino-pixeles"],
+[data-preview="reino-pixeles"] {
+  color-scheme: light;
+  --bg: #f0dcb8;
+  --body: #e8cfa0;
+  --surface: #f4e3c0;
+  --surface2: #e0c28e;
+  --surface3: #faf0d8;
+  --face: #e8cfa0;
+  --menu-bg: #f4e3c0;
+  --menu-text: #3a2412;
+  --element: #faf0d8;
+  --border: #8a5f30;
+  --border2: #4a2f1c;
+  --bevel-h: #fff8e6;
+  --bevel-l: #6b4423;
+  --sunken: rgba(74, 47, 28, 0.35);
+  --sunken-l: #fff8e6;
+  --accent: #2e7d32;
+  --accent2: #c9962e;
+  --accent3: #1b5e20;
+  --sel-a: #3f9142;
+  --sel-b: #1e5c22;
+  --hover-bg: rgba(46, 125, 50, 0.14);
+  --text: #3a2412;
+  --text2: #5d4126;
+  --text3: #8a6a42;
+  --green: #2e7d32;
+  --green-dim: rgba(46, 125, 50, 0.14);
+  --red: #b02a1e;
+  --red-dim: rgba(176, 42, 30, 0.12);
+  --amber: #8a5f00;
+  --amber-dim: rgba(138, 95, 0, 0.14);
+  --shadow: 4px 4px 0 rgba(74, 47, 28, 0.55);
+  --titlebar-a: #3f9142;
+  --titlebar-b: #1e5c22;
+  --titlebar-text: #fff8e6;
+  --start-a: #c9962e;
+  --start-b: #8a5f00;
+  --taskbar-a: #6b4423;
+  --taskbar-b: #3a2412;
+  --taskbar-line: #c9962e;
+  --taskbar-h: 32px;
+  --desktop-text: #fff8e6;
+  --desktop-bg:
+    repeating-conic-gradient(rgba(255, 248, 230, 0.05) 0 25%, transparent 0 50%) 0 0 / 36px 36px,
+    linear-gradient(180deg, #2e5d34 0%, #1d3320 70%, #12240f 100%);
+  --tbwin-a: #8a5f30;
+  --tbwin-b: #4a2f1c;
+  --tbwin-text: #fff8e6;
+  --btn-a: #faf0d8;
+  --btn-b: #e0c28e;
+  --primary-a: #3f9142;
+  --primary-b: #1e5c22;
+  --font-ui: "Courier New", Consolas, monospace;
+  --font-mono: "Courier New", Consolas, monospace;
+  --radius-win: 0;
+  --radius-btn: 0;
+  --radius-menu: 0;
+  --radius-input: 0;
+  --anim-ms: 100ms;
+}
+:root[data-theme="reino-pixeles"] .win {
+  outline: 2px solid var(--border2);
+  outline-offset: -6px;
+}
+
+/* ============================================================ Ciudad Lluviosa */
+:root[data-theme="ciudad-lluviosa"],
+[data-preview="ciudad-lluviosa"] {
+  color-scheme: dark;
+  --bg: rgba(8, 14, 24, 0.88);
+  --body: rgba(7, 11, 20, 0.78);
+  --surface: rgba(14, 22, 36, 0.82);
+  --surface2: rgba(10, 16, 28, 0.85);
+  --surface3: rgba(26, 38, 58, 0.8);
+  --face: rgba(18, 28, 46, 0.85);
+  --menu-bg: rgba(7, 11, 20, 0.94);
+  --menu-text: #d5e7f5;
+  --element: rgba(3, 6, 12, 0.9);
+  --border: #233448;
+  --border2: #57c8ff;
+  --bevel-h: rgba(87, 200, 255, 0.22);
+  --bevel-l: rgba(0, 0, 0, 0.7);
+  --sunken: rgba(0, 0, 0, 0.65);
+  --sunken-l: rgba(87, 200, 255, 0.08);
+  --accent: #57c8ff;
+  --accent2: #ff9a3c;
+  --accent3: #9fd8ff;
+  --sel-a: #1f6f9e;
+  --sel-b: #0e3a56;
+  --hover-bg: rgba(87, 200, 255, 0.12);
+  --text: #d5e7f5;
+  --text2: #93a9c0;
+  --text3: #5c7189;
+  --green: #4ade80;
+  --green-dim: rgba(74, 222, 128, 0.12);
+  --red: #ff5a5a;
+  --red-dim: rgba(255, 90, 90, 0.14);
+  --amber: #ff9a3c;
+  --amber-dim: rgba(255, 154, 60, 0.14);
+  --shadow: 0 14px 44px rgba(0, 0, 0, 0.75);
+  --titlebar-a: #1d3a5c;
+  --titlebar-b: #070b14;
+  --titlebar-text: #ffd9ab;
+  --start-a: #b25a1e;
+  --start-b: #5e2c0c;
+  --taskbar-a: rgba(14, 22, 36, 0.8);
+  --taskbar-b: rgba(3, 6, 12, 0.88);
+  --taskbar-line: #57c8ff;
+  --taskbar-h: 32px;
+  --desktop-text: #d5e7f5;
+  --desktop-bg:
+    radial-gradient(30% 20% at 18% 30%, rgba(87, 200, 255, 0.14) 0%, transparent 70%),
+    radial-gradient(25% 18% at 80% 70%, rgba(255, 154, 60, 0.12) 0%, transparent 70%),
+    linear-gradient(180deg, #0a1220 0%, #060a13 100%);
+  --tbwin-a: #24466a;
+  --tbwin-b: #0b1626;
+  --tbwin-text: #d5e7f5;
+  --btn-a: #1d2f47;
+  --btn-b: #0b1626;
+  --primary-a: #57c8ff;
+  --primary-b: #1f6f9e;
+  --font-ui: "Arial Narrow", "Helvetica Neue", Tahoma, sans-serif;
+  --radius-win: 4px;
+  --radius-btn: 3px;
+  --radius-menu: 3px;
+  --glass: blur(12px) saturate(1.2);
+  --anim-ms: 180ms;
+}
+:root[data-theme="ciudad-lluviosa"] body::before {
+  opacity: 1;
+  background: repeating-linear-gradient(102deg, transparent 0 7px, rgba(87, 200, 255, 0.05) 7px 8px);
+  animation: rainFall 3.2s linear infinite;
+}
+@keyframes rainFall {
+  from { background-position: 0 -60px; }
+  to { background-position: -30px 60px; }
+}
+
+/* ============================================================ Sector Galactico */
+:root[data-theme="sector-galactico"],
+[data-preview="sector-galactico"] {
+  color-scheme: dark;
+  --bg: #04060f;
+  --body: #050816;
+  --surface: #0a1024;
+  --surface2: #070c1d;
+  --surface3: #111a3a;
+  --face: #0d1430;
+  --menu-bg: #050816;
+  --menu-text: #cfeaff;
+  --element: #01020a;
+  --border: #2a3a6e;
+  --border2: #9fd8ff;
+  --bevel-h: rgba(159, 216, 255, 0.3);
+  --bevel-l: rgba(0, 0, 0, 0.75);
+  --sunken: rgba(0, 0, 0, 0.7);
+  --sunken-l: rgba(139, 123, 255, 0.1);
+  --accent: #9fd8ff;
+  --accent2: #8b7bff;
+  --accent3: #d5c8ff;
+  --sel-a: #3d5fb8;
+  --sel-b: #1c2c63;
+  --hover-bg: rgba(159, 216, 255, 0.12);
+  --text: #cfeaff;
+  --text2: #8fa3cc;
+  --text3: #55648f;
+  --green: #4ade80;
+  --green-dim: rgba(74, 222, 128, 0.12);
+  --red: #ff5a7a;
+  --red-dim: rgba(255, 90, 122, 0.14);
+  --amber: #ffd23b;
+  --amber-dim: rgba(255, 210, 59, 0.12);
+  --shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 30px rgba(139, 123, 255, 0.12);
+  --titlebar-a: #2a3a7e;
+  --titlebar-b: #0a1024;
+  --titlebar-text: #ffffff;
+  --start-a: #4b3fb8;
+  --start-b: #241d6e;
+  --taskbar-a: #0a1024;
+  --taskbar-b: #01020a;
+  --taskbar-line: #8b7bff;
+  --taskbar-h: 32px;
+  --desktop-text: #cfeaff;
+  --desktop-bg:
+    radial-gradient(1.6px 1.6px at 12% 22%, #ffffff 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 68% 12%, #9fd8ff 50%, transparent 52%),
+    radial-gradient(1.8px 1.8px at 84% 58%, #ffffff 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 34% 66%, #d5c8ff 50%, transparent 52%),
+    radial-gradient(1.5px 1.5px at 52% 84%, #ffffff 50%, transparent 52%),
+    radial-gradient(20% 14% at 76% 20%, rgba(139, 123, 255, 0.2) 0%, transparent 70%),
+    linear-gradient(180deg, #04060f 0%, #02030a 100%);
+  --tbwin-a: #2a3a7e;
+  --tbwin-b: #0d1430;
+  --tbwin-text: #ffffff;
+  --btn-a: #16204a;
+  --btn-b: #0a1024;
+  --primary-a: #5a8fe8;
+  --primary-b: #2a3a7e;
+  --font-ui: "Segoe UI", Tahoma, Verdana, sans-serif;
+  --radius-win: 10px;
+  --radius-btn: 8px;
+  --radius-menu: 8px;
+  --anim-ms: 200ms;
+  --glow: drop-shadow(0 0 6px rgba(159, 216, 255, 0.5));
+}
+:root[data-theme="sector-galactico"] body::before {
+  opacity: 1;
+  background:
+    radial-gradient(1.4px 1.4px at 24% 40%, #ffffff 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 58% 30%, #9fd8ff 50%, transparent 52%),
+    radial-gradient(1.6px 1.6px at 90% 76%, #ffffff 50%, transparent 52%),
+    radial-gradient(1.2px 1.2px at 8% 88%, #d5c8ff 50%, transparent 52%);
+}
+:root[data-theme="sector-galactico"] body::after {
+  opacity: 1;
+  width: 130vmax;
+  height: 130vmax;
+  left: auto;
+  right: -65vmax;
+  top: -65vmax;
+  border: 1px solid rgba(139, 123, 255, 0.16);
+  border-radius: 50%;
+  animation: orbitSpin 90s linear infinite;
+}
+@keyframes orbitSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================ Bunker Analogico */
+:root[data-theme="bunker-analogico"],
+[data-preview="bunker-analogico"] {
+  color-scheme: dark;
+  --bg: #0d0a06;
+  --body: #141008;
+  --surface: #1c1509;
+  --surface2: #120d06;
+  --surface3: #2a2010;
+  --face: #20180c;
+  --menu-bg: #141008;
+  --menu-text: #ffb000;
+  --element: #060402;
+  --border: #5e4a22;
+  --border2: #ffb000;
+  --bevel-h: rgba(255, 176, 0, 0.3);
+  --bevel-l: rgba(0, 0, 0, 0.85);
+  --sunken: rgba(0, 0, 0, 0.9);
+  --sunken-l: rgba(255, 176, 0, 0.08);
+  --accent: #ffb000;
+  --accent2: #ffd23b;
+  --accent3: #ff7a00;
+  --sel-a: #6e520f;
+  --sel-b: #3d2c06;
+  --hover-bg: rgba(255, 176, 0, 0.1);
+  --text: #ffb000;
+  --text2: #c98f2e;
+  --text3: #7a5c22;
+  --green: #8aa844;
+  --green-dim: rgba(138, 168, 68, 0.14);
+  --red: #ff4a2e;
+  --red-dim: rgba(255, 74, 46, 0.14);
+  --amber: #ffb000;
+  --amber-dim: rgba(255, 176, 0, 0.16);
+  --shadow: 0 4px 0 rgba(0, 0, 0, 0.6), 0 10px 28px rgba(0, 0, 0, 0.6);
+  --titlebar-a: #2a2010;
+  --titlebar-b: #120d06;
+  --titlebar-text: #ffd23b;
+  --start-a: #6e520f;
+  --start-b: #2a2010;
+  --taskbar-a: #1c1509;
+  --taskbar-b: #060402;
+  --taskbar-line: #ffb000;
+  --taskbar-h: 32px;
+  --desktop-text: #ffb000;
+  --desktop-bg: radial-gradient(110% 100% at 50% 40%, #1c1509 0%, #0d0a06 70%, #000000 100%);
+  --tbwin-a: #4a3a16;
+  --tbwin-b: #1c1509;
+  --tbwin-text: #ffd23b;
+  --btn-a: #3a2d12;
+  --btn-b: #1c1509;
+  --primary-a: #c98a00;
+  --primary-b: #6e520f;
+  --font-ui: "Courier New", Consolas, monospace;
+  --font-mono: "Courier New", Consolas, monospace;
+  --radius-win: 6px;
+  --radius-btn: 6px;
+  --radius-menu: 4px;
+  --radius-input: 4px;
+  --anim-ms: 120ms;
+  --glow: drop-shadow(0 0 5px rgba(255, 176, 0, 0.55));
+}
+:root[data-theme="bunker-analogico"] body::after {
+  opacity: 1;
+  background:
+    radial-gradient(120% 120% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.5) 100%),
+    repeating-linear-gradient(180deg, transparent 0 3px, rgba(0, 0, 0, 0.18) 3px 4px);
+}
+:root[data-theme="bunker-analogico"] .win {
+  animation: powerOn 0.32s ease-out;
+}
+@keyframes powerOn {
+  from { filter: brightness(2.2) saturate(0.4); }
+  to { filter: none; }
+}
+
+/* ============================================================ Operacion Tactica */
+:root[data-theme="operacion-tactica"],
+[data-preview="operacion-tactica"] {
+  color-scheme: dark;
+  --bg: #101208;
+  --body: #15170d;
+  --surface: #1e2211;
+  --surface2: #171a0d;
+  --surface3: #2a3016;
+  --face: #222814;
+  --menu-bg: #15170d;
+  --menu-text: #e3d5a8;
+  --element: #080a05;
+  --border: #4a5d23;
+  --border2: #8aa844;
+  --bevel-h: rgba(201, 185, 138, 0.25);
+  --bevel-l: rgba(0, 0, 0, 0.8);
+  --sunken: rgba(0, 0, 0, 0.8);
+  --sunken-l: rgba(138, 168, 68, 0.1);
+  --accent: #8aa844;
+  --accent2: #c9b98a;
+  --accent3: #e3d5a8;
+  --sel-a: #5d7326;
+  --sel-b: #33401a;
+  --hover-bg: rgba(138, 168, 68, 0.14);
+  --text: #e3d5a8;
+  --text2: #a89a6e;
+  --text3: #6e6545;
+  --green: #8aa844;
+  --green-dim: rgba(138, 168, 68, 0.16);
+  --red: #d6543c;
+  --red-dim: rgba(214, 84, 60, 0.14);
+  --amber: #d8a93b;
+  --amber-dim: rgba(216, 169, 59, 0.14);
+  --shadow: 0 6px 22px rgba(0, 0, 0, 0.7);
+  --titlebar-a: #3f5222;
+  --titlebar-b: #171a0d;
+  --titlebar-text: #f2e8c8;
+  --start-a: #5d7326;
+  --start-b: #2a3016;
+  --taskbar-a: #1e2211;
+  --taskbar-b: #080a05;
+  --taskbar-line: #8aa844;
+  --taskbar-h: 30px;
+  --desktop-text: #e3d5a8;
+  --desktop-bg:
+    repeating-linear-gradient(0deg, transparent 0 34px, rgba(138, 168, 68, 0.07) 34px 35px),
+    repeating-linear-gradient(90deg, transparent 0 34px, rgba(138, 168, 68, 0.07) 34px 35px),
+    linear-gradient(180deg, #1a1e10 0%, #101208 100%);
+  --tbwin-a: #4a5d23;
+  --tbwin-b: #222814;
+  --tbwin-text: #f2e8c8;
+  --btn-a: #2a3016;
+  --btn-b: #171a0d;
+  --primary-a: #6e8a34;
+  --primary-b: #3f5222;
+  --font-ui: Verdana, Tahoma, "Segoe UI", sans-serif;
+  --radius-win: 2px;
+  --radius-btn: 2px;
+  --radius-menu: 2px;
+  --anim-ms: 100ms;
+}
+:root[data-theme="operacion-tactica"] .win-title {
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
+/* ============================================================ Sueno Sintetico */
+:root[data-theme="sueno-sintetico"],
+[data-preview="sueno-sintetico"] {
+  color-scheme: light;
+  --bg: rgba(255, 255, 255, 0.68);
+  --body: rgba(244, 240, 252, 0.8);
+  --surface: rgba(255, 255, 255, 0.82);
+  --surface2: rgba(236, 230, 250, 0.8);
+  --surface3: #ffffff;
+  --face: rgba(242, 236, 252, 0.9);
+  --menu-bg: rgba(255, 255, 255, 0.88);
+  --menu-text: #4a3f6e;
+  --element: #ffffff;
+  --border: #d3c8f0;
+  --border2: #a894e0;
+  --bevel-h: rgba(255, 255, 255, 0.95);
+  --bevel-l: rgba(120, 100, 180, 0.25);
+  --sunken: rgba(120, 100, 180, 0.14);
+  --sunken-l: #ffffff;
+  --accent: #9a7fe8;
+  --accent2: #ff8e9e;
+  --accent3: #5a8fd1;
+  --sel-a: #b9a5f2;
+  --sel-b: #8a6fe0;
+  --hover-bg: rgba(154, 127, 232, 0.12);
+  --text: #4a3f6e;
+  --text2: #6e6396;
+  --text3: #9a90b8;
+  --green: #3fae7c;
+  --green-dim: rgba(63, 174, 124, 0.12);
+  --red: #e0607e;
+  --red-dim: rgba(224, 96, 126, 0.1);
+  --amber: #c98a2e;
+  --amber-dim: rgba(201, 138, 46, 0.12);
+  --shadow: 0 16px 44px rgba(150, 130, 220, 0.3);
+  --titlebar-a: rgba(255, 255, 255, 0.9);
+  --titlebar-b: rgba(226, 216, 248, 0.9);
+  --titlebar-text: #4a3f6e;
+  --start-a: #ffb3c0;
+  --start-b: #ff8e9e;
+  --taskbar-a: rgba(255, 255, 255, 0.75);
+  --taskbar-b: rgba(232, 224, 248, 0.82);
+  --taskbar-line: #c3b4ec;
+  --taskbar-h: 34px;
+  --desktop-text: #4a3f6e;
+  --desktop-bg:
+    radial-gradient(16% 12% at 20% 24%, rgba(255, 255, 255, 0.8) 0%, transparent 70%),
+    radial-gradient(12% 9% at 74% 62%, rgba(255, 255, 255, 0.7) 0%, transparent 70%),
+    radial-gradient(40% 30% at 85% 15%, rgba(255, 142, 158, 0.35) 0%, transparent 70%),
+    linear-gradient(180deg, #cfd8f7 0%, #e6dcf7 50%, #f7dfe8 100%);
+  --tbwin-a: #ffffff;
+  --tbwin-b: #e0d4f5;
+  --tbwin-text: #4a3f6e;
+  --btn-a: #ffffff;
+  --btn-b: #e6dcf7;
+  --primary-a: #b9a5f2;
+  --primary-b: #8a6fe0;
+  --font-ui: "Segoe UI", Tahoma, Verdana, sans-serif;
+  --radius-win: 16px;
+  --radius-btn: 12px;
+  --radius-menu: 14px;
+  --radius-input: 12px;
+  --glass: blur(16px) saturate(1.4);
+  --anim-ms: 260ms;
+}
+:root[data-theme="sueno-sintetico"] body::before {
+  opacity: 1;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.65) 2px, transparent 2.6px);
+  background-size: 130px 130px;
+  animation: driftSlow 14s ease-in-out infinite alternate;
+}
+@keyframes driftSlow {
+  from { background-position: 0 0; }
+  to { background-position: 60px 40px; }
+}
+
+/* ============================================================ Metropolis Mecanica */
+:root[data-theme="metropolis-mecanica"],
+[data-preview="metropolis-mecanica"] {
+  color-scheme: dark;
+  --bg: #171310;
+  --body: #1e1812;
+  --surface: #2a2117;
+  --surface2: #191410;
+  --surface3: #38300f;
+  --face: #2e261c;
+  --menu-bg: #1e1812;
+  --menu-text: #f2e8d5;
+  --element: #0c0a07;
+  --border: #6e6a60;
+  --border2: #c97b2f;
+  --bevel-h: rgba(242, 232, 213, 0.28);
+  --bevel-l: rgba(0, 0, 0, 0.75);
+  --sunken: rgba(0, 0, 0, 0.8);
+  --sunken-l: rgba(201, 123, 47, 0.12);
+  --accent: #e09a3c;
+  --accent2: #c97b2f;
+  --accent3: #f2e8d5;
+  --sel-a: #8a5a24;
+  --sel-b: #4d3212;
+  --hover-bg: rgba(224, 154, 60, 0.12);
+  --text: #f2e8d5;
+  --text2: #c4b49a;
+  --text3: #8a7c64;
+  --green: #7fae5a;
+  --green-dim: rgba(127, 174, 90, 0.14);
+  --red: #d6543c;
+  --red-dim: rgba(214, 84, 60, 0.14);
+  --amber: #e09a3c;
+  --amber-dim: rgba(224, 154, 60, 0.16);
+  --shadow: 0 8px 26px rgba(0, 0, 0, 0.7);
+  --titlebar-a: #4d4436;
+  --titlebar-b: #191410;
+  --titlebar-text: #ffd9a0;
+  --start-a: #8a5a24;
+  --start-b: #3a2a12;
+  --taskbar-a: #2a2117;
+  --taskbar-b: #0c0a07;
+  --taskbar-line: #c97b2f;
+  --taskbar-h: 32px;
+  --desktop-text: #f2e8d5;
+  --desktop-bg:
+    repeating-linear-gradient(90deg, transparent 0 5px, rgba(255, 255, 255, 0.018) 5px 6px),
+    linear-gradient(180deg, #241d16 0%, #171310 70%, #0c0a07 100%);
+  --tbwin-a: #5e5142;
+  --tbwin-b: #2a2117;
+  --tbwin-text: #ffd9a0;
+  --btn-a: #3d352a;
+  --btn-b: #20180f;
+  --primary-a: #c97b2f;
+  --primary-b: #7a4a1c;
+  --font-ui: Georgia, "Times New Roman", Tahoma, serif;
+  --radius-win: 3px;
+  --radius-btn: 3px;
+  --radius-menu: 3px;
+  --anim-ms: 180ms;
+}
+:root[data-theme="metropolis-mecanica"] .win-titlebar {
+  position: relative;
+  overflow: hidden;
+}
+:root[data-theme="metropolis-mecanica"] .win-titlebar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 220, 160, 0.16) 45%, transparent 60%);
+  background-size: 280% 100%;
+  animation: sheenSweep 8s linear infinite;
+  pointer-events: none;
+}
+@keyframes sheenSweep {
+  from { background-position: 120% 0; }
+  to { background-position: -120% 0; }
+}
+
+/* ============================================================ Colonia Submarina */
+:root[data-theme="colonia-submarina"],
+[data-preview="colonia-submarina"] {
+  color-scheme: dark;
+  --bg: rgba(4, 32, 54, 0.9);
+  --body: rgba(5, 40, 66, 0.72);
+  --surface: rgba(8, 52, 84, 0.78);
+  --surface2: rgba(4, 32, 54, 0.85);
+  --surface3: rgba(16, 74, 110, 0.75);
+  --face: rgba(10, 60, 96, 0.8);
+  --menu-bg: rgba(4, 28, 48, 0.94);
+  --menu-text: #d8f4f0;
+  --element: rgba(1, 14, 24, 0.9);
+  --border: #14608a;
+  --border2: #2dd4bf;
+  --bevel-h: rgba(216, 244, 240, 0.3);
+  --bevel-l: rgba(0, 0, 0, 0.6);
+  --sunken: rgba(0, 0, 0, 0.6);
+  --sunken-l: rgba(45, 212, 191, 0.1);
+  --accent: #2dd4bf;
+  --accent2: #4ade80;
+  --accent3: #9ff0e2;
+  --sel-a: #0f766e;
+  --sel-b: #083f3a;
+  --hover-bg: rgba(45, 212, 191, 0.12);
+  --text: #d8f4f0;
+  --text2: #93c8c0;
+  --text3: #4f857e;
+  --green: #4ade80;
+  --green-dim: rgba(74, 222, 128, 0.12);
+  --red: #ff6b5e;
+  --red-dim: rgba(255, 107, 94, 0.16);
+  --amber: #ffd23b;
+  --amber-dim: rgba(255, 210, 59, 0.12);
+  --shadow: 0 12px 40px rgba(0, 8, 18, 0.7);
+  --titlebar-a: #0f5b80;
+  --titlebar-b: #04263e;
+  --titlebar-text: #ffffff;
+  --start-a: #14b8a6;
+  --start-b: #0f766e;
+  --taskbar-a: rgba(8, 52, 84, 0.8);
+  --taskbar-b: rgba(1, 14, 24, 0.9);
+  --taskbar-line: #2dd4bf;
+  --taskbar-h: 32px;
+  --desktop-text: #d8f4f0;
+  --desktop-bg:
+    radial-gradient(10% 8% at 30% 60%, rgba(216, 244, 240, 0.16) 0%, transparent 70%),
+    radial-gradient(7% 6% at 66% 34%, rgba(216, 244, 240, 0.13) 0%, transparent 70%),
+    radial-gradient(60% 40% at 50% -10%, rgba(45, 212, 191, 0.2) 0%, transparent 70%),
+    linear-gradient(180deg, #06304e 0%, #04263e 55%, #010e18 100%);
+  --tbwin-a: #0f6f8f;
+  --tbwin-b: #083350;
+  --tbwin-text: #ffffff;
+  --btn-a: #106082;
+  --btn-b: #073350;
+  --primary-a: #2dd4bf;
+  --primary-b: #0f766e;
+  --font-ui: "Segoe UI", Tahoma, Verdana, sans-serif;
+  --radius-win: 10px;
+  --radius-btn: 8px;
+  --radius-menu: 8px;
+  --glass: blur(12px) saturate(1.3);
+  --anim-ms: 220ms;
+  --glow: drop-shadow(0 0 6px rgba(45, 212, 191, 0.5));
+}
+:root[data-theme="colonia-submarina"] body::before {
+  opacity: 1;
+  background-image: radial-gradient(rgba(216, 244, 240, 0.35) 1.6px, transparent 2.2px);
+  background-size: 150px 150px;
+  animation: bubbleRise 12s linear infinite;
+}
+@keyframes bubbleRise {
+  from { background-position: 0 150px; }
+  to { background-position: 30px -150px; }
+}
+
+/* ============================================================ Mundo de Carton */
+:root[data-theme="mundo-carton"],
+[data-preview="mundo-carton"] {
+  color-scheme: light;
+  --bg: #fbf3dd;
+  --body: #f6e7c8;
+  --surface: #fdf6e3;
+  --surface2: #f0dcb2;
+  --surface3: #fffaf0;
+  --face: #f3e2bc;
+  --menu-bg: #fdf6e3;
+  --menu-text: #4a2f1c;
+  --element: #fffaf0;
+  --border: #c99a5e;
+  --border2: #8a5f30;
+  --bevel-h: #fffdf6;
+  --bevel-l: rgba(138, 95, 48, 0.5);
+  --sunken: rgba(138, 95, 48, 0.25);
+  --sunken-l: #fffdf6;
+  --accent: #e4572e;
+  --accent2: #d9a441;
+  --accent3: #8a4a1c;
+  --sel-a: #ef7d54;
+  --sel-b: #c74e28;
+  --hover-bg: rgba(228, 87, 46, 0.1);
+  --text: #4a2f1c;
+  --text2: #6e4f30;
+  --text3: #9a7a52;
+  --green: #5d8a3c;
+  --green-dim: rgba(93, 138, 60, 0.14);
+  --red: #c73e2c;
+  --red-dim: rgba(199, 62, 44, 0.1);
+  --amber: #a86e00;
+  --amber-dim: rgba(168, 110, 0, 0.14);
+  --shadow: 3px 4px 0 rgba(138, 95, 48, 0.4);
+  --titlebar-a: #e88a5e;
+  --titlebar-b: #c74e28;
+  --titlebar-text: #fffaf0;
+  --start-a: #7fb069;
+  --start-b: #4d7a3c;
+  --taskbar-a: #e8cfa0;
+  --taskbar-b: #c99a5e;
+  --taskbar-line: #8a5f30;
+  --taskbar-h: 34px;
+  --desktop-text: #4a2f1c;
+  --desktop-bg:
+    radial-gradient(120% 100% at 50% 0%, #a8d5e2 0%, #7fb8cc 34%, #e8cfa0 36%, #d9a066 100%);
+  --tbwin-a: #f3e2bc;
+  --tbwin-b: #d9b57e;
+  --tbwin-text: #4a2f1c;
+  --btn-a: #fffaf0;
+  --btn-b: #eed9ae;
+  --primary-a: #ef7d54;
+  --primary-b: #c74e28;
+  --font-ui: "Comic Sans MS", "Chalkboard SE", Tahoma, sans-serif;
+  --radius-win: 14px 4px 16px 5px;
+  --radius-btn: 10px 3px 12px 4px;
+  --radius-menu: 12px 4px 14px 5px;
+  --radius-input: 8px 3px 10px 4px;
+  --anim-ms: 160ms;
+}
+:root[data-theme="mundo-carton"] .btn:hover {
+  animation: wiggle 0.3s ease-in-out;
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0); }
+  50% { transform: rotate(-1.2deg) scale(1.03); }
+}
+
+/* Encabezados de categoria en el selector */
+.themes-cat {
+  grid-column: 1 / -1;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text2);
+  padding: 6px 2px 0;
+}
+

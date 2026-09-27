@@ -8,7 +8,7 @@ const TYPE_ICON = {
   file: '<svg class="icon tree-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-7-6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M13 3v6h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
 };
 
-function buildNesting(entries) {
+function buildNesting(entries, extraDirs) {
   const root = { dirs: new Map(), files: [] };
   for (const e of entries) {
     const parts = e.path.split("/");
@@ -24,12 +24,24 @@ function buildNesting(entries) {
     }
     node.files.push({ entry: e, name: fileName });
   }
+  for (const dir of extraDirs || []) {
+    const parts = dir.split("/");
+    let node = root;
+    let acc = [];
+    for (const part of parts) {
+      if (!node.dirs.has(part)) {
+        node.dirs.set(part, { name: part, rel: (acc.length ? acc.join("/") + "/" : "") + part, dirs: new Map(), files: [] });
+      }
+      node = node.dirs.get(part);
+      acc.push(part);
+    }
+  }
   return root;
 }
 
-export function createTree(container, entries, { onOpen }) {
+export function createTree(container, entries, { onOpen, emptyDirs } = {}) {
   container.textContent = "";
-  const all = buildNesting(entries);
+  const all = buildNesting(entries, emptyDirs);
   const rows = []; // filas planas para navegacion de teclado
   let openRequests = [];
 
@@ -85,7 +97,7 @@ export function createTree(container, entries, { onOpen }) {
       parentEl.appendChild(
         el("div", {
           class: "tree-empty",
-          text: depth === 0 ? "Sin archivos publicos: abre tu boveda para ver el contenido" : "vacio",
+          text: depth === 0 ? "Tu vault esta vacio. Crea una carpeta o un archivo." : "vacio",
         })
       );
     }

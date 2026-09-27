@@ -2,7 +2,6 @@
 // (el contenido solo se escanea bajo demanda y nunca sobre archivos cifrados).
 
 import { getConfig } from "../config.js";
-import { fetchText } from "./manifest.js";
 
 const MAX_CONTENT_FETCH_BYTES = 2 * 1024 * 1024;
 
@@ -31,6 +30,7 @@ export class SearchEngine {
     const { filters, needle } = this.parseQuery(raw);
     const q = needle.toLowerCase();
     const out = [];
+    const scores = new Map();
     let hasMeta = false;
 
     for (const e of this.entries) {
@@ -50,14 +50,14 @@ export class SearchEngine {
         const inPath = pathL.includes(q);
         if (!inName && !inPath) continue;
         hasMeta = true;
-        e._lastScore = (inName && nameL.startsWith(q) ? 2 : inName ? 1 : 0.5) + (inPath ? 0.25 : 0);
+        scores.set(e, (inName && nameL.startsWith(q) ? 2 : inName ? 1 : 0.5) + (inPath ? 0.25 : 0));
       } else {
-        e._lastScore = 0;
+        scores.set(e, 0);
       }
       out.push(e);
     }
 
-    out.sort((a, b) => (b._lastScore - a._lastScore) || (a.path < b.path ? -1 : 1));
+    out.sort((a, b) => (scores.get(b) - scores.get(a)) || (a.path < b.path ? -1 : 1));
     return { results: out.slice(0, cfg.search.maxResults), hasMetaOnly: !q || hasMeta };
   }
 
@@ -71,7 +71,6 @@ export class SearchEngine {
 
     const candidates = this.entries.filter(
       (e) =>
-        !e.encrypted &&
         (e.viewer === "code" || e.viewer === "text" || e.viewer === "md") &&
         (e.size == null || e.size <= MAX_CONTENT_FETCH_BYTES)
     ).slice(0, cfg.search.maxContentScan);
@@ -88,7 +87,7 @@ export class SearchEngine {
         try {
           let text = this.cache.get(e.path);
           if (text === undefined) {
-            text = await fetchText(e.downloadUrl || e.path);
+            text = await e.fetch();
             this.cache.set(e.path, text);
           }
           if (text.toLowerCase().includes(q)) hits.push(e);

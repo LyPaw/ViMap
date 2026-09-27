@@ -1,9 +1,9 @@
-// Preferencias locales NO sensibles (tema, aceptacion de riesgos).
-// Nunca se guardan aqui contrasenas, claves ni contenido descifrado.
+// Preferencias locales NO sensibles (tema). Nunca se guardan aqui contrasenas,
+// claves ni contenido descifrado.
 
 const KEYS = {
   theme: "vimap.theme",
-  riskAccepted: "vimap.crypto.risk-accepted",
+  rmotion: "vimap.reduceMotion",
 };
 
 function read(key) {
@@ -29,10 +29,10 @@ export const store = {
   setTheme(t) {
     write(KEYS.theme, t);
   },
-  isRiskAccepted() {
-    return read(KEYS.riskAccepted) === "1";
+  getReduceMotion() {
+    return read(KEYS.rmotion);
   },
-  setRiskAccepted() {
-    write(KEYS.riskAccepted, "1");
+  setReduceMotion(v) {
+    write(KEYS.rmotion, v);
   },
 };

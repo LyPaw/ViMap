@@ -1,457 +1,257 @@
-// ViMap main: orquestador de arranque e interfaz.
-// Carga config, manifiesto e indice de bovedas; monta el arbol publico,
-// la boveda cifrada, la busqueda, el router de hash, teclado, tema y visores.
+// ViMap: aplicacion principal. Gestiona sesion (login/desbloqueo/setup) y
+// arranca el escritorio tipo OS (ventanas, taskbar, Inicio, drag&drop, buscar).
+// Toda la criptografia vive en assets/js/crypto; aqui solo se orquesta.
 
-import { loadConfig, getConfig } from "./config.js";
+import { getConfig } from "./config.js";
 import { initTheme } from "./core/theme.js";
-import { loadManifest, loadVaultsIndex } from "./core/manifest.js";
-import { createTree } from "./core/tree.js";
-import { parseRoute, navigateTo, initRouter } from "./core/router.js";
 import { SearchEngine } from "./core/search.js";
-import { isTypingTarget, initGlobalKeyboard } from "./core/keyboard.js";
-import { on, emit } from "./core/events.js";
-import { toast, announce } from "./core/toast.js";
-import { store } from "./core/state.js";
-import { render as renderViewer, getViewer } from "./viewers/registry.js";
-import {
-  unlockVault,
-  lockVault,
-  isUnlocked,
-  unlockedVaultId,
-  getVaultEntries,
-  getVaultEntryByPath,
-  decryptVaultFile,
-  vaultEntryAttempts,
-} from "./crypto/session.js";
-import { esc, el } from "./core/utils.js";
+import { parseRoute, initRouter } from "./core/router.js";
+import { initGlobalKeyboard } from "./core/keyboard.js";
+import { toast } from "./core/toast.js";
+import { api } from "./api.js";
+import { session } from "./crypto/session.js";
+import { initStore } from "./desktop/store.js";
+import { initDesktop, renderDesktop } from "./desktop/desktop.js";
+import { initTaskbar, updateQuota, closeStartMenu } from "./desktop/taskbar.js";
+import { initDnd } from "./desktop/dnd.js";
+import { initVaultDnd } from "./desktop/vault-dnd.js";
+import { initShortcuts, handleShortcutsEscape } from "./desktop/shortcuts.js";
+import { closeAllWindows, handleGlobalEscape } from "./desktop/windows.js";
+import { openEntryAtPath, openAdminWindow, openSearchWindow } from "./desktop/apps.js";
 
 const Q = (sel) => document.querySelector(sel);
-const Qa = (sel) => [...document.querySelectorAll(sel)];
+const cfg = getConfig();
 
-function buildByPath(entries) {
-  return new Map(entries.map((e) => [e.path, e]));
-}
+let searchEngine = null;
 
-function lastPathOf(p) {
-  const i = p.lastIndexOf("/");
-  return i >= 0 ? p.slice(i + 1) : p;
-}
+boot();
 
-function dirOf(p) {
-  const i = p.lastIndexOf("/");
-  return i >= 0 ? p.slice(0, i) : "";
-}
-
-async function boot() {
-  const cfg = await loadConfig();
-  initTheme(cfg.defaultTheme || "system");
-
-  const manifest = await loadManifest();
-  const entries = manifest.entries;
-  const byPath = manifest.byPath;
-
-  // Identidad de marca.
-  document.querySelectorAll("[data-brand]").forEach((node) => {
-    node.textContent = cfg.appName;
-  });
-
-  const searchEngine = new SearchEngine(entries, byPath);
-  const searchInput = Q("#search-input");
-  const searchResults = Q("#search-results");
-  const treeContainer = Q("#public-tree");
-
-  // Arbol publico.
-  const treeApi = createTree(treeContainer, entries, {
-    onOpen: async (entry) => {
-      await openEntry(entry);
+function boot() {
+  initTheme(cfg.defaultTheme);
+  wireGates();
+  initStore({ refreshQuota });
+  initDesktop();
+  initTaskbar({
+    api,
+    refreshQuota,
+    getEngine: () => searchEngine,
+    onLogout: async () => {
+      try {
+        await session.logout();
+      } catch {
+        session.lock();
+      }
+      closeAllWindows();
+      closeStartMenu();
+      showGate("login");
+      toast("Sesion cerrada", "info");
     },
   });
+  initDnd();
+  initVaultDnd();
 
-  wireSearch(searchEngine, entries, byPath, searchInput, searchResults);
-  wireKeyboard(searchInput);
-  wireRouter(manifest, byPath);
-  wireWelcome(byPath);
-  wireSidebar();
-
-  // Apertura inicial por hash (enlace compartido #/file/<ruta>).
-  const initial = parseRoute();
-  if (initial) {
-    const entry = byPath.get(initial);
-    if (entry) openEntry(entry);
-  }
-
-  // Bovedas cifradas.
-  try {
-    const vaults = await loadVaultsIndex();
-    if (vaults.length) {
-      initVaultUi(vaults, byPath);
-    } else {
-      hideVaultUi();
-    }
-  } catch (err) {
-    console.warn("[vault] sin indice de bovedas:", err);
-  }
-}
-
-function hideVaultUi() {
-  const chip = Q("#vault-chip");
-  const btn = Q("#btn-vault");
-  const welcomeBtn = Q("#btn-unlock-welcome");
-  if (chip) chip.hidden = true;
-  if (btn) btn.hidden = true;
-  if (welcomeBtn) welcomeBtn.hidden = true;
-}
-
-// ---------------------------------------------------------------------------
-// Apertura publica de un archivo (desde arbol, router o historial).
-// ---------------------------------------------------------------------------
-
-async function openEntry(entry) {
-  const pane = Q("#pane");
-  const bar = Q("#viewer-bar");
-  const crumb = Q("#breadcrumb");
-  const badge = Q("#lang-badge");
-  const actions = Q("#file-actions");
-  const btnWrap = Q("#btn-wrap");
-  const btnCopy = Q("#btn-copy");
-  const btnDownload = Q("#btn-download");
-
-  // Ruta en el hash para enlazar/compartir: el router la re-abre (un solo render).
-  const targetHash = "#/file/" + encodeURIComponent(entry.path);
-  if (window.location.hash !== targetHash) {
-    window.location.hash = targetHash;
-    return;
-  }
-
-  welcomeHide();
-  bar.hidden = false;
-
-  crumb.replaceChildren(
-    el("a", { href: "#/file/" + encodeURIComponent(dirOf(entry.path)), text: dirOf(entry.path) || "raiz" }),
-    el("span", { class: "crumb-sep", text: "/" }),
-    el("span", { class: "crumb-file", text: entry.name })
-  );
-
-  badge.textContent = entry.language || entry.ext || "";
-  badge.hidden = !badge.textContent;
-
-  if (btnWrap) btnWrap.hidden = !(entry.viewer === "code" && !entry.encrypted);
-  if (btnCopy) btnCopy.hidden = entry.encrypted;
-  if (btnDownload) btnDownload.hidden = false;
-
-  btnCopy.onclick = async () => {
-    try {
-      const text = entry.encrypted
-        ? await decryptVaultFile(unlockedVaultId(), entry.id)
-        : await entry.fetch();
-      await copyToClipboard(text);
-      toast("Copiado al portapapeles");
-    } catch (err) {
-      toast("No se pudo copiar: " + (err && err.message ? err.message : err), "error");
-    }
-  };
-  btnDownload.onclick = () => {
-    if (entry.encrypted) {
-      toast("La boveda cifrada no usa descarga directa: usa el boton de copia o bloques el visor", "warn");
-      return;
-    }
-    const link = document.createElement("a");
-    link.href = entry.downloadUrl || entry.path;
-    link.download = entry.name;
-    link.rel = "noopener";
-    document.body.append(link);
-    link.click();
-    link.remove();
-  };
-
-  emit("viewer:open", { entry, pane });
-
-  const viewer = await getViewer(entry.viewer);
-  const container = pane;
-  container.textContent = "";
-  try {
-    await viewer.render(entry, container, {
-      toast,
-      onData: (d) => announce(d && d.announce),
-    });
-  } catch (err) {
-    container.textContent = "";
-    const box = el("div", { class: "viewer-error", role: "alert" }, [
-      el("p", {}, ["No se pudo abrir " + esc(entry.name)]),
-      el("p", { class: "muted" }, [esc(err && err.message ? err.message : String(err))]),
-    ]);
-    container.append(box);
-  }
-
-  Qa(".tree-row").forEach((r) => {
-    r.classList.toggle("selected", r.dataset.path === entry.path);
-  });
-}
-
-// ---------------------------------------------------------------------------
-// Busqueda: filtros + resultados en <ul> con contador accesible.
-// ---------------------------------------------------------------------------
-
-function wireSearch(engine, entries, byPath, input, results) {
-  input.closest("form")?.addEventListener("submit", (ev) => ev.preventDefault());
-  let timer = null;
-  input.addEventListener("input", () => {
-    clearTimeout(timer);
-    timer = setTimeout(() => runSearch(engine, input.value, results), 180);
-  });
-  input.addEventListener("focus", () => runSearch(engine, input.value, results));
-
-  results.addEventListener("mousedown", (ev) => {
-    const row = ev.target.closest("[data-path]");
-    if (row) {
-      ev.preventDefault();
-      const entry = byPath.get(row.dataset.path);
-      if (entry) openEntry(entry);
-    }
-  });
-
-  results.addEventListener("click", (ev) => {
-    const row = ev.target.closest("[data-path]");
-    if (row) {
-      ev.preventDefault();
-      results.hidden = true;
-    }
-  });
-}
-
-async function runSearch(engine, raw, results) {
-  const q = raw.trim();
-  results.textContent = "";
-  if (!q) {
-    results.hidden = true;
-    return;
-  }
-  const r = engine.search(q);
-  const list = el("ul", { class: "search-list", role: "listbox", "aria-label": "Resultados de busqueda" });
-  if (!r.results.length) {
-    list.append(el("li", { class: "search-empty", role: "option" }, ["Sin coincidencias"]));
-  } else {
-    for (const e of r.results) {
-      list.append(
-        el("li", { class: "search-item", role: "option", dataset: { path: e.path } }, [
-          el("span", { class: "search-name" }, e.name),
-          el("span", { class: "search-path" }, dirOf(e.path)),
-        ])
-      );
-    }
-  }
-  results.append(list);
-  results.hidden = false;
-  announce(list.querySelector(".search-empty") ? "Sin coincidencias" : r.results.length + " resultados");
-}
-
-// ---------------------------------------------------------------------------
-// Teclado y router.
-// ---------------------------------------------------------------------------
-
-function wireKeyboard(searchInput) {
   initGlobalKeyboard({
     onSearchFocus: () => {
-      searchInput.focus();
-      searchInput.select();
+      if (appVisible() && session.isUnlocked()) openSearchWindow(searchEngine);
     },
     onEscape: () => {
-      document.querySelectorAll(".dialog").forEach((d) => (d.hidden = true));
-      const s = Q("#search-results");
-      if (s && !s.hidden) s.hidden = true;
+      // Escape prioriza limpiar seleccion/cortado; solo si no habia nada que
+      // limpiar se recurre al cierre de la ventana activa.
+      if (!handleShortcutsEscape()) handleGlobalEscape();
     },
   });
-}
+  initShortcuts();
 
-function wireRouter(_manifest, byPath) {
   initRouter((path) => {
-    const entry = byPath.get(path) || getVaultEntryByPath(path);
-    if (entry) openEntry(entry);
-    else {
-      announce("Archivo no encontrado: " + path);
-      toast("No existe un archivo publico con esa ruta", "warn");
-    }
-  });
-}
-
-// ---------------------------------------------------------------------------
-// Pantalla de bienvenida (modo vacio / sin boveda desbloqueada).
-// ---------------------------------------------------------------------------
-
-function wireWelcome(byPath) {
-  const welcome = Q("#welcome-screen");
-  const desc = Q("#app-desc");
-
-  if (byPath.size === 0) {
-    desc.textContent = "Aun no hay archivos publicos. Añade contenido en la carpeta vault/ de tu repositorio y regenera el manifiesto.";
-    welcome.hidden = false;
-    return;
-  }
-  welcome.hidden = true;
-}
-
-// Panel lateral: toggle off-canvas en movil con scrim (cierra al clicar fuera).
-function wireSidebar() {
-  const btn = Q("#sidebar-toggle");
-  const sidebar = Q("#sidebar");
-  const scrim = Q("#scrim");
-  if (!btn || !sidebar) return;
-
-  function toggle() {
-    const open = sidebar.classList.toggle("open");
-    btn.setAttribute("aria-expanded", open ? "true" : "false");
-    if (scrim) scrim.hidden = !open;
-  }
-
-  btn.addEventListener("click", toggle);
-  if (scrim) scrim.addEventListener("click", toggle);
-}
-
-function welcomeHide() {
-  const w = Q("#welcome-screen");
-  if (w) w.hidden = true;
-}
-
-// ---------------------------------------------------------------------------
-// Boveda cifrada: dialogo de desbloqueo + arbol + visor de entrada.
-// ---------------------------------------------------------------------------
-
-function initVaultUi(vaults, byPath) {
-  const dialogo = Q("#unlock-dialog");
-  const sel = Q("#vault-select");
-  const pass = Q("#unlock-password");
-  const errBox = Q("#unlock-error");
-  const riskPanel = Q("#dialog-risk");
-  const unlockPanel = Q("#dialog-unlock");
-  const riskAccept = Q("#risk-accept");
-  const btnUnlock = Q("#btn-unlock-submit");
-  const btnCancel = Q("#btn-unlock-cancel");
-  const btnClose = Q("#btn-dialog-close");
-  const vaultChip = Q("#vault-chip");
-  const vaultStatus = Q("#vault-status");
-  const vaultTree = Q("#vault-tree");
-  const vaultTreeSection = Q("#vault-tree-section");
-  const btnVault = Q("#btn-vault");
-
-  for (const v of vaults) {
-    const o = document.createElement("option");
-    o.value = v.id;
-    o.textContent = typeof v.label === "string" ? v.label : (v.label && v.label.name) || v.id;
-    sel.append(o);
-  }
-
-  function openDialog() {
-    errBox.hidden = true;
-    const accepted = store.isRiskAccepted();
-    riskPanel.hidden = accepted;
-    unlockPanel.hidden = !accepted;
-    dialogo.hidden = false;
-    (accepted ? sel : riskAccept).focus();
-  }
-
-  function closeDialog() {
-    dialogo.hidden = true;
-    errBox.hidden = true;
-  }
-
-  btnVault.addEventListener("click", () => {
-    if (isUnlocked()) {
-      lockVault();
-      vaultStatus.textContent = "Bloqueado";
-      vaultChip.dataset.state = "locked";
-      vaultTree.textContent = "";
-      if (vaultTreeSection) vaultTreeSection.hidden = true;
-      toast("Boveda bloqueada");
-      return;
-    }
-    openDialog();
+    if (!session.isUnlocked()) return;
+    openEntryAtPath(path);
   });
 
-  btnCancel.addEventListener("click", closeDialog);
-  btnClose.addEventListener("click", closeDialog);
-
-  const btnWelcome = Q("#btn-unlock-welcome");
-  if (btnWelcome) btnWelcome.addEventListener("click", openDialog);
-
-  riskAccept.addEventListener("change", () => {
-    if (riskAccept.checked) {
-      riskPanel.hidden = true;
-      unlockPanel.hidden = false;
-      sel.focus();
+  window.addEventListener("hashchange", () => {
+    if (window.location.hash === "#/admin" && session.isUnlocked() && (session.currentUser()?.role || "") === "admin") {
+      openAdminWindow(api, refreshQuota);
     }
-    errBox.hidden = true;
   });
 
-  btnUnlock.addEventListener("click", async () => {
-    const v = vaults.find((x) => x.id === sel.value);
-    const password = pass.value;
-    if (!v || !password) {
-      showUnlockError("Elige una boveda y escribe la contrasena");
-      return;
-    }
-    if (!riskAccept.checked && !store.isRiskAccepted()) {
-      showUnlockError("Debes aceptar el aviso de riesgos para desbloquear");
-      return;
-    }
+  document.addEventListener("vimap:unauthorized", forceLockToLogin);
+
+  bootstrapAuth();
+}
+
+function appVisible() {
+  const app = Q("#app");
+  return app && !app.hidden;
+}
+
+// ---------------------------------------------------------------------------
+// Puertas (login / setup / desbloqueo)
+// ---------------------------------------------------------------------------
+
+function showGate(kind) {
+  Q("#login-screen").hidden = kind !== "login";
+  Q("#unlock-screen").hidden = kind !== "unlock";
+  Q("#setup-screen").hidden = kind !== "setup";
+  Q("#unlock-error").hidden = true;
+  Q("#app").hidden = true;
+}
+
+function showApp() {
+  Q("#login-screen").hidden = true;
+  Q("#unlock-screen").hidden = true;
+  Q("#setup-screen").hidden = true;
+  Q("#app").hidden = false;
+}
+
+function setBusy(btn, busy) {
+  if (!btn) return;
+  btn.disabled = busy;
+  btn.classList.toggle("busy", busy);
+}
+
+function hideError(node) {
+  node.hidden = true;
+  node.textContent = "";
+}
+
+function showFormError(node, err) {
+  const msg =
+    err && err.code === "AUTH_FAILED" ? "Usuario o contrasena incorrectos" :
+    err && err.code === "RATE_LIMITED" ? (err.message || "Demasiados intentos") :
+    err && err.message ? err.message : String(err);
+  node.textContent = msg;
+  node.hidden = false;
+}
+
+function wireGates() {
+  Q("#login-form").addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const username = Q("#login-username").value.trim();
+    const password = Q("#login-password").value;
+    setBusy(Q("#btn-login"), true);
+    hideError(Q("#login-error"));
     try {
-      await unlockVault(v, password);
-      dialogo.hidden = true;
-      pass.value = "";
-      vaultStatus.textContent = "Desbloqueada";
-      vaultChip.dataset.state = "unlocked";
-      store.setRiskAccepted();
-
-      const entries = getVaultEntries();
-      createTree(vaultTree, entries, {
-        onOpen: async (e) => openEntry(e),
-      });
-      if (vaultTreeSection) vaultTreeSection.hidden = false;
-      announce("Boveda desbloqueada: " + entries.length + " archivos");
+      await session.login(username, password);
+      Q("#login-password").value = "";
+      enterApp();
     } catch (err) {
-      unlockPanel.hidden = false;
-      riskPanel.hidden = true;
-      showUnlockError((err && err.message) || "No se pudo desbloquear");
-      if (err && err.code === "AUTH_FAILED") {
-        const n = vaultEntryAttempts();
-        if (n >= (getConfig().security ? getConfig().security.maxAttemptsNotice : 5)) {
-          toast("Reintentos agotados por ahora: recarga la pagina para reintentar", "warn", 6000);
-        }
-      }
+      showFormError(Q("#login-error"), err);
+    } finally {
+      setBusy(Q("#btn-login"), false);
     }
   });
 
-  function showUnlockError(msg) {
-    errBox.textContent = msg;
-    errBox.hidden = false;
-  }
+  Q("#unlock-form").addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const password = Q("#unlock-password").value;
+    setBusy(Q("#btn-unlock-submit"), true);
+    hideError(Q("#unlock-error"));
+    try {
+      await session.unlock(password);
+      Q("#unlock-password").value = "";
+      enterApp();
+    } catch (err) {
+      showFormError(Q("#unlock-error"), err);
+      Q("#unlock-password").select();
+    } finally {
+      setBusy(Q("#btn-unlock-submit"), false);
+    }
+  });
+
+  Q("#setup-form").addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    const token = Q("#setup-token").value.trim();
+    const username = Q("#setup-username").value.trim();
+    const password = Q("#setup-password").value;
+    const displayName = Q("#setup-displayname").value.trim();
+    setBusy(Q("#btn-setup"), true);
+    hideError(Q("#setup-error"));
+    try {
+      await api.adminSetup({ token, username, displayName, password });
+      Q("#setup-token").value = "";
+      Q("#setup-password").value = "";
+      Q("#setup-displayname").value = "";
+      Q("#login-username").value = username;
+      Q("#login-password").value = "";
+      showGate("login");
+      toast("Administrador creado. Entra con tus credenciales.", "info");
+      Q("#login-password").focus();
+    } catch (err) {
+      showFormError(Q("#setup-error"), err);
+      Q("#setup-token").select();
+    } finally {
+      setBusy(Q("#btn-setup"), false);
+    }
+  });
+
+  Q("#btn-unlock-back").addEventListener("click", async () => {
+    try {
+      await session.logout();
+    } catch {
+      session.lock();
+    }
+    showGate("login");
+    toast("Sesion cerrada", "info");
+  });
 }
 
-// Datos cedidos por scripts (cifrados). Se inyectan despues del unlock.
-async function copyToClipboard(text) {
+async function bootstrapAuth() {
   try {
-    await navigator.clipboard.writeText(text);
-    return;
+    const me = await session.attachUser();
+    showGate("unlock");
+    const label = Q("#unlock-username");
+    label.textContent = "Cuenta: " + (me.displayName || me.username);
+    label.hidden = false;
   } catch {
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.append(ta);
-    ta.select();
-    document.execCommand("copy");
-    ta.remove();
+    if (await needsSetup()) {
+      showGate("setup");
+      const tokenInput = Q("#setup-token");
+      if (tokenInput) tokenInput.focus();
+    } else {
+      showGate("login");
+    }
   }
 }
 
-boot().catch((err) => {
-  console.error("[vimap] arranque fallido:", err);
-  announce("No se pudo cargar la aplicacion");
-  const pane = Q("#pane");
-  if (pane) {
-    pane.textContent = "";
-    pane.append(el("div", { class: "viewer-error" }, [
-      el("p", {}, ["No se pudo cargar ViMap"]),
-      el("p", { class: "muted" }, [esc(err && err.message ? err.message : String(err))]),
-    ]));
+async function needsSetup() {
+  try {
+    const s = await api.setupStatus();
+    return !s.exists;
+  } catch {
+    return false;
   }
-});
+}
+
+function forceLockToLogin() {
+  try {
+    session.lock();
+    searchEngine = null;
+    closeAllWindows();
+    closeStartMenu();
+    showGate("login");
+    toast("Sesion caducada. Vuelve a entrar.", "warn");
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Entrada a la aplicacion
+// ---------------------------------------------------------------------------
+
+function enterApp() {
+  showApp();
+  refreshQuota();
+  renderDesktop();
+  searchEngine = new SearchEngine(session.getEntries(), session.getByPath);
+
+  const route = parseRoute();
+  if (route) {
+    openEntryAtPath(route);
+  } else if (window.location.hash === "#/admin" && (session.currentUser()?.role || "") === "admin") {
+    openAdminWindow(api, refreshQuota);
+  }
+}
+
+function refreshQuota() {
+  updateQuota();
+}

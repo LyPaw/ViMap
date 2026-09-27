@@ -1,9 +1,11 @@
-// Valida la estructura del proyecto sin requerir dependencias npm:
-//  - existencias minimas (index.html, 404.html, config, public, assets)
-//  - salubridad ESM de los modulos del cliente (import/export por sintaxis)
-//  - ausencia de secretos en contenido publico (claves/pat/token/.env)
-//  - manifiesto y vaults coherentes y dentro de la raiz servida
-// Uso: node scripts/validate.mjs
+// Valida la estructura del proyecto (sin dependencias npm):
+//  - existencias minimas (index, assets, worker, wrangler, migrations)
+//  - wrangler.json coherente (assets para el front, D1)
+//  - salubridad ESM de los modulos JS (import/export por sintaxis) en el
+//    cliente, el worker y los scripts
+//  - ausencia de secretos en el codigo fuente
+//  - placeholder de database_id sin desplegar accidentalmente
+// Uso: node scripts/validate.mjs [--allow-placeholder]
 
 import fs from "node:fs";
 import path from "node:path";
@@ -11,7 +13,9 @@ import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(here, "..");
+const allowPlaceholder = process.argv.includes("--allow-placeholder");
 const failures = [];
+const warnings = [];
 
 function must(dir, msg) {
   const abs = path.resolve(ROOT, dir);
@@ -19,37 +23,60 @@ function must(dir, msg) {
   return abs;
 }
 
-function isInRoot(p) {
-  const r = path.resolve(ROOT);
-  const abs = path.resolve(ROOT, p);
-  return abs === r || abs.startsWith(r + path.sep);
-}
-
 must("index.html", "falta index.html");
-must("404.html", "falta 404.html");
-must("config/public-config.json", "falta config/public-config.json");
-must("public/vaults.json", "falta public/vaults.json");
 must("assets/js/main.js", "falta assets/js/main.js");
+must("assets/js/api.js", "falta assets/js/api.js");
 must("assets/js/config.js", "falta assets/js/config.js");
 must("assets/js/vendor.js", "falta assets/js/vendor.js");
+must("assets/js/crypto/session.js", "falta assets/js/crypto/session.js");
 must("assets/vendor/marked.min.js", "falta vendor marked.min.js");
 must("assets/vendor/purify.min.js", "falta vendor purify.min.js");
 must("assets/vendor/highlight.min.js", "falta vendor highlight.min.js");
+must("src/worker.js", "falta src/worker.js");
+must("wrangler.json", "falta wrangler.json");
+must("migrations/0001_init.sql", "falta migrations/0001_init.sql");
 
-// Escaneo de secretos en lo que se publica (nada cifrado ni privado aqui).
+// wrangler.json: estructura minima y placeholders
+try {
+  const w = JSON.parse(fs.readFileSync(path.join(ROOT, "wrangler.json"), "utf8"));
+  if (w.main !== "src/worker.js") failures.push("wrangler.json: main debe ser src/worker.js");
+  if (!w.assets) failures.push("wrangler.json: falta la seccion assets");
+  if (w.assets && w.assets.binding !== "ASSETS") warnings.push("wrangler.json: binding de assets distinto de ASSETS");
+  if (!Array.isArray(w.d1_databases) || !w.d1_databases.length) failures.push("wrangler.json: falta el binding D1");
+  if (Array.isArray(w.r2_buckets) && w.r2_buckets.length) warnings.push("wrangler.json: se declara un bucket R2 pero el almacen es solo D1");
+  for (const d of w.d1_databases || []) {
+    if (typeof d.database_id === "string" && /REPLACE_WITH_/.test(d.database_id)) {
+      if (allowPlaceholder) warnings.push("wrangler.json: database_id sigue con placeholder");
+      else failures.push("wrangler.json: database_id es un placeholder (ejecuta wrangler d1 create)");
+    }
+  }
+} catch (e) {
+  failures.push("wrangler.json no es JSON valido: " + e.message);
+}
+
+// Migraciones: cualquier *.sql cargado como migracion debe existir en disco.
+const migrationsDir = path.join(ROOT, "migrations");
+if (fs.existsSync(migrationsDir)) {
+  const sql = fs.readdirSync(migrationsDir).filter((f) => f.endsWith(".sql"));
+  if (!sql.length) failures.push("migrations/ vacio");
+} else {
+  failures.push("falta migrations/");
+}
+
+// Escaneo de secretos en el codigo fuente.
 const SECRET_PATTERNS = [
   /(ghp_|gho_|github_pat_|glpat-|xox[baprs]-|AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9_-]{20,})/,
   /-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----/,
   /password\s*=\s*["'][^"']+/i,
   /api[_-]?key\s*[:=]\s*["'][^"']+/i,
 ];
-function walk(p) {
+function walk(p, skipMarkers) {
   if (!fs.existsSync(p)) return;
   for (const ent of fs.readdirSync(p, { withFileTypes: true })) {
     if (ent.name.startsWith(".")) continue;
     const abs = path.join(p, ent.name);
-    if (ent.isDirectory()) walk(abs);
-    else if (/\.(html|js|mjs|css|json|md|toml|yml|yaml)$/i.test(ent.name)) {
+    if (ent.isDirectory()) walk(abs, skipMarkers);
+    else if (/\.(html|js|mjs|css|json|md|toml|yml|yaml|sql)$/i.test(ent.name)) {
       const txt = fs.readFileSync(abs, "utf8");
       for (const re of SECRET_PATTERNS) {
         const m = txt.match(re);
@@ -61,37 +88,10 @@ function walk(p) {
     }
   }
 }
-walk(path.join(ROOT, "public"));
-walk(path.join(ROOT, "config"));
 walk(path.join(ROOT, "assets"));
-if (fs.existsSync(path.join(ROOT, "dist"))) walk(path.join(ROOT, "dist"));
+walk(path.join(ROOT, "src"));
 
-// Manifiesto dentro de la raiz y rutas relativas.
-const manifestPath = path.join(ROOT, "public/manifest.json");
-if (fs.existsSync(manifestPath)) {
-  try {
-    const mf = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-    if (!Array.isArray(mf.files)) failures.push("manifest.json sin array files");
-    for (const f of mf.files || []) {
-      if (typeof f.path !== "string" || !isInRoot("public/" + f.path)) {
-        failures.push(`ruta fuera de public en manifest: ${f.path}`);
-      }
-    }
-  } catch (e) {
-    failures.push("manifest.json no es JSON valido");
-  }
-}
-if (fs.existsSync(path.join(ROOT, "public/vaults.json"))) {
-  try {
-    const v = JSON.parse(fs.readFileSync(path.join(ROOT, "public/vaults.json"), "utf8"));
-    if (v.version !== 1 || !Array.isArray(v.vaults)) failures.push("vaults.json mal formado");
-  } catch (e) {
-    failures.push("vaults.json no es JSON valido");
-  }
-}
-
-// Verificacion cruzada de imports/exports ESM en assets/js: un `import { x }`
-// debe existir como export en el modulo destino; si no, falla en runtime.
+// Verificacion cruzada de imports/exports ESM.
 function esmExports(src) {
   const names = new Set();
   for (const m of src.matchAll(/export\s+(?:async\s+)?function\s+([A-Za-z_$][\w$]*)/g)) names.add(m[1]);
@@ -102,16 +102,8 @@ function esmExports(src) {
       if (p) names.add(p);
     }
   }
-  if (/\/export\s+default\s+\w+/.test(src) || /export\s+default\s+function|class/.test(src)) names.add("default");
+  if (/export\s+default\s+\w+|export\s+default\s+f\s*\{|const\s+\w+\s*=\s*[^;]*;\s*export\s+default/.test(src)) names.add("default");
   return names;
-}
-
-function walkEsModules(dir) {
-  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
-    const abs = path.join(dir, ent.name);
-    if (ent.isDirectory()) walkEsModules(abs);
-    else if (/\.js$/.test(ent.name)) verifyModule(abs);
-  }
 }
 
 function verifyModule(abs) {
@@ -125,8 +117,10 @@ function verifyModule(abs) {
   for (const m of src.matchAll(/import\s*\{([^}]*)\}\s*from\s*["']([^"']+)["']/g)) {
     const names = m[1].split(",").map((s) => s.trim().split(/\s+as\s+/)[0].trim()).filter(Boolean);
     if (!names.length) continue;
-    const spec = m[2].endsWith(".js") ? m[2] : m[2] + ".js";
-    const target = path.resolve(path.dirname(abs), spec);
+    const spec = m[2];
+    if (!spec.startsWith(".")) continue; // imports de node: o de paquetes
+    const targetPath = spec.endsWith(".js") ? spec : spec + ".js";
+    const target = path.resolve(path.dirname(abs), targetPath);
     if (!fs.existsSync(target)) {
       failures.push(`import destino inexistente en ${path.relative(ROOT, abs)}: ${m[2]}`);
       continue;
@@ -139,11 +133,24 @@ function verifyModule(abs) {
     }
   }
 }
-walkEsModules(path.join(ROOT, "assets/js"));
+
+function walkJs(dir) {
+  if (!fs.existsSync(dir)) return;
+  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+    const abs = path.join(dir, ent.name);
+    if (ent.isDirectory()) walkJs(abs);
+    else if (/\.(js|mjs)$/.test(ent.name)) verifyModule(abs);
+  }
+}
+walkJs(path.join(ROOT, "assets/js"));
+walkJs(path.join(ROOT, "src"));
+walkJs(path.join(ROOT, "scripts"));
+
+for (const wtext of warnings) console.warn("[validate] aviso: " + wtext);
 
 if (failures.length) {
   console.error("[validate] FALLOS:");
   for (const f of failures) console.error("  - " + f);
   process.exit(1);
 }
-console.log("[validate] OK: estructura y ausencia de secretos verificadas");
+console.log("[validate] OK: estructura, bindings y ausencia de secretos verificados");

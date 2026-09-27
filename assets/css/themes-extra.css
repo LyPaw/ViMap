@@ -1,0 +1,882 @@
+/* Catalogo de temas visuales (10). Cada bloque define el set completo de
+   tokens y aplica tanto al documento (:root[data-theme]) como a las vistas
+   previas del selector ([data-preview]). */
+
+/* Valores por defecto (temas dark/light de themes.css los heredan). */
+:root {
+  --font-ui: Tahoma, "Segoe UI", "MS Sans Serif", Verdana, sans-serif;
+  --font-mono: "Courier New", Consolas, monospace;
+  --radius-win: 0;
+  --radius-btn: 2px;
+  --radius-menu: 0;
+  --radius-input: 2px;
+  --radius-start: 6px 6px 8px 8px;
+  --winbtn-radius: 2px;
+  --winbtn-bg: linear-gradient(180deg, #f7f8fc, #c9d1e4);
+  --winbtn-fg: #101318;
+  --winbtn-close-bg: linear-gradient(180deg, #f0625a, #b02020);
+  --taskbar-a: #3f8ef0;
+  --taskbar-b: #15449f;
+  --taskbar-line: #0831d9;
+  --tbwin-a: #3f8ef0;
+  --tbwin-b: #2a6adb;
+  --tbwin-text: #fff;
+  --btn-a: var(--surface3);
+  --btn-b: var(--face);
+  --primary-a: #4f8bf0;
+  --primary-b: #2f60c9;
+  --glass: none;
+  --anim-ms: 150ms;
+  --glow: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
+}
+
+/* ============================================================ Windows 95/98 */
+:root[data-theme="win95"],
+[data-preview="win95"] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --body: #c0c0c0;
+  --surface: #c0c0c0;
+  --surface2: #b5b5b5;
+  --surface3: #dfdfdf;
+  --face: #c0c0c0;
+  --menu-bg: #f0f0f0;
+  --menu-text: #000000;
+  --element: #ffffff;
+  --border: #808080;
+  --border2: #0a0a0a;
+  --bevel-h: #ffffff;
+  --bevel-l: #0a0a0a;
+  --sunken: rgba(0, 0, 0, 0.45);
+  --sunken-l: #ffffff;
+  --accent: #000080;
+  --accent2: #1084d0;
+  --accent3: #000080;
+  --sel-a: #000080;
+  --sel-b: #1084d0;
+  --hover-bg: rgba(0, 0, 128, 0.12);
+  --text: #000000;
+  --text2: #222222;
+  --text3: #555555;
+  --green: #008000;
+  --green-dim: rgba(0, 128, 0, 0.14);
+  --red: #a00000;
+  --red-dim: rgba(160, 0, 0, 0.12);
+  --amber: #7a5c00;
+  --amber-dim: rgba(122, 92, 0, 0.14);
+  --shadow: 2px 2px 0 rgba(0, 0, 0, 0.55);
+  --titlebar-a: #000080;
+  --titlebar-b: #1084d0;
+  --titlebar-text: #ffffff;
+  --start-a: #c0c0c0;
+  --start-b: #9a9a9a;
+  --taskbar-a: #c0c0c0;
+  --taskbar-b: #a8a8a8;
+  --taskbar-line: #ffffff;
+  --taskbar-h: 30px;
+  --desktop-text: #ffffff;
+  --desktop-bg: #008080;
+  --tbwin-a: #c0c0c0;
+  --tbwin-b: #a8a8a8;
+  --tbwin-text: #000000;
+  --btn-a: #dfdfdf;
+  --btn-b: #c0c0c0;
+  --primary-a: #000080;
+  --primary-b: #000060;
+  --font-ui: Tahoma, "MS Sans Serif", Verdana, sans-serif;
+  --radius-win: 0;
+  --radius-btn: 0;
+  --radius-menu: 0;
+  --radius-start: 0;
+  --anim-ms: 0ms;
+}
+
+/* ============================================================ Windows XP Luna */
+:root[data-theme="xp-luna"],
+[data-preview="xp-luna"] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --body: #f5f4ee;
+  --surface: #ece9d8;
+  --surface2: #d4d0c8;
+  --surface3: #f7f6f1;
+  --face: #ece9d8;
+  --menu-bg: #f7f6f1;
+  --menu-text: #141414;
+  --element: #ffffff;
+  --border: #aca899;
+  --border2: #7f9db9;
+  --bevel-h: #ffffff;
+  --bevel-l: #808080;
+  --sunken: rgba(0, 0, 0, 0.28);
+  --sunken-l: rgba(255, 255, 255, 0.92);
+  --accent: #316ac5;
+  --accent2: #4b84cc;
+  --accent3: #e86a17;
+  --sel-a: #316ac5;
+  --sel-b: #1453a8;
+  --hover-bg: rgba(49, 106, 197, 0.14);
+  --text: #141414;
+  --text2: #3a3a38;
+  --text3: #60605e;
+  --green: #37743a;
+  --green-dim: rgba(55, 116, 58, 0.13);
+  --red: #b02020;
+  --red-dim: rgba(176, 32, 32, 0.1);
+  --amber: #9a6700;
+  --amber-dim: rgba(154, 103, 0, 0.12);
+  --shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  --titlebar-a: #0997ff;
+  --titlebar-b: #0053ee;
+  --titlebar-text: #ffffff;
+  --start-a: #3f9c46;
+  --start-b: #1c5e24;
+  --taskbar-a: #3f8ef0;
+  --taskbar-b: #15449f;
+  --taskbar-line: #0831d9;
+  --taskbar-h: 30px;
+  --desktop-text: #ffffff;
+  --desktop-bg: linear-gradient(180deg, #7fb2e5 0%, #4b86c8 30%, #2b63ae 60%, #174a92 100%);
+  --tbwin-a: #3f8ef0;
+  --tbwin-b: #2a6adb;
+  --tbwin-text: #ffffff;
+  --btn-a: #fdfcf7;
+  --btn-b: #ece9d8;
+  --primary-a: #4f8bf0;
+  --primary-b: #2f60c9;
+  --font-ui: Tahoma, "Segoe UI", Verdana, sans-serif;
+  --radius-win: 3px;
+  --radius-btn: 3px;
+  --radius-menu: 2px;
+  --radius-input: 2px;
+  --anim-ms: 120ms;
+}
+
+/* ============================================================ Windows Vista Aero */
+:root[data-theme="vista-aero"],
+[data-preview="vista-aero"] {
+  color-scheme: dark;
+  --bg: rgba(14, 30, 50, 0.82);
+  --body: rgba(10, 24, 42, 0.66);
+  --surface: rgba(22, 44, 70, 0.78);
+  --surface2: rgba(16, 34, 56, 0.8);
+  --surface3: rgba(46, 84, 124, 0.75);
+  --face: rgba(30, 56, 88, 0.8);
+  --menu-bg: rgba(12, 26, 44, 0.92);
+  --menu-text: #eaf6ff;
+  --element: rgba(6, 16, 30, 0.85);
+  --border: rgba(150, 210, 255, 0.35);
+  --border2: rgba(170, 220, 255, 0.55);
+  --bevel-h: rgba(255, 255, 255, 0.35);
+  --bevel-l: rgba(0, 0, 0, 0.5);
+  --sunken: rgba(0, 0, 0, 0.55);
+  --sunken-l: rgba(255, 255, 255, 0.1);
+  --accent: #4fc3f7;
+  --accent2: #7fd4ff;
+  --accent3: #b3e5fc;
+  --sel-a: #2b7fc4;
+  --sel-b: #14467f;
+  --hover-bg: rgba(79, 195, 247, 0.16);
+  --text: #eaf6ff;
+  --text2: #b9d4e8;
+  --text3: #7fa3bd;
+  --green: #69d67a;
+  --green-dim: rgba(105, 214, 122, 0.14);
+  --red: #ff6f66;
+  --red-dim: rgba(255, 111, 102, 0.14);
+  --amber: #ffcf6e;
+  --amber-dim: rgba(255, 207, 110, 0.14);
+  --shadow: 0 12px 44px rgba(0, 10, 30, 0.6);
+  --titlebar-a: #2f7fc9;
+  --titlebar-b: #0e2c55;
+  --titlebar-text: #ffffff;
+  --start-a: #2f7fd0;
+  --start-b: #14467f;
+  --taskbar-a: rgba(24, 52, 86, 0.72);
+  --taskbar-b: rgba(8, 20, 38, 0.78);
+  --taskbar-line: rgba(170, 220, 255, 0.5);
+  --taskbar-h: 34px;
+  --desktop-text: #eaf6ff;
+  --desktop-bg: radial-gradient(120% 90% at 50% 0%, #2e6da8 0%, #14355f 45%, #060f22 100%);
+  --tbwin-a: rgba(64, 140, 205, 0.8);
+  --tbwin-b: rgba(20, 66, 122, 0.85);
+  --tbwin-text: #ffffff;
+  --btn-a: rgba(90, 160, 220, 0.75);
+  --btn-b: rgba(30, 70, 120, 0.8);
+  --primary-a: #4fc3f7;
+  --primary-b: #1c6aa8;
+  --font-ui: "Segoe UI", Tahoma, Verdana, sans-serif;
+  --radius-win: 8px;
+  --radius-btn: 6px;
+  --radius-menu: 6px;
+  --radius-input: 4px;
+  --glass: blur(14px) saturate(1.4);
+  --anim-ms: 220ms;
+  --glow: drop-shadow(0 0 6px rgba(127, 212, 255, 0.55));
+}
+
+/* ============================================================ Windows 7 Aero */
+:root[data-theme="win7-aero"],
+[data-preview="win7-aero"] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --body: #eef3f8;
+  --surface: #f4f7fb;
+  --surface2: #dde7f1;
+  --surface3: #ffffff;
+  --face: #e4ecf4;
+  --menu-bg: rgba(248, 251, 255, 0.96);
+  --menu-text: #1a2333;
+  --element: #ffffff;
+  --border: #a9bfd4;
+  --border2: #6f8aa5;
+  --bevel-h: #ffffff;
+  --bevel-l: rgba(60, 90, 120, 0.4);
+  --sunken: rgba(40, 70, 100, 0.25);
+  --sunken-l: #ffffff;
+  --accent: #2f7fd0;
+  --accent2: #4b9fe8;
+  --accent3: #14467f;
+  --sel-a: #5da0f7;
+  --sel-b: #2f6ec4;
+  --hover-bg: rgba(47, 127, 208, 0.12);
+  --text: #1a2333;
+  --text2: #3d4c60;
+  --text3: #6b7c90;
+  --green: #2e7d32;
+  --green-dim: rgba(46, 125, 50, 0.12);
+  --red: #c62828;
+  --red-dim: rgba(198, 40, 40, 0.1);
+  --amber: #8a6100;
+  --amber-dim: rgba(138, 97, 0, 0.12);
+  --shadow: 0 8px 28px rgba(20, 40, 70, 0.35);
+  --titlebar-a: #f2f6fb;
+  --titlebar-b: #b9cfe8;
+  --titlebar-text: #0f2033;
+  --start-a: #5da0f7;
+  --start-b: #2f6ec4;
+  --taskbar-a: rgba(38, 58, 82, 0.82);
+  --taskbar-b: rgba(12, 24, 40, 0.88);
+  --taskbar-line: rgba(255, 255, 255, 0.35);
+  --taskbar-h: 34px;
+  --desktop-text: #ffffff;
+  --desktop-bg: linear-gradient(180deg, #4d8fd1 0%, #2f6cb0 40%, #1c4e89 75%, #123a6b 100%);
+  --tbwin-a: rgba(120, 175, 230, 0.75);
+  --tbwin-b: rgba(40, 90, 150, 0.8);
+  --tbwin-text: #ffffff;
+  --btn-a: #ffffff;
+  --btn-b: #d7e3f0;
+  --primary-a: #5da0f7;
+  --primary-b: #2f6ec4;
+  --font-ui: "Segoe UI", Tahoma, Verdana, sans-serif;
+  --radius-win: 6px;
+  --radius-btn: 5px;
+  --radius-menu: 4px;
+  --radius-input: 3px;
+  --glass: blur(10px) saturate(1.25);
+  --anim-ms: 180ms;
+}
+
+/* ============================================================ Terminal retro */
+:root[data-theme="terminal"],
+[data-preview="terminal"] {
+  color-scheme: dark;
+  --bg: #000000;
+  --body: #020a04;
+  --surface: #031007;
+  --surface2: #04140a;
+  --surface3: #06210f;
+  --face: #04140a;
+  --menu-bg: #020a04;
+  --menu-text: #33ff66;
+  --element: #000000;
+  --border: #0f3d1f;
+  --border2: #1ea84f;
+  --bevel-h: rgba(51, 255, 102, 0.25);
+  --bevel-l: rgba(0, 0, 0, 0.8);
+  --sunken: rgba(0, 0, 0, 0.9);
+  --sunken-l: rgba(51, 255, 102, 0.08);
+  --accent: #33ff66;
+  --accent2: #66ff99;
+  --accent3: #ffb000;
+  --sel-a: #0f6b32;
+  --sel-b: #0a4a23;
+  --hover-bg: rgba(51, 255, 102, 0.12);
+  --text: #33ff66;
+  --text2: #1ea84f;
+  --text3: #0f6b32;
+  --green: #33ff66;
+  --green-dim: rgba(51, 255, 102, 0.12);
+  --red: #ff4444;
+  --red-dim: rgba(255, 68, 68, 0.12);
+  --amber: #ffb000;
+  --amber-dim: rgba(255, 176, 0, 0.12);
+  --shadow: none;
+  --titlebar-a: #031007;
+  --titlebar-b: #000000;
+  --titlebar-text: #33ff66;
+  --start-a: #06210f;
+  --start-b: #020a04;
+  --taskbar-a: #031007;
+  --taskbar-b: #000000;
+  --taskbar-line: #1ea84f;
+  --taskbar-h: 30px;
+  --desktop-text: #33ff66;
+  --desktop-bg: radial-gradient(100% 100% at 50% 50%, #04140a 0%, #000000 80%);
+  --tbwin-a: #06210f;
+  --tbwin-b: #020a04;
+  --tbwin-text: #33ff66;
+  --btn-a: #06210f;
+  --btn-b: #020a04;
+  --primary-a: #0f6b32;
+  --primary-b: #0a4a23;
+  --font-ui: "Courier New", Consolas, monospace;
+  --font-mono: "Courier New", Consolas, monospace;
+  --radius-win: 0;
+  --radius-btn: 0;
+  --radius-menu: 0;
+  --radius-input: 0;
+  --radius-start: 0;
+  --anim-ms: 0ms;
+  --glow: drop-shadow(0 0 4px rgba(51, 255, 102, 0.6));
+}
+
+/* ============================================================ Cyberpunk neon */
+:root[data-theme="cyberpunk"],
+[data-preview="cyberpunk"] {
+  color-scheme: dark;
+  --bg: #0a0618;
+  --body: #0d0820;
+  --surface: #120a2e;
+  --surface2: #160c38;
+  --surface3: #1e1148;
+  --face: #180e40;
+  --menu-bg: #0d0820;
+  --menu-text: #d9f6ff;
+  --element: #060312;
+  --border: #3b1f6e;
+  --border2: #00e5ff;
+  --bevel-h: rgba(0, 229, 255, 0.35);
+  --bevel-l: rgba(0, 0, 0, 0.7);
+  --sunken: rgba(0, 0, 0, 0.7);
+  --sunken-l: rgba(0, 229, 255, 0.1);
+  --accent: #ff2bd6;
+  --accent2: #00e5ff;
+  --accent3: #9d4dff;
+  --sel-a: #b01ff0;
+  --sel-b: #5b0fa8;
+  --hover-bg: rgba(0, 229, 255, 0.12);
+  --text: #d9f6ff;
+  --text2: #9db8d8;
+  --text3: #5f7396;
+  --green: #39ff88;
+  --green-dim: rgba(57, 255, 136, 0.12);
+  --red: #ff2b5e;
+  --red-dim: rgba(255, 43, 94, 0.14);
+  --amber: #ffd23b;
+  --amber-dim: rgba(255, 210, 59, 0.12);
+  --shadow: 0 0 24px rgba(255, 43, 214, 0.25), 0 8px 32px rgba(0, 0, 0, 0.6);
+  --titlebar-a: #c2149e;
+  --titlebar-b: #4b0f8f;
+  --titlebar-text: #ffffff;
+  --start-a: #ff2bd6;
+  --start-b: #7a10c9;
+  --taskbar-a: #160c38;
+  --taskbar-b: #060312;
+  --taskbar-line: #00e5ff;
+  --taskbar-h: 32px;
+  --desktop-text: #d9f6ff;
+  --desktop-bg:
+    radial-gradient(45% 35% at 15% 10%, rgba(255, 43, 214, 0.22) 0%, transparent 70%),
+    radial-gradient(45% 35% at 85% 85%, rgba(0, 229, 255, 0.2) 0%, transparent 70%),
+    linear-gradient(180deg, #0d0820 0%, #05010f 100%);
+  --tbwin-a: #7a10c9;
+  --tbwin-b: #2a0a5e;
+  --tbwin-text: #ffffff;
+  --btn-a: #2a0f5e;
+  --btn-b: #12062e;
+  --primary-a: #ff2bd6;
+  --primary-b: #8f12b8;
+  --font-ui: "Segoe UI", Verdana, Tahoma, sans-serif;
+  --radius-win: 4px;
+  --radius-btn: 2px;
+  --radius-menu: 2px;
+  --anim-ms: 160ms;
+  --glow: drop-shadow(0 0 6px rgba(0, 229, 255, 0.6));
+}
+
+/* ============================================================ Minimalismo macOS */
+:root[data-theme="minimal-macos"],
+[data-preview="minimal-macos"] {
+  color-scheme: light;
+  --bg: rgba(255, 255, 255, 0.72);
+  --body: rgba(246, 246, 248, 0.82);
+  --surface: rgba(255, 255, 255, 0.85);
+  --surface2: rgba(240, 240, 244, 0.85);
+  --surface3: #ffffff;
+  --face: #f0f0f4;
+  --menu-bg: rgba(250, 250, 252, 0.88);
+  --menu-text: #1d1d1f;
+  --element: #ffffff;
+  --border: #d2d2d7;
+  --border2: #b9b9c0;
+  --bevel-h: rgba(255, 255, 255, 0.9);
+  --bevel-l: rgba(0, 0, 0, 0.08);
+  --sunken: rgba(0, 0, 0, 0.06);
+  --sunken-l: #ffffff;
+  --accent: #0071e3;
+  --accent2: #3395f0;
+  --accent3: #0058b0;
+  --sel-a: #4b9bf5;
+  --sel-b: #0071e3;
+  --hover-bg: rgba(0, 113, 227, 0.08);
+  --text: #1d1d1f;
+  --text2: #515154;
+  --text3: #86868b;
+  --green: #1f8a4c;
+  --green-dim: rgba(31, 138, 76, 0.1);
+  --red: #c92a2a;
+  --red-dim: rgba(201, 42, 42, 0.08);
+  --amber: #9a6a00;
+  --amber-dim: rgba(154, 106, 0, 0.1);
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.16);
+  --titlebar-a: #f5f5f7;
+  --titlebar-b: #e3e3e8;
+  --titlebar-text: #1d1d1f;
+  --start-a: #f5f5f7;
+  --start-b: #dcdce0;
+  --taskbar-a: rgba(250, 250, 252, 0.8);
+  --taskbar-b: rgba(235, 235, 240, 0.85);
+  --taskbar-line: #d2d2d7;
+  --taskbar-h: 34px;
+  --desktop-text: #ffffff;
+  --desktop-bg: linear-gradient(180deg, #a8c4e0 0%, #c9d6e4 35%, #e8e2d8 70%, #d8cfc2 100%);
+  --tbwin-a: #ffffff;
+  --tbwin-b: #e6e6eb;
+  --tbwin-text: #1d1d1f;
+  --btn-a: #ffffff;
+  --btn-b: #ececf0;
+  --primary-a: #3395f0;
+  --primary-b: #0071e3;
+  --font-ui: -apple-system, "SF Pro Text", "Segoe UI", Tahoma, sans-serif;
+  --radius-win: 12px;
+  --radius-btn: 8px;
+  --radius-menu: 10px;
+  --radius-input: 8px;
+  --radius-start: 8px;
+  --winbtn-radius: 50%;
+  --winbtn-bg: #e0e0e6;
+  --winbtn-fg: #6e6e73;
+  --winbtn-close-bg: #ff5f57;
+  --glass: blur(20px) saturate(1.6);
+  --anim-ms: 200ms;
+}
+
+/* ============================================================ Oscuro profesional */
+:root[data-theme="dark-pro"],
+[data-preview="dark-pro"] {
+  color-scheme: dark;
+  --bg: #0d1117;
+  --body: #161b22;
+  --surface: #1c2128;
+  --surface2: #21262d;
+  --surface3: #2a3139;
+  --face: #232a33;
+  --menu-bg: #1c2128;
+  --menu-text: #e6edf3;
+  --element: #0d1117;
+  --border: #30363d;
+  --border2: #484f58;
+  --bevel-h: rgba(255, 255, 255, 0.07);
+  --bevel-l: rgba(0, 0, 0, 0.5);
+  --sunken: rgba(0, 0, 0, 0.55);
+  --sunken-l: rgba(255, 255, 255, 0.04);
+  --accent: #2f81f7;
+  --accent2: #58a6ff;
+  --accent3: #79c0ff;
+  --sel-a: #1f6feb;
+  --sel-b: #1158c7;
+  --hover-bg: rgba(47, 129, 247, 0.14);
+  --text: #e6edf3;
+  --text2: #b3bac2;
+  --text3: #7d8590;
+  --green: #3fb950;
+  --green-dim: rgba(63, 185, 80, 0.13);
+  --red: #f85149;
+  --red-dim: rgba(248, 81, 73, 0.13);
+  --amber: #d29922;
+  --amber-dim: rgba(210, 153, 34, 0.13);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --titlebar-a: #21262d;
+  --titlebar-b: #161b22;
+  --titlebar-text: #e6edf3;
+  --start-a: #2a3139;
+  --start-b: #161b22;
+  --taskbar-a: #161b22;
+  --taskbar-b: #0a0d12;
+  --taskbar-line: #30363d;
+  --taskbar-h: 32px;
+  --desktop-text: #e6edf3;
+  --desktop-bg: linear-gradient(180deg, #161b22 0%, #0d1117 60%, #010409 100%);
+  --tbwin-a: #2a3139;
+  --tbwin-b: #161b22;
+  --tbwin-text: #e6edf3;
+  --btn-a: #2a3139;
+  --btn-b: #1c2128;
+  --primary-a: #2f81f7;
+  --primary-b: #1f6feb;
+  --font-ui: "Segoe UI", Tahoma, Verdana, sans-serif;
+  --radius-win: 6px;
+  --radius-btn: 6px;
+  --radius-menu: 6px;
+  --radius-input: 6px;
+  --anim-ms: 0ms;
+}
+
+/* ============================================================ Y2K / Web 2000 */
+:root[data-theme="y2k"],
+[data-preview="y2k"] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --body: #eef7ff;
+  --surface: #f7fbff;
+  --surface2: #dbe9f7;
+  --surface3: #ffffff;
+  --face: #e3effb;
+  --menu-bg: rgba(255, 255, 255, 0.94);
+  --menu-text: #0b2a4a;
+  --element: #ffffff;
+  --border: #9db3c8;
+  --border2: #5b7ea3;
+  --bevel-h: #ffffff;
+  --bevel-l: rgba(70, 110, 150, 0.45);
+  --sunken: rgba(60, 100, 140, 0.25);
+  --sunken-l: #ffffff;
+  --accent: #0080ff;
+  --accent2: #ff8c00;
+  --accent3: #1663c7;
+  --sel-a: #4da3ff;
+  --sel-b: #1663c7;
+  --hover-bg: rgba(0, 128, 255, 0.12);
+  --text: #0b2a4a;
+  --text2: #33517a;
+  --text3: #6b87a5;
+  --green: #1e9e4f;
+  --green-dim: rgba(30, 158, 79, 0.12);
+  --red: #d23b3b;
+  --red-dim: rgba(210, 59, 59, 0.1);
+  --amber: #b26a00;
+  --amber-dim: rgba(178, 106, 0, 0.12);
+  --shadow: 0 8px 26px rgba(30, 90, 150, 0.35);
+  --titlebar-a: #6db3f2;
+  --titlebar-b: #1663c7;
+  --titlebar-text: #ffffff;
+  --start-a: #ffb14d;
+  --start-b: #ff8c00;
+  --taskbar-a: #9cc8f2;
+  --taskbar-b: #4d94dd;
+  --taskbar-line: #ffffff;
+  --taskbar-h: 32px;
+  --desktop-text: #ffffff;
+  --desktop-bg:
+    radial-gradient(18% 12% at 12% 18%, rgba(255, 255, 255, 0.75) 0%, transparent 70%),
+    radial-gradient(12% 9% at 78% 30%, rgba(255, 255, 255, 0.6) 0%, transparent 70%),
+    linear-gradient(180deg, #8ec9f5 0%, #4d94dd 55%, #2f6cb0 100%);
+  --tbwin-a: #bfe0fa;
+  --tbwin-b: #6aa9e8;
+  --tbwin-text: #0b2a4a;
+  --btn-a: #ffffff;
+  --btn-b: #cfe4f8;
+  --primary-a: #4da3ff;
+  --primary-b: #1663c7;
+  --font-ui: Tahoma, Verdana, "Segoe UI", sans-serif;
+  --radius-win: 10px;
+  --radius-btn: 10px;
+  --radius-menu: 8px;
+  --radius-input: 8px;
+  --anim-ms: 150ms;
+  --glow: drop-shadow(0 1px 2px rgba(255, 255, 255, 0.7));
+}
+
+/* ============================================================ Futurista limpio */
+:root[data-theme="future"],
+[data-preview="future"] {
+  color-scheme: light;
+  --bg: rgba(255, 255, 255, 0.66);
+  --body: rgba(255, 255, 255, 0.6);
+  --surface: rgba(255, 255, 255, 0.75);
+  --surface2: rgba(230, 238, 250, 0.75);
+  --surface3: #ffffff;
+  --face: rgba(240, 245, 252, 0.9);
+  --menu-bg: rgba(255, 255, 255, 0.85);
+  --menu-text: #1a2340;
+  --element: #ffffff;
+  --border: #d6e2f5;
+  --border2: #a9bde0;
+  --bevel-h: rgba(255, 255, 255, 0.95);
+  --bevel-l: rgba(90, 120, 180, 0.25);
+  --sunken: rgba(90, 120, 180, 0.15);
+  --sunken-l: #ffffff;
+  --accent: #5aa8ff;
+  --accent2: #8b7bff;
+  --accent3: #3d6fd1;
+  --sel-a: #8ab8ff;
+  --sel-b: #5a7fe8;
+  --hover-bg: rgba(90, 168, 255, 0.12);
+  --text: #1a2340;
+  --text2: #46538a;
+  --text3: #7c88b3;
+  --green: #1f9e6e;
+  --green-dim: rgba(31, 158, 110, 0.1);
+  --red: #d6456c;
+  --red-dim: rgba(214, 69, 108, 0.1);
+  --amber: #a86e00;
+  --amber-dim: rgba(168, 110, 0, 0.1);
+  --shadow: 0 16px 44px rgba(90, 130, 220, 0.25);
+  --titlebar-a: rgba(255, 255, 255, 0.9);
+  --titlebar-b: rgba(214, 228, 248, 0.9);
+  --titlebar-text: #1a2340;
+  --start-a: #8ab8ff;
+  --start-b: #5a7fe8;
+  --taskbar-a: rgba(255, 255, 255, 0.72);
+  --taskbar-b: rgba(226, 236, 250, 0.8);
+  --taskbar-line: #c3d4ef;
+  --taskbar-h: 34px;
+  --desktop-text: #1a2340;
+  --desktop-bg:
+    radial-gradient(30% 22% at 82% 12%, rgba(139, 123, 255, 0.25) 0%, transparent 70%),
+    radial-gradient(35% 25% at 12% 82%, rgba(90, 168, 255, 0.28) 0%, transparent 70%),
+    linear-gradient(180deg, #dfe9fa 0%, #eef3fc 55%, #d9e4f6 100%);
+  --tbwin-a: #ffffff;
+  --tbwin-b: #d9e4f6;
+  --tbwin-text: #1a2340;
+  --btn-a: #ffffff;
+  --btn-b: #dfe9fa;
+  --primary-a: #8ab8ff;
+  --primary-b: #5a7fe8;
+  --font-ui: "Segoe UI", Tahoma, Verdana, sans-serif;
+  --radius-win: 14px;
+  --radius-btn: 10px;
+  --radius-menu: 12px;
+  --radius-input: 10px;
+  --glass: blur(18px) saturate(1.5);
+  --anim-ms: 240ms;
+}
+
+/* ============================================================ Transicion de tema */
+body,
+.win,
+.win-titlebar,
+.btn,
+.ctx-item,
+.sm-item,
+.context-menu,
+#start-menu,
+.taskbar,
+.start-btn,
+.tb-win,
+.explorer-toolbar,
+.explorer-path,
+.field-input,
+.toast,
+.dialog,
+.gate-card {
+  transition:
+    background-color var(--anim-ms, 150ms) ease,
+    color var(--anim-ms, 150ms) ease,
+    border-color var(--anim-ms, 150ms) ease;
+}
+
+/* ============================================================ Efectos de caracter */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 940000;
+  opacity: 0;
+}
+
+/* Terminal: lineas de escaneo CRT muy sutiles */
+:root[data-theme="terminal"] body::after {
+  opacity: 1;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0 2px,
+    rgba(0, 0, 0, 0.22) 2px 3px
+  );
+}
+
+/* Cyberpunk: rejilla futurista discreta */
+:root[data-theme="cyberpunk"] body::before {
+  opacity: 1;
+  background:
+    linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+/* Futurista: particulas de fondo muy sutiles */
+:root[data-theme="future"] body::before {
+  opacity: 1;
+  background-image: radial-gradient(rgba(90, 130, 220, 0.35) 1px, transparent 1.6px);
+  background-size: 90px 90px;
+}
+
+/* ============================================================ Accesibilidad */
+html[data-rmotion="reduce"] *,
+html[data-rmotion="reduce"] *::before,
+html[data-rmotion="reduce"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+html[data-rmotion="reduce"] body::before,
+html[data-rmotion="reduce"] body::after {
+  opacity: 0 !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-rmotion="full"]) *,
+  :root:not([data-rmotion="full"]) *::before,
+  :root:not([data-rmotion="full"]) *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  :root:not([data-rmotion="full"]) body::before,
+  :root:not([data-rmotion="full"]) body::after {
+    opacity: 0 !important;
+  }
+}
+
+/* ============================================================ Selector de temas */
+.themes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  align-content: start;
+  overflow-y: auto;
+  padding: 12px;
+  min-height: 0;
+}
+.theme-card {
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  gap: 7px;
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-menu, 3px);
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text);
+  text-align: left;
+}
+.theme-card:hover {
+  border-color: var(--accent2);
+  background: var(--surface3);
+}
+.theme-card.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.theme-preview {
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.tp-win {
+  background: var(--body);
+}
+.tp-title {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  gap: 3px;
+  align-items: center;
+  padding: 3px 5px;
+  background: linear-gradient(180deg, var(--titlebar-a) 0%, var(--titlebar-b) 100%);
+  color: var(--titlebar-text);
+  font-size: 10px;
+  font-weight: 700;
+}
+.tp-title i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--winbtn-bg);
+}
+.tp-title i:last-child {
+  background: var(--winbtn-close-bg);
+}
+.tp-body {
+  display: grid;
+  gap: 4px;
+  padding: 6px;
+  background: var(--bg);
+}
+.tp-line {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--text3);
+  opacity: 0.55;
+}
+.tp-line.short {
+  width: 62%;
+}
+.tp-btn {
+  justify-self: start;
+  padding: 2px 10px;
+  font-size: 10px;
+  color: var(--text);
+  background: linear-gradient(180deg, var(--btn-a), var(--btn-b));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-btn);
+}
+.theme-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.theme-desc {
+  font-size: 0.7rem;
+  color: var(--text2);
+  line-height: 1.4;
+  min-height: 2.4em;
+}
+.theme-apply {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px;
+  align-items: center;
+}
+.theme-state {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent2);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+.themes-foot {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-top: 1px solid var(--border);
+  background: var(--surface2);
+}
+.themes-foot .muted {
+  font-size: 0.72rem;
+}
+.rmotion-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 7px;
+  align-items: center;
+  font-size: 0.76rem;
+  color: var(--text2);
+  cursor: pointer;
+}
+.rmotion-row input {
+  accent-color: var(--accent);
+}

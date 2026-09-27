@@ -27,3 +27,8 @@ config/local-*.json
 .DS_Store
 Thumbs.db
 *.log
+# Secrets locales de wrangler (dev). Nunca subir.
+.dev.vars
+
+# Estado local de wrangler (dev). No subir.
+.wrangler/

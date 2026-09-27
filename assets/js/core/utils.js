@@ -110,6 +110,11 @@ export async function copyText(text) {
   ta.remove();
 }
 
+const BOOLEAN_ATTRS = new Set([
+  "disabled", "hidden", "checked", "selected", "required", "readOnly", "required",
+  "multiple", "autofocus", "autoplay", "muted", "controls", "loop", "open",
+]);
+
 export function el(tag, attrs, children) {
   const node = document.createElement(tag);
   if (attrs) {
@@ -118,6 +123,8 @@ export function el(tag, attrs, children) {
       else if (k === "text") node.textContent = v;
       else if (k === "html") node.innerHTML = v;
       else if (k === "dataset") Object.assign(node.dataset, v);
+      else if (v == null || v === false) continue;
+      else if (BOOLEAN_ATTRS.has(k)) node[k] = true;
       else node.setAttribute(k, v);
     }
   }

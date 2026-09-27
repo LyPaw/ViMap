@@ -7,7 +7,7 @@
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta name="permissions-policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), battery=(), accelerometer=(), gyroscope=()">
-  <meta name="description" content="Archivo personal de notas y codigo">
+  <meta name="description" content="Vault personal cifrado con visor de lenguaje">
   <meta name="author" content="Manuel Fuentes Cruz">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#060910">
@@ -15,165 +15,128 @@
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
   <link rel="stylesheet" href="assets/css/base.css">
   <link rel="stylesheet" href="assets/css/themes.css">
-  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/themes-extra.css">
+  <link rel="stylesheet" href="assets/css/themes-universes.css">
   <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/app.css">
   <link rel="stylesheet" href="assets/css/markdown.css">
   <link rel="stylesheet" href="assets/css/code.css">
+  <link rel="stylesheet" href="assets/css/desktop.css">
 </head>
 <body>
-  <a class="skip-link" href="#main">Saltar al contenido</a>
+  <a class="skip-link" href="#desktop">Saltar al contenido</a>
 
-  <header class="site-header">
-    <button id="sidebar-toggle" class="icon-btn" type="button" aria-label="Abrir panel de archivos" aria-controls="sidebar" aria-expanded="false">
-      <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>
-
-    <div class="brand" aria-hidden="true">
-      <img src="assets/icons/logo.svg" alt="" class="brand-logo">
-      <span class="brand-name" id="app-name">ViMap</span>
+  <!-- Pantalla de login (sin sesion) -->
+  <section id="login-screen" class="gate" hidden>
+    <div class="gate-card">
+      <div class="gate-titlebar">
+        <span class="gate-titlebar-logo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.2 8 11 4.6-1.8 8-6 8-11V5l-8-3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span>ViMap — Inicio de sesion</span>
+      </div>
+      <div class="gate-content">
+        <img src="assets/icons/logo.svg" alt="" class="welcome-logo">
+        <h1 class="brand-name gate-brand">ViMap</h1>
+        <p class="gate-sub">Accede a tu vault cifrado</p>
+        <form id="login-form" class="gate-form">
+          <label class="field">
+            <span class="field-label" for="login-username">Nombre de usuario</span>
+            <input id="login-username" type="text" class="field-input" autocomplete="username" autocapitalize="none"
+                   spellcheck="false" autofocus>
+          </label>
+          <label class="field">
+            <span class="field-label" for="login-password">Contrasena</span>
+            <input id="login-password" type="password" class="field-input" autocomplete="current-password" spellcheck="false">
+          </label>
+          <p id="login-error" class="form-error" role="alert" hidden></p>
+          <button id="btn-login" type="submit" class="btn btn-primary btn-block">Entrar</button>
+        </form>
+      </div>
     </div>
+  </section>
 
-    <div class="search-wrap">
-      <form id="search-form" role="search" aria-label="Buscar archivos">
-        <svg class="search-icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <input id="search-input" type="search" autocomplete="off" spellcheck="false"
-               placeholder="Buscar archivos  ( / )" aria-label="Buscar archivos"
-               aria-controls="search-results" aria-expanded="false" role="combobox" aria-autocomplete="list">
-        <kbd class="search-kbd" aria-hidden="true">/</kbd>
-      </form>
-      <div id="search-results" class="search-results" role="listbox" hidden></div>
+  <!-- Pantalla de configuracion inicial (primer arranque: crea el administrador) -->
+  <section id="setup-screen" class="gate" hidden>
+    <div class="gate-card">
+      <div class="gate-titlebar">
+        <span class="gate-titlebar-logo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.2 8 11 4.6-1.8 8-6 8-11V5l-8-3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span>ViMap — Configuracion inicial</span>
+      </div>
+      <div class="gate-content">
+        <img src="assets/icons/logo.svg" alt="" class="welcome-logo">
+        <h1 class="brand-name gate-brand">ViMap</h1>
+        <p class="gate-sub">Primera configuracion: crea el administrador</p>
+        <form id="setup-form" class="gate-form">
+          <label class="field">
+            <span class="field-label" for="setup-token">Token de configuracion</span>
+            <input id="setup-token" type="password" class="field-input" autocomplete="off" spellcheck="false" autofocus>
+          </label>
+          <label class="field">
+            <span class="field-label" for="setup-username">Nombre de usuario</span>
+            <input id="setup-username" type="text" class="field-input" autocomplete="username" autocapitalize="none"
+                   spellcheck="false">
+          </label>
+          <label class="field">
+            <span class="field-label" for="setup-displayname">Nombre visible</span>
+            <input id="setup-displayname" type="text" class="field-input" autocomplete="name" spellcheck="false">
+          </label>
+          <label class="field">
+            <span class="field-label" for="setup-password">Contrasena</span>
+            <input id="setup-password" type="password" class="field-input" autocomplete="new-password" spellcheck="false">
+          </label>
+          <p class="field-hint">La contrasena cifra el vault en tu navegador (minimo 12 caracteres). No se guarda en claro.</p>
+          <p id="setup-error" class="form-error" role="alert" hidden></p>
+          <button id="btn-setup" type="submit" class="btn btn-primary btn-block">Crear administrador</button>
+        </form>
+      </div>
     </div>
+  </section>
 
-    <nav class="head-actions" aria-label="Preferencias">
-      <div class="theme-switch" role="group" aria-label="Tema de color">
-        <button id="theme-light" type="button" class="theme-btn" title="Tema claro" aria-label="Tema claro">
-          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-        <button id="theme-system" type="button" class="theme-btn" title="Tema segun el sistema" aria-label="Tema segun el sistema">
-          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 20h8M12 16v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-        <button id="theme-dark" type="button" class="theme-btn" title="Tema oscuro" aria-label="Tema oscuro">
-          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z" fill="currentColor"/></svg>
-        </button>
+  <!-- Pantalla de desbloqueo (sesion valida, falta la frase de descifrado) -->
+  <section id="unlock-screen" class="gate" hidden>
+    <div class="gate-card">
+      <div class="gate-titlebar">
+        <span class="gate-titlebar-logo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 11V7a4 4 0 0 1 8 0M6 11h12a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span>
+        <span>ViMap — Desbloquear vault</span>
       </div>
-
-      <div class="vault-chip" id="vault-chip" data-state="locked">
-        <span class="vault-dot" aria-hidden="true"></span>
-        <span class="vault-label" id="vault-status">Bloqueado</span>
+      <div class="gate-content">
+        <img src="assets/icons/logo.svg" alt="" class="welcome-logo">
+        <h2 class="gate-title">Desbloquear vault</h2>
+        <p class="gate-sub">Sesion iniciada. Desbloquea tu vault con tu contrasena.</p>
+        <p class="unlock-user" id="unlock-username" hidden></p>
+        <form id="unlock-form" class="gate-form">
+          <label class="field">
+            <span class="field-label" for="unlock-password">Contrasena</span>
+            <input id="unlock-password" type="password" class="field-input" autocomplete="current-password" spellcheck="false" autofocus>
+          </label>
+          <p class="field-hint">Tu contrasena inicia sesion y, solo en tu navegador, deriva la clave de descifrado del vault; el servidor no la conserva ni puede leer tus archivos.</p>
+          <p id="unlock-error" class="form-error" role="alert" hidden></p>
+          <button id="btn-unlock-submit" type="submit" class="btn btn-primary btn-block">Desbloquear</button>
+          <button id="btn-unlock-back" type="button" class="btn btn-ghost btn-block">Salir</button>
+        </form>
       </div>
-      <button id="btn-vault" type="button" class="btn btn-primary">Desbloquear boveda</button>
-    </nav>
-  </header>
+    </div>
+  </section>
 
-  <div class="app">
-    <aside id="sidebar" class="sidebar" aria-label="Explorador de archivos">
-      <div class="sidebar-body">
-        <section class="tree-section" aria-label="Archivos publicos">
-          <h2 class="tree-heading" id="public-tree-title">Archivos publicos</h2>
-          <div id="public-tree" class="tree" role="tree" aria-labelledby="public-tree-title"></div>
-        </section>
-
-        <section class="tree-section" id="vault-tree-section" aria-label="Boveda privada" hidden>
-          <h2 class="tree-heading" id="vault-tree-title">Boveda privada</h2>
-          <div id="vault-tree" class="tree" role="tree" aria-labelledby="vault-tree-title"></div>
-        </section>
+  <!-- Aplicacion: escritorio + ventanas + taskbar -->
+  <div id="app" class="app" hidden>
+    <div id="desktop" class="desktop" aria-label="Escritorio">
+      <div id="desktop-icons" class="desktop-icons" data-dnd-dir="" role="application" aria-label="Iconos del escritorio"></div>
+    </div>
+    <div id="window-layer" class="window-layer"></div>
+    <footer id="taskbar" class="taskbar" aria-label="Barra de tareas">
+      <button id="btn-start" type="button" class="start-btn" aria-haspopup="menu" aria-expanded="false">
+        <span class="start-logo"><img src="assets/icons/logo.svg" alt="" width="15" height="15"></span>
+        <span>Inicio</span>
+      </button>
+      <div id="taskbar-windows" class="taskbar-windows" role="toolbar" aria-label="Ventanas abiertas"></div>
+      <div class="taskbar-tray">
+        <span id="quota-chip" class="tray-quota" title="Uso del vault"></span>
+        <span id="taskbar-clock" class="tray-clock" aria-live="off"></span>
       </div>
-      <footer class="sidebar-foot">
-        <p>Atajos: <kbd>s</kbd>/<kbd>/</kbd> buscar · <kbd>&#8592;</kbd><kbd>&#8593;</kbd><kbd>&#8595;</kbd><kbd>&#8594;</kbd> navegar · <kbd>Enter</kbd> abrir</p>
-      </footer>
-    </aside>
-    <div id="scrim" class="scrim" hidden></div>
-
-    <section id="main" class="viewer" aria-label="Documento">
-      <div class="viewer-bar" id="viewer-bar" hidden>
-        <nav class="breadcrumb" id="breadcrumb" aria-label="Ruta actual"></nav>
-        <div class="file-actions" id="file-actions">
-          <button id="btn-wrap" type="button" class="btn btn-ghost" title="Activar o desactivar el ajuste de linea" hidden>
-            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 6h18M3 12h12a4 4 0 0 1 0 8H10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="m13 17-3 3-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="btn-label">Ajuste</span>
-          </button>
-          <button id="btn-copy" type="button" class="btn btn-ghost" title="Copiar contenido">
-            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-            <span class="btn-label">Copiar</span>
-          </button>
-          <button id="btn-download" type="button" class="btn btn-ghost" title="Descargar archivo">
-            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-            <span class="btn-label">Descargar</span>
-          </button>
-          <span class="lang-badge" id="lang-badge" hidden></span>
-        </div>
-      </div>
-
-      <div id="pane" class="pane">
-        <div id="welcome-screen" class="welcome">
-          <img src="assets/icons/logo.svg" alt="" class="welcome-logo">
-          <h2 id="app-name-welcome">ViMap</h2>
-          <p id="app-desc">Archivo personal de notas y codigo</p>
-          <div class="welcome-note">
-            <p>Esta aplicacion es un sitio <strong>estatico</strong> publicado en GitHub Pages. No sustituye un sistema de
-            autenticacion con servidor: no almacenes secretos de produccion, credenciales, tokens ni informacion
-            extremadamente sensible.</p>
-            <p>La <strong>boveda cifrada</strong> se descifra exclusivamente en tu memoria del navegador con una
-            contrasena que nunca se guarda ni se transmite. Su seguridad depende de la fortaleza de esa contrasena.</p>
-          </div>
-          <button id="btn-unlock-welcome" type="button" class="btn btn-primary">Desbloquear boveda</button>
-        </div>
-      </div>
-    </section>
+    </footer>
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-
-  <div id="unlock-dialog" class="dialog-backdrop" hidden>
-    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
-      <div class="dialog-head">
-        <h2 id="dialog-title">Desbloquear boveda</h2>
-        <button id="btn-dialog-close" type="button" class="icon-btn" aria-label="Cerrar">
-          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
-      </div>
-
-      <div class="dialog-body" id="dialog-risk" hidden>
-        <div id="risk-warning" class="risk-box" role="note">
-          <p><strong>Antes de usar el cifrado, entiende los limites de esta aplicacion:</strong></p>
-          <ul>
-            <li>Los archivos y manifiestos cifrados son <strong>descargables por cualquier visitante</strong>. Un atacante
-                puede copiar el ciphertext y atacarlo por fuerza bruta offline.</li>
-            <li>El descifrado ocurre solo en tu navegador; GitHub Pages no ofrece backend ni autenticacion.</li>
-            <li>La seguridad depende de que uses una contrasena <strong>larga y aleatoria</strong> (o frase de paso de alta
-                entropia). Si la olvidas, no hay recuperacion.</li>
-            <li>El limite de intentos fallidos es solo una ayuda de interfaz y <strong>no es una medida de seguridad real</strong>,
-                puede eludirse con las herramientas del navegador.</li>
-            <li>No guardes aqui secretos de produccion ni datos que requieran control de acceso real.</li>
-          </ul>
-          <label class="risk-check">
-            <input type="checkbox" id="risk-accept" autocomplete="off">
-            <span>Entiendo estos riesgos y deseo continuar.</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="dialog-body" id="dialog-unlock">
-        <label class="field">
-          <span class="field-label" id="vault-select-label">Boveda</span>
-          <select id="vault-select" class="field-input" aria-labelledby="vault-select-label"></select>
-        </label>
-        <label class="field">
-          <span class="field-label" for="unlock-password">Contrasena de descifrado local</span>
-          <input id="unlock-password" type="password" class="field-input" autocomplete="off" autocapitalize="off"
-                 spellcheck="false" aria-describedby="unlock-error" placeholder="Frase de paso de alta entropia">
-        </label>
-        <p class="field-hint">La contrasena se usa solo para derivar la clave de descifrado en memoria. Se borra al bloquear
-        o recargar. No se guarda ni se envia a ningun servicio.</p>
-        <p id="attempts-note" class="attempts-note" hidden></p>
-        <p id="unlock-error" class="form-error" role="alert" hidden></p>
-        <div class="dialog-actions">
-          <button id="btn-unlock-cancel" type="button" class="btn btn-ghost">Cancelar</button>
-          <button id="btn-unlock-submit" type="button" class="btn btn-primary">Desbloquear</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <noscript>
     <div class="noscript">

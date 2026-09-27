@@ -1,0 +1,299 @@
+/* Estilos de la interfaz con backend: paneles de administracion, papelera/
+   versiones y utilidades. Las puertas (login/setup/desbloqueo) viven en
+   desktop.css junto al resto del shell. Solo CSS Grid. */
+
+/* --- Botones extra --- */
+.btn-sm {
+  padding: 3px 8px;
+  font-size: 0.76rem;
+}
+.btn-block {
+  width: 100%;
+  justify-content: center;
+}
+.btn:disabled.busy {
+  opacity: 0.6;
+  cursor: progress;
+}
+.btn-danger {
+  background: linear-gradient(180deg, #e05252, #b02020);
+  border-color: #801515;
+  color: #fff;
+}
+.btn-danger:hover {
+  background: linear-gradient(180deg, #ef6a6a, #c03030);
+}
+.btn-danger-ghost {
+  color: var(--red);
+}
+.btn-danger-ghost:hover {
+  background: var(--red-dim);
+  color: var(--red);
+}
+
+/* --- Barra de carpeta / toolbar del vault --- */
+.vault-toolbar {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 6px;
+  padding: 0 12px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.quota-label {
+  margin-top: 8px;
+}
+
+/* --- Texto auxiliar --- */
+.muted {
+  color: var(--text3);
+  font-size: 0.78rem;
+}
+
+/* --- Editor dialog --- */
+.editor-area {
+  min-height: 46vh;
+  resize: vertical;
+  background: var(--element);
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  box-shadow: inset 1px 1px 1px var(--sunken), inset -1px -1px 1px var(--sunken-l);
+  padding: 12px;
+  color: var(--text);
+  font-family: "Courier New", Consolas, monospace;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  tab-size: 4;
+  outline: none;
+  white-space: pre;
+  overflow: auto;
+}
+.editor-area:focus {
+  border-color: var(--accent2);
+}
+
+/* --- Listas de papelera / versiones --- */
+.version-list {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  max-height: 46vh;
+  overflow-y: auto;
+}
+.version-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--surface);
+  box-shadow: inset 1px 1px 1px var(--bevel-h), inset -1px -1px 1px var(--bevel-l);
+}
+@media (max-width: 640px) {
+  .version-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+}
+.version-meta {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.version-meta strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.version-actions {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 8px;
+}
+
+/* --- Dialogo de confirmacion --- */
+.dialog-sm {
+  width: min(92vw, 400px);
+}
+
+/* --- Resultados de busqueda (botones) --- */
+.search-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+.search-item:hover,
+.search-item[aria-selected="true"] {
+  background: linear-gradient(180deg, var(--sel-a), var(--sel-b));
+  color: #fff;
+}
+.search-item mark {
+  background: var(--amber);
+  color: #000;
+  border-radius: 1px;
+  padding-inline: 1px;
+}
+
+/* --- Marca (solo login/setup) --- */
+.brand-name {
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+/* --- Admin --- */
+.admin-title {
+  font-size: 1.25rem;
+  padding: 18px 20px 4px;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 3px;
+  margin: 14px 20px;
+  padding: 16px;
+  box-shadow: inset 1px 1px 1px var(--bevel-h), inset -1px -1px 1px var(--bevel-l);
+}
+.admin-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+.admin-form-actions {
+  margin-top: 14px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  justify-content: end;
+}
+.admin-table-wrap {
+  margin: 0 20px 20px;
+  overflow-x: auto;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+}
+.admin-table th,
+.admin-table td {
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  border-bottom: 1px solid var(--border);
+}
+.admin-table th {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text3);
+  background: linear-gradient(180deg, var(--surface3), var(--surface2));
+}
+.admin-actions {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 8px;
+}
+
+/* Mi cuenta: barra de cuota y sesiones */
+.quota-bar {
+  height: 10px;
+  background: var(--element);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-input, 2px);
+  box-shadow: inset 1px 1px 1px var(--sunken);
+  overflow: hidden;
+}
+.quota-fill {
+  height: 100%;
+  background: linear-gradient(180deg, var(--sel-a), var(--sel-b));
+}
+.session-list {
+  display: grid;
+  gap: 8px;
+}
+.session-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 7px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-menu, 3px);
+  font-size: 0.78rem;
+}
+
+/* Explorador: vista de lista y orden */
+.explorer-viewopts {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 4px;
+  align-items: center;
+  margin-left: auto;
+}
+.explorer-sort {
+  background: var(--element);
+  color: var(--text);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-input, 2px);
+  font-family: inherit;
+  font-size: 0.72rem;
+  padding: 3px 5px;
+  outline: none;
+}
+.explorer-list {
+  grid-row: 2;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: grid;
+  align-content: start;
+  gap: 1px;
+  padding: 6px 10px 12px;
+  background: var(--bg);
+}
+.explorer-list .dicon {
+  width: auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  justify-items: start;
+  padding: 4px 8px;
+  text-align: left;
+  border-radius: var(--radius-btn, 2px);
+}
+.explorer-list .dicon-img {
+  width: 22px;
+  height: 22px;
+}
+.explorer-list .dicon-img svg {
+  width: 20px;
+  height: 20px;
+}
+.explorer-list .dicon-label {
+  max-width: none;
+  font-size: 0.78rem;
+}
+.explorer-list .lr-meta {
+  color: var(--text3);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}

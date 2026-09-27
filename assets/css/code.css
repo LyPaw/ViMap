@@ -1,70 +1,70 @@
+/* Visores de codigo / texto plano / binario con paleta de sintaxis retro.
+   Estructura con CSS Grid. */
+
 .code-viewer {
-  flex: 1;
+  grid-row: 2;
   min-height: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
   overflow: hidden;
 }
 
 .code-area {
-  flex: 1;
   min-height: 0;
   overflow: auto;
-  background: var(--bg);
+  background: var(--element);
 }
-
 .code-area pre {
   margin: 0;
-  padding: 18px 20px;
-  font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+  padding: 14px 16px;
+  font-family: "Courier New", Consolas, monospace;
   font-size: 0.8rem;
-  line-height: 1.65;
+  line-height: 1.6;
   white-space: pre;
 }
-
 .code-area.wrap pre {
   white-space: pre-wrap;
   word-break: break-word;
 }
 
 .code-line {
-  display: flex;
-  gap: 18px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
 }
 .code-line:hover {
-  background: rgba(127, 127, 127, 0.05);
+  background: var(--hover-bg);
 }
 .ln {
   color: var(--text3);
   font-size: 0.72rem;
   min-width: 34px;
   text-align: right;
-  flex-shrink: 0;
   user-select: none;
+  justify-self: end;
 }
 .lc {
-  flex: 1;
   min-width: 0;
 }
 
 .plain-viewer {
-  flex: 1;
+  grid-row: 2;
   min-height: 0;
   overflow: auto;
-  padding: 22px 28px;
-  font-family: "Cascadia Code", "Fira Code", "Consolas", monospace;
+  padding: 18px 24px;
+  font-family: "Courier New", Consolas, monospace;
   font-size: 0.84rem;
   line-height: 1.7;
   white-space: pre-wrap;
   word-break: break-word;
+  background: var(--element);
 }
 
 .binary-viewer {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  grid-row: 2;
+  display: grid;
+  place-content: center;
+  justify-items: center;
   gap: 16px;
   padding: 28px;
   text-align: center;
@@ -79,37 +79,37 @@
   max-width: 420px;
 }
 
-/* highlight.js tokens, tema coherente con el tema global */
+/* highlight.js: paleta clasica (VS6/Notepad-era) coherente con cada tema */
 :root[data-theme="dark"] .hljs-keyword,
 :root[data-theme="dark"] .hljs-selector-tag,
 :root[data-theme="dark"] .hljs-literal,
 :root[data-theme="dark"] .hljs-section,
 :root[data-theme="dark"] .hljs-link {
-  color: #7dd3fc;
+  color: #87b8ff;
 }
 :root[data-theme="dark"] .hljs-title,
 :root[data-theme="dark"] .hljs-title.function_,
 :root[data-theme="dark"] .hljs-title.class_ {
-  color: #34d399;
+  color: #7fe0a1;
 }
 :root[data-theme="dark"] .hljs-string,
 :root[data-theme="dark"] .hljs-meta .hljs-string,
 :root[data-theme="dark"] .hljs-attr {
-  color: #fb923c;
+  color: #f4a261;
 }
 :root[data-theme="dark"] .hljs-comment,
 :root[data-theme="dark"] .hljs-quote {
-  color: #64748b;
+  color: #7b8a9a;
   font-style: italic;
 }
 :root[data-theme="dark"] .hljs-number,
 :root[data-theme="dark"] .hljs-symbol,
 :root[data-theme="dark"] .hljs-bullet {
-  color: #c4b5fd;
+  color: #c9a6f5;
 }
 :root[data-theme="dark"] .hljs-annotation,
 :root[data-theme="dark"] .hljs-attribute {
-  color: #f472b6;
+  color: #f0a0c0;
 }
 :root[data-theme="dark"] .hljs-variable,
 :root[data-theme="dark"] .hljs-template-variable,
@@ -117,13 +117,13 @@
   color: #e2e8f0;
 }
 :root[data-theme="dark"] .hljs-built_in {
-  color: #93c5fd;
+  color: #87b8ff;
 }
 :root[data-theme="dark"] .hljs-type {
   color: #6ee7b7;
 }
 :root[data-theme="dark"] .hljs-tag {
-  color: #67e8f9;
+  color: #87b8ff;
 }
 :root[data-theme="dark"] .hljs-name {
   color: #93c5fd;
@@ -131,7 +131,7 @@
 :root[data-theme="dark"] .hljs-selector-class,
 :root[data-theme="dark"] .hljs-selector-id,
 :root[data-theme="dark"] .hljs-selector-pseudo {
-  color: #a5b4fc;
+  color: #e5b0ff;
 }
 
 :root[data-theme="light"] .hljs-keyword,
@@ -139,51 +139,51 @@
 :root[data-theme="light"] .hljs-literal,
 :root[data-theme="light"] .hljs-section,
 :root[data-theme="light"] .hljs-link {
-  color: #0369a1;
+  color: #0000ff;
 }
 :root[data-theme="light"] .hljs-title,
 :root[data-theme="light"] .hljs-title.function_,
 :root[data-theme="light"] .hljs-title.class_ {
-  color: #047857;
+  color: #2f6f9f;
 }
 :root[data-theme="light"] .hljs-string,
 :root[data-theme="light"] .hljs-meta .hljs-string,
 :root[data-theme="light"] .hljs-attr {
-  color: #b45309;
+  color: #a31515;
 }
 :root[data-theme="light"] .hljs-comment,
 :root[data-theme="light"] .hljs-quote {
-  color: #64748b;
+  color: #008000;
   font-style: italic;
 }
 :root[data-theme="light"] .hljs-number,
 :root[data-theme="light"] .hljs-symbol,
 :root[data-theme="light"] .hljs-bullet {
-  color: #6d28d9;
+  color: #098658;
 }
 :root[data-theme="light"] .hljs-annotation,
 :root[data-theme="light"] .hljs-attribute {
-  color: #be185d;
+  color: #7f0055;
 }
 :root[data-theme="light"] .hljs-variable,
 :root[data-theme="light"] .hljs-template-variable,
 :root[data-theme="light"] .hljs-params {
-  color: #0f172a;
+  color: #141414;
 }
 :root[data-theme="light"] .hljs-built_in {
-  color: #1d4ed8;
+  color: #0000ff;
 }
 :root[data-theme="light"] .hljs-type {
-  color: #15803d;
+  color: #2f6f9f;
 }
 :root[data-theme="light"] .hljs-tag {
-  color: #0e7490;
+  color: #0000ff;
 }
 :root[data-theme="light"] .hljs-name {
-  color: #1d4ed8;
+  color: #0f4fbc;
 }
 :root[data-theme="light"] .hljs-selector-class,
 :root[data-theme="light"] .hljs-selector-id,
 :root[data-theme="light"] .hljs-selector-pseudo {
-  color: #4c1d95;
+  color: #7f0055;
 }

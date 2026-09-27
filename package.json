@@ -1,19 +1,22 @@
 {
   "name": "vimap",
-  "version": "2.0.0",
-  "description": "Repositorio personal de notas y codigo. Sitio estatico para GitHub Pages con boveda cifrada en el cliente.",
+  "version": "3.0.0",
+  "description": "Vault personal cifrado por usuario con visores de lenguaje. Backend: Cloudflare Workers + D1; cifrado cliente (AES-256-GCM).",
   "private": true,
   "type": "module",
   "engines": {
     "node": ">=18"
   },
   "scripts": {
-    "start": "node scripts/serve.mjs",
-    "build:manifest": "node scripts/build-manifest.mjs",
     "validate": "node scripts/validate.mjs",
     "dist": "node scripts/assemble-dist.mjs",
+    "backup:local": "wrangler d1 export vimap-db --local --output=backups/vimadb-local.sql",
+    "backup:remote": "wrangler d1 export vimap-db --remote --output=backups/vimadb-remote.sql",
     "encrypt": "node scripts/encrypt-vault.mjs",
     "decrypt": "node scripts/decrypt-vault.mjs",
-    "ci": "node scripts/validate.mjs && node scripts/build-manifest.mjs && node scripts/assemble-dist.mjs"
+    "ci": "node scripts/validate.mjs && node scripts/assemble-dist.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.137.0"
   }
 }
