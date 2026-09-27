@@ -34,6 +34,12 @@ ViMap recrea la experiencia de un escritorio clásico (ventanas, barra de tareas
   <img src="docs/screenshots/temas.png" alt="Selector de temas de ViMap" width="720">
 </p>
 
+<p align="center">
+  <img src="docs/screenshots/demo-crear.gif" alt="Demo: crear carpeta y archivo en ViMap" width="640">
+  <br>
+  <em>Crear una carpeta y un archivo desde el menú contextual.</em>
+</p>
+
 ## Puesta en marcha (2 minutos, en local)
 
 Requisitos: Node ≥ 18 y `wrangler` CLI.
