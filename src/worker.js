@@ -175,6 +175,22 @@ function isHex64(s) {
   return typeof s === "string" && /^[0-9a-f]{64}$/.test(s);
 }
 
+// Forma de sobre v1 sin descifrar (E2EE intacto): impide corromper un vault
+// subiendo un manifiesto en claro o con otro formato.
+function isEnvelopeShape(text) {
+  let obj;
+  try {
+    obj = JSON.parse(text);
+  } catch {
+    return false;
+  }
+  if (!obj || typeof obj !== "object" || obj.version !== 1) return false;
+  for (const f of ["algo", "kdf", "iv", "ciphertext"]) {
+    if (obj[f] == null || obj[f] === "") return false;
+  }
+  return true;
+}
+
 function normalizeUsername(u) {
   return String(u || "").trim().toLowerCase();
 }
@@ -404,6 +420,9 @@ async function handleManifestPush(request, env, user) {
   if (blobKeys.length > 20000) return err("PAYLOAD_TOO_LARGE", "Demasiadas claves de blob", 413);
   if (typeof manifestText !== "string" || !manifestText.length || manifestText.length > MAX_MANIFEST_BYTES) {
     return err("BAD_REQUEST", "Manifest invalido", 400);
+  }
+  if (!isEnvelopeShape(manifestText)) {
+    return err("BAD_REQUEST", "Manifest sin formato de sobre valido", 400);
   }
 
   const upd = await env.DB.prepare("UPDATE vaults SET rev = rev + 1, updated_at = ?, manifest = ? WHERE user_id = ? AND rev = ?")
