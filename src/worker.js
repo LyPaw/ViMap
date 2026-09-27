@@ -13,7 +13,9 @@ const MAX_MANIFEST_BYTES = 1900000;
 const BLOB_CHUNK_BYTES = 1500000;
 const DEFAULT_QUOTA_BYTES = 100 * 1024 * 1024;
 const BATCH_KEYS = 50;
-const SESSION_TTL_MS = 7 * 24 * 3600 * 1000;
+// La sesion solo la cierra el usuario (logout), la revocacion o el admin.
+// Sobrevive a reinicios y redespliegues: vive en D1 + cookie persistente.
+const SESSION_TTL_MS = 30 * 24 * 3600 * 1000;
 const LOCK_WINDOW_MS = 60 * 1000;
 const MAX_FAILS = 5;
 const COOKIE = "vimap_session";
